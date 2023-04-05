@@ -1,44 +1,17 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
+
+#include "backup.hpp"
+#include "calc_exec.hpp"
+#include "memory.hpp"
+#include "number.hpp"
 
 namespace for_society {
 
-enum Mode { Working, Programming, ExecutingProg, TurnedOff};
-
-enum Button {
-  ButNull,
-  ButStepLeft,
-  ButStepRight,
-  ButBO,
-  ButCP,
-  ButCx,
-  ButP,
-  ButXy,
-  ButBP,
-  ButPP,
-  ButNum0,
-  ButNum1,
-  ButNum2,
-  ButNum3,
-  ButNum4,
-  ButNum5,
-  ButNum6,
-  ButNum7,
-  ButNum8,
-  ButNum9,
-  ButXArrowY,
-  ButArrowUp,
-  ButMultiply,
-  ButPlus,
-  ButDivision,
-  ButMinus,
-  ButComma,
-  ButPrefixMinus,
-  ButVP,
-  ButF
-};
-
-enum OperationCodes { OpNeutral = 0 };
+// to convert from decimal to hexadecimal and vice versa
+uint8_t ToHexadecimal(uint8_t);
+uint8_t ToDecimal(uint8_t);
 
 }  // namespace for_society
