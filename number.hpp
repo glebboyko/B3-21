@@ -16,15 +16,15 @@ class Number {
   Number(const Number& other) noexcept;
   Number& operator=(const Number&) noexcept;
 
-  std::string GetNumber() const noexcept;
+  std::string GetNumber() const;
 
   void SignButton() noexcept;
   void MantissaButton();  // не уверен, может ли мантисса выдать ошибку
-  void NumberButton(uint8_t) noexcept;
+  void NumberButton(uint8_t);
   void ClearButton() noexcept;
 
   // for backup / restore
-  Number(uint8_t number, uint8_t mantissa, bool sign) noexcept;
+  Number(uint8_t characteristic, uint8_t mantissa, bool sign) noexcept;
   Trio<uint8_t, uint8_t, bool> GetClass() const noexcept;
 
  private:
