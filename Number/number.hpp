@@ -1,7 +1,8 @@
 #pragma once
-#include "for_society.hpp"
+#include <iostream>
+#include <string>
 
-namespace number {
+namespace CN {
 
 template <typename A, typename B, typename C>
 struct Trio {
@@ -30,4 +31,4 @@ class Number {
  private:
 };
 
-}  // namespace number
+}  // namespace CN

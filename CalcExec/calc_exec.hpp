@@ -1,7 +1,11 @@
 #pragma once
-#include "for_society.hpp"
+#include <iostream>
+#include <vector>
 
-namespace calc_exec {
+#include "../ForSociety/for_society.hpp"
+#include "../Memory/memory.hpp"
+
+namespace CE {
 
 const uint8_t kProgBufferSize = 60;
 
@@ -48,7 +52,7 @@ class Calc {
   Calc& operator=(const Calc&);
 
   const std::vector<OperationCodes>& GetProgramBuffer() const;
-  const buff::Buffer GetRegisterBuffer() const;
+  const CM::Buffer GetRegisterBuffer() const;
   Button GetCurrFuncButton() const;
   int GetStep() const;
   Mode GetMode() const noexcept;
@@ -59,13 +63,13 @@ class Calc {
 
   // for backup / restore
   Calc(const std::vector<OperationCodes>& program_buffer,
-       const buff::Buffer& register_buffer, Button curr_func_button,
-       uint8_t step, Mode mode);
+       const CM::Buffer& register_buffer, Button curr_func_button, uint8_t step,
+       Mode mode);
 
  private:
   std::vector<OperationCodes> program_ =
       std::vector<OperationCodes>(kProgBufferSize, OpNeutral);
-  buff::Buffer buffer_;
+  CM::Buffer buffer_;
 
   Button curr_func_button_ = ButNull;
   uint8_t step_ = 0;
@@ -83,5 +87,4 @@ class Calc {
   void WorkingWithProgram(Button);
 };
 
-std::iterator_traits<std::vector<int>::iterator>::iterator_category
-}  // namespace calc_exec
+}  // namespace CE
