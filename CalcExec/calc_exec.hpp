@@ -46,15 +46,15 @@ enum OperationCodes { OpNeutral = 0 };
 
 class Calc {
  public:
-  Calc();
-  Calc(const Calc&);
-  ~Calc();
-  Calc& operator=(const Calc&);
+  Calc() = default;
+  Calc(const Calc&) = default;
+  ~Calc() = default;
+  Calc& operator=(const Calc&) = default;
 
-  const std::vector<OperationCodes>& GetProgramBuffer() const;
-  const CM::Buffer GetRegisterBuffer() const;
-  Button GetCurrFuncButton() const;
-  int GetStep() const;
+  const std::vector<OperationCodes>& GetProgramBuffer() const noexcept;
+  const CM::Buffer& GetRegisterBuffer() const noexcept;
+  Button GetCurrFuncButton() const noexcept;
+  uint8_t GetStep() const noexcept;
   Mode GetMode() const noexcept;
 
   void PressButton(Button);
@@ -69,22 +69,22 @@ class Calc {
  private:
   std::vector<OperationCodes> program_ =
       std::vector<OperationCodes>(kProgBufferSize, OpNeutral);
-  CM::Buffer buffer_;
+  CM::Buffer buffer_ = CM::Buffer();
 
   Button curr_func_button_ = ButNull;
   uint8_t step_ = 0;
   Mode mode_ = TurnedOff;
 
-  void ChangeMode(Button);
-  void PressedFuncButton(Button);
-  void PressedStepButton(Button);
-  void PressedMantissaButton();
-
-  void WorkingWithBuffer(Button);
-  void WorkingWithXY(Button);
-  void WorkingWithLongBuffer(Button);
-
-  void WorkingWithProgram(Button);
+  //  void ChangeMode(Button);
+  //  void PressedFuncButton(Button);
+  //  void PressedStepButton(Button);
+  //  void PressedMantissaButton();
+  //
+  //  void WorkingWithBuffer(Button);
+  //  void WorkingWithXY(Button);
+  //  void WorkingWithLongBuffer(Button);
+  //
+  //  void WorkingWithProgram(Button);
 };
 
 }  // namespace CE
