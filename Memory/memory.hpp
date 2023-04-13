@@ -17,8 +17,8 @@ class Buffer {
   Buffer(const Buffer&);
   Buffer& operator=(const Buffer&);
 
-  std::vector<CN::Number> GetNumeratedBuffer() const noexcept;
-  std::vector<CN::Number> GetRoundedBuffer() const noexcept;
+  const std::vector<CN::Number>& GetNumeratedBuffer() const noexcept;
+  const std::vector<CN::Number>& GetRoundedBuffer() const noexcept;
 
   void RoundBuffer(Round) noexcept;
   void PutFromZToX(uint8_t);
