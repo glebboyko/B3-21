@@ -17,6 +17,8 @@ class Number {
   Number(const Number& other) noexcept;
   Number& operator=(const Number&) noexcept;
 
+  operator int() const noexcept;
+
   std::string GetNumber() const;
 
   void SignButton() noexcept;
@@ -28,7 +30,21 @@ class Number {
   Number(uint8_t characteristic, uint8_t mantissa, bool sign) noexcept;
   Trio<uint8_t, uint8_t, bool> GetClass() const noexcept;
 
+  friend bool operator<(const Number&, const Number&);
+  friend bool operator<=(const Number&, const Number&);
+  friend bool operator>(const Number&, const Number&);
+  friend bool operator>=(const Number&, const Number&);
+  friend bool operator==(const Number&, const Number&);
+  friend bool operator!=(const Number&, const Number&);
+
  private:
 };
+
+bool operator<(const Number&, const Number&);
+bool operator<=(const Number&, const Number&);
+bool operator>(const Number&, const Number&);
+bool operator>=(const Number&, const Number&);
+bool operator==(const Number&, const Number&);
+bool operator!=(const Number&, const Number&);
 
 }  // namespace CN
