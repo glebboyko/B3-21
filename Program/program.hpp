@@ -41,7 +41,7 @@ enum OperationCodes {
   OpPNum4 = 41,
   OpFNum4 = 42,
   OpPComma = 43,
-  OpNUm4 =  44,
+  OpNum4 = 44,
   OpFComma = 45,
   OpComma = 46,
   OpFBO = 47,
@@ -86,6 +86,8 @@ enum OperationCodes {
   OpPlus = 96
 };
 
+enum TransferStatus { TsNoCommand, TsTransfer, TsNoTransfer };
+
 enum Direction { DirLeft = -1, DirRight = 1 };
 
 class Program {
@@ -101,7 +103,7 @@ class Program {
   void StepToZero() noexcept;
 
   void EnterCode(OperationCodes);
-  void ExecuteStep(CE::Calc&);
+  OperationCodes ExecuteStep(CE::Calc&);
 
   // for restore
   Program(const std::vector<OperationCodes>& data, uint8_t step);
@@ -110,7 +112,6 @@ class Program {
   std::vector<OperationCodes> data_ =
       std::vector<OperationCodes>(kProgBufferSize, OpNeutral);
   uint8_t step_ = 0;
-
 };
 
 }  // namespace CP
