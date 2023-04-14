@@ -2,14 +2,7 @@
 
 using namespace CE;
 
-bool IsNum(Button button) noexcept { return GetDigit(button, 2) == 4; }
-
-uint8_t GetDigit(uint8_t number, uint8_t index) noexcept {
-  for (uint8_t i = 0; i < index; ++i) {
-    number /= 10;
-  }
-  return number % 10;
-}
+bool IsNum(Button button) noexcept { return FS::GetDigit(button, 2) == 4; }
 
 const CP::Program& Calc::GetProgram() const noexcept { return program_; }
 
@@ -38,13 +31,13 @@ void Calc::TurnOn() noexcept { mode_ = Working; }
 void Calc::TurnOff() noexcept { *this = Calc(); }
 
 void Calc::ChangeMode(Mode new_mode) noexcept {
-  curr_func_button_ = ButNull;  // ?
+  curr_func_button_ = ButNull;
   mode_ = new_mode;
 }
 
 CP::OperationCodes Calc::GetOperationCode(CE::Button button) const noexcept {
-  return static_cast<CP::OperationCodes>((button / 1000) * 10 +
-                                         GetDigit(button, curr_func_button_));
+  return static_cast<CP::OperationCodes>(
+      (button / 1000) * 10 + FS::GetDigit(button, curr_func_button_));
 }
 
 void Calc::PressedButtonWorking(Button button) {
@@ -53,11 +46,11 @@ void Calc::PressedButtonWorking(Button button) {
   } else if (IsNum(button)) {
     Num(button);
   } else if (button == ButStepRight) {
-    program_.ExecuteStep(buffer_);
+    program_.ExecuteStep(*this);
   } else if (button == ButStepLeft) {
     program_.MakeStep(CP::DirLeft);
   } else {
-    (this->*method_ptr_[GetOperationCode(button)])();
+    ExecuteCommand(GetOperationCode(button));
   }
 }
 
@@ -74,6 +67,10 @@ void Calc::PressedButtonProgramming(Button button) {
 
 void Calc::PressedFuncButton(Button button) noexcept {
   curr_func_button_ = button;
+}
+
+void Calc::ExecuteCommand(CP::OperationCodes operation) {
+  (this->*method_ptr_[operation])();
 }
 
 void Calc::PNum(uint8_t num) { buffer_.PutFronXToZ(num); }
