@@ -6,6 +6,10 @@
 #include "../Memory/memory.hpp"
 #include "../Program/program.hpp"
 
+namespace CP {
+class Program;
+}
+
 namespace CE {
 
 const uint8_t kOperationQuantity = 96;
@@ -46,7 +50,6 @@ enum Button {
 };
 
 bool IsNum(Button) noexcept;
-uint8_t GetDigit(uint8_t, uint8_t) noexcept;
 
 class Calc {
  public:
@@ -84,10 +87,12 @@ class Calc {
 
   void PressedFuncButton(Button) noexcept;
 
+  void ExecuteCommand(CP::OperationCodes);
+
   void PNum(uint8_t);
   void FNum(uint8_t);
   void Num(uint8_t);
-  
+
   void Neutral();
 
   /* 03 */ void PArrowUp();
@@ -114,104 +119,43 @@ class Calc {
   /* 96 */ void Plus();
 
   typedef void (Calc::*MethodPtr)();
-  MethodPtr method_ptr_[kOperationQuantity + 1] = {&Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::PArrowUp,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::ArrowUp,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::PXArrowY,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::XArrowY,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::PMultiply,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Multiply,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::PDivision,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Division,
-                                                   &Calc::Neutral,
-                                                   &Calc::XExpY,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::FComma,
-                                                   &Calc::Comma,
-                                                   &Calc::Neutral,
-                                                   &Calc::BO,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::FPrefixMinus,
-                                                   &Calc::PrefixMinus,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::FVP,
-                                                   &Calc::VP,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Cx,
-                                                   &Calc::Neutral,
-                                                   &Calc::CP,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::PMinus,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Minus,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::PPlus,
-                                                   &Calc::Neutral,
-                                                   &Calc::Neutral,
-                                                   &Calc::Plus};
 
+  MethodPtr method_ptr_[kOperationQuantity + 1] = {
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::PArrowUp,  &Calc::Neutral,      &Calc::Neutral,
+      &Calc::ArrowUp,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::PXArrowY,     &Calc::Neutral,
+      &Calc::Neutral,   &Calc::XArrowY,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::PMultiply,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Multiply,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::PDivision, &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Division,  &Calc::Neutral,      &Calc::XExpY,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::FComma,    &Calc::Comma,        &Calc::Neutral,
+      &Calc::BO,        &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::FPrefixMinus, &Calc::PrefixMinus,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::FVP,
+      &Calc::VP,        &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Cx,           &Calc::Neutral,
+      &Calc::CP,        &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::PMinus,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Minus,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::PPlus,     &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Plus};
+
+  friend class CP::Program;
 };
 
 }  // namespace CE
