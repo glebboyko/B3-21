@@ -2,7 +2,11 @@
 
 #include <vector>
 
-#include "../CalcExec/calc_exec.hpp"
+#include "backend/calc_exec/calc_exec.hpp"
+
+namespace CE {
+class Calc;
+}
 
 namespace CP {
 
