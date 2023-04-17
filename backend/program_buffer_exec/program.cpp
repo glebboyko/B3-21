@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "../ForSociety/for_society.hpp"
+#include "backend/for_society/for_society.hpp"
 
 using namespace CP;
 
@@ -42,7 +42,9 @@ const std::vector<OperationCodes>& Program::GetProgram() const noexcept {
   return data_;
 }
 
-uint8_t Program::GetStep() const noexcept { return FS::ToHexadecimal(step_); }
+uint8_t Program::GetStep() const noexcept {
+  return FS::FromSysToSys<10, 6>(step_);
+}
 
 void Program::MakeStep(Direction direction) {
   if (step_ == 6 && direction == DirRight) {
@@ -63,7 +65,7 @@ OperationCodes Program::ExecuteStep(CE::Calc& calc) {
     switch (IsTransfer(calc.GetRegisterBuffer().GetNumeratedBuffer().front(),
                        data_.at(step_ - 1))) {
       case TsTransfer:
-        step_ = FS::ToDecimal(data_.at(step_ - 1));
+        step_ = FS::FromSysToSys<6, 10>(data_.at(step_ - 1));
         return OpNeutral;
       case TsNoTransfer:
         step_ += 1;
