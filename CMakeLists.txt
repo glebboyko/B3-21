@@ -3,6 +3,40 @@ project(B3_21)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(B3_21 main.cpp ForSociety/for_society.hpp Number/number.hpp Backup/backup.hpp CalcExec/calc_exec.hpp
-        Memory/memory.hpp Backup/backup.cpp CalcExec/calc_exec.cpp ForSociety/for_society.cpp Memory/memory.cpp
-        Number/number.cpp Program/program.cpp Program/program.hpp CalcExec/calc_operations.cpp)
+#setting up wxWidgets
+set(wxWidgets_ROOT_DIR </opt/homebrew/bin/wx-config>)
+set(wxWidgets_CONFIGURATION mswu)
+find_package(wxWidgets COMPONENTS core base REQUIRED)
+include(${wxWidgets_USE_FILE})
+
+#including project files
+include_directories(${PROJECT_SOURCE_DIR})
+link_directories(${PROJECT_SOURCE_DIR})
+
+
+#adding executables
+add_executable(B3_21 main.cpp backend/calc_exec/calc_exec.hpp)
+
+
+add_library(backup OBJECT backend/backup/backup.cpp)
+target_include_directories(backup PRIVATE backend/backup)
+
+add_library(calc_exec OBJECT backend/calc_exec/calc_exec.cpp backend/calc_exec/calc_operations.cpp)
+target_include_directories(calc_exec PRIVATE backend/calc_exec)
+
+add_library(for_society OBJECT backend/for_society/for_society.cpp)
+target_include_directories(for_society PRIVATE backend/for_society)
+
+add_library(number OBJECT backend/number/number.cpp)
+target_include_directories(number PRIVATE backend/number)
+
+add_library(number_buffer OBJECT backend/number_buffer/number_buffer.cpp)
+target_include_directories(number_buffer PRIVATE backend/number_buffer)
+
+add_library(program OBJECT backend/program_buffer_exec/program.cpp)
+target_include_directories(program PRIVATE backend/program_buffer_exec)
+
+
+target_link_directories(B3_21 PRIVATE ${calc_exec} ${program} ${number_buffer} ${number} ${backup} ${for_society})
+
+target_link_libraries(B3_21 PRIVATE ${wxWidgets_LIBRARIES})
