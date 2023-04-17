@@ -2,9 +2,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../ForSociety/for_society.hpp"
-#include "../Memory/memory.hpp"
-#include "../Program/program.hpp"
+#include "backend/for_society/for_society.hpp"
+#include "backend/number_buffer/number_buffer.hpp"
+#include "backend/program_buffer_exec/program.hpp"
 
 namespace CP {
 class Program;
