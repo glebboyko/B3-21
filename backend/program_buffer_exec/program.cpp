@@ -42,19 +42,9 @@ const std::vector<OperationCodes>& Program::GetProgram() const noexcept {
   return data_;
 }
 
-uint8_t Program::GetStep() const noexcept {
-  return FS::FromSysToSys<10, 6>(step_);
-}
+const uint8_t& Program::GetStep() const noexcept { return step_; }
 
-void Program::MakeStep(Direction direction) {
-  if (step_ == 6 && direction == DirRight) {
-    step_ += 4;
-  } else if (step_ == 0 && direction == DirLeft) {
-    step_ -= 4;
-  } else {
-    step_ += direction;
-  }
-}
+void Program::MakeStep(Direction direction) { step_ += direction; }
 
 void Program::StepToZero() noexcept { step_ = 0; }
 

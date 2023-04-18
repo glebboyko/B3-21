@@ -101,7 +101,7 @@ class Program {
   Program& operator=(const Program&) = default;
 
   const std::vector<OperationCodes>& GetProgram() const noexcept;
-  uint8_t GetStep() const noexcept;
+  const uint8_t& GetStep() const noexcept;
 
   void MakeStep(Direction);
   void StepToZero() noexcept;
