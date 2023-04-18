@@ -11,6 +11,8 @@ struct Trio {
   C third;
 };
 
+const int kNumOfDigits = 8;
+
 class Number {
  public:
   Number() noexcept;
@@ -22,7 +24,7 @@ class Number {
   std::string GetNumber() const;
 
   void SignButton() noexcept;
-  void MantissaButton();  // не уверен, может ли мантисса выдать ошибку
+  void CharacteristicButton();  // не уверен, может ли мантисса выдать ошибку
   void NumberButton(uint8_t);
   void ClearButton() noexcept;
 
@@ -37,7 +39,15 @@ class Number {
   friend bool operator==(const Number&, const Number&);
   friend bool operator!=(const Number&, const Number&);
 
+  friend Number operator+(const Number&, const Number&);
+  friend Number operator-(const Number&, const Number&);
+  friend Number operator*(const Number&, const Number&);
+  friend Number operator/(const Number&, const Number&);
+
  private:
+  uint8_t number_ = 0;
+  uint8_t mantissa_ = UINT8_MAX;
+  bool sign_ = false;
 };
 
 bool operator<(const Number&, const Number&);
@@ -46,5 +56,10 @@ bool operator>(const Number&, const Number&);
 bool operator>=(const Number&, const Number&);
 bool operator==(const Number&, const Number&);
 bool operator!=(const Number&, const Number&);
+
+Number operator+(const Number&, const Number&);
+Number operator-(const Number&, const Number&);
+Number operator*(const Number&, const Number&);
+Number operator/(const Number&, const Number&);
 
 }  // namespace CN
