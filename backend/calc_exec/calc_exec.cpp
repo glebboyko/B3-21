@@ -172,4 +172,6 @@ Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
     : program_(program_buffer),
       buffer_(register_buffer),
       curr_func_button_(curr_func_button),
-      mode_(mode) {}
+      mode_(mode) {
+  number_of_class_objects += 1;
+}
