@@ -170,9 +170,6 @@
 76. `void Cx()`
 
 
-78. `void CP()`
-
-
 83. `void PMinus()`
 
 
