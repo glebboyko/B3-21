@@ -1,8 +1,13 @@
 #pragma once
+#include <unistd.h>
+
 #include <iostream>
+#include <optional>
+#include <thread>
 #include <vector>
 
 #include "backend/for_society/for_society.hpp"
+#include "backend/message_queue/message_queue.hpp"
 #include "backend/number_buffer/number_buffer.hpp"
 #include "backend/program_buffer_exec/program.hpp"
 
@@ -11,6 +16,11 @@ class Program;
 }
 
 namespace CE {
+
+const std::chrono::milliseconds kWait = std::chrono::milliseconds(250);
+
+const char kMessageQueueFile[] = "message_queue_file";
+enum MessageToVisualize { UpdateData, GoodBie, MessageToCalc, MessageFromCalc };
 
 const uint8_t kOperationQuantity = 96;
 enum Mode { Working, Programming, ExecutingProg, TurnedOff };
@@ -49,23 +59,21 @@ enum Button {
   ButStepRight,
 };
 
-bool IsNum(Button) noexcept;
-
 class Calc {
  public:
-  Calc() = default;
-  Calc(const Calc&) = default;
-  ~Calc() = default;
-  Calc& operator=(const Calc&) = default;
+  Calc();
+  Calc(const Calc&);
+  ~Calc();
+  Calc& operator=(const Calc&);
 
   const CP::Program& GetProgram() const noexcept;
   const CM::Buffer& GetRegisterBuffer() const noexcept;
-  Button GetCurrFuncButton() const noexcept;
-  Mode GetMode() const noexcept;
+  const Button& GetCurrFuncButton() const noexcept;
+  const Mode& GetMode() const noexcept;
+  MQ::MessageQueue GetDataUpdateMarker() const noexcept;
 
   void PressButton(Button);
-  void TurnOn() noexcept;
-  void TurnOff() noexcept;
+  void TurnOnOff() noexcept;
 
   // for backup / restore
   Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
@@ -78,16 +86,27 @@ class Calc {
   Button curr_func_button_ = ButNull;
   Mode mode_ = TurnedOff;
 
+  MQ::MessageQueue update_signal_ =
+      MQ::MessageQueue(ftok(kMessageQueueFile, number_of_class_objects));
+  std::optional<std::thread> exec_prog_thread_ = {};
+
+  static uint8_t number_of_class_objects;
+
   void ChangeMode(Mode) noexcept;
 
   CP::OperationCodes GetOperationCode(Button) const noexcept;
 
   void PressedButtonWorking(Button);
   void PressedButtonProgramming(Button);
+  void PressedButtonExecutingProg(Button);
 
   void PressedFuncButton(Button) noexcept;
 
   void ExecuteCommand(CP::OperationCodes);
+
+  void ExecutingProgram();
+
+  void SendUpdateSignal();
 
   void PNum(uint8_t);
   void FNum(uint8_t);
@@ -112,7 +131,6 @@ class Calc {
   /* 65 */ void FVP();
   /* 66 */ void VP();
   /* 76 */ void Cx();
-  /* 78 */ void CP();
   /* 83 */ void PMinus();
   /* 86 */ void Minus();
   /* 93 */ void PPlus();
@@ -147,7 +165,7 @@ class Calc {
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Cx,           &Calc::Neutral,
-      &Calc::CP,        &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::PMinus,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Minus,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
@@ -157,5 +175,7 @@ class Calc {
 
   friend class CP::Program;
 };
+
+uint8_t Calc::number_of_class_objects = 0;
 
 }  // namespace CE
