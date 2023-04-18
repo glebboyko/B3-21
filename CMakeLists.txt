@@ -9,6 +9,9 @@ set(wxWidgets_CONFIGURATION mswu)
 find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
 
+#copy necessary files
+configure_file(${CMAKE_SOURCE_DIR}/backend/message_queue/message_queue_file ${CMAKE_BINARY_DIR} COPYONLY)
+
 #including project files
 include_directories(${PROJECT_SOURCE_DIR})
 link_directories(${PROJECT_SOURCE_DIR})
@@ -36,7 +39,10 @@ target_include_directories(number_buffer PRIVATE backend/number_buffer)
 add_library(program OBJECT backend/program_buffer_exec/program.cpp)
 target_include_directories(program PRIVATE backend/program_buffer_exec)
 
+add_library(message_queue OBJECT backend/message_queue/message_queue.cpp)
+target_include_directories(message_queue PRIVATE backend/message_queue)
 
-target_link_directories(B3_21 PRIVATE ${calc_exec} ${program} ${number_buffer} ${number} ${backup} ${for_society})
+
+target_link_directories(B3_21 PRIVATE ${calc_exec} ${program} ${number_buffer} ${number} ${backup} ${message_queue} ${for_society})
 
 target_link_libraries(B3_21 PRIVATE ${wxWidgets_LIBRARIES})
