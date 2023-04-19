@@ -4,13 +4,18 @@ project(B3_21)
 set(CMAKE_CXX_STANDARD 20)
 
 #setting up wxWidgets
-set(wxWidgets_ROOT_DIR </opt/homebrew/bin/wx-config>)
+if(APPLE)
+    set(wxWidgets_ROOT_DIR </opt/homebrew/bin/wx-config>)
+else()
+    set(wxWidgets_ROOT_DIR </usr/include/wx-3.0>)
+endif ()
 set(wxWidgets_CONFIGURATION mswu)
 find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
 
 #copy necessary files
 configure_file(${CMAKE_SOURCE_DIR}/backend/message_queue/message_queue_file ${CMAKE_BINARY_DIR} COPYONLY)
+file(COPY ${CMAKE_SOURCE_DIR}/frontend/images DESTINATION ${CMAKE_BINARY_DIR}/images)
 
 #including project files
 include_directories(${PROJECT_SOURCE_DIR})
@@ -18,7 +23,7 @@ link_directories(${PROJECT_SOURCE_DIR})
 
 
 #adding executables
-add_executable(B3_21 main.cpp backend/calc_exec/calc_exec.hpp)
+add_executable(B3_21 main.cpp backend/calc_exec/calc_exec.hpp frontend/test.cpp)
 
 
 add_library(backup OBJECT backend/backup/backup.cpp)
