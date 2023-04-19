@@ -15,6 +15,7 @@ include(${wxWidgets_USE_FILE})
 
 #copy necessary files
 configure_file(${CMAKE_SOURCE_DIR}/backend/message_queue/message_queue_file ${CMAKE_BINARY_DIR} COPYONLY)
+file(COPY ${CMAKE_SOURCE_DIR}/frontend/images DESTINATION ${CMAKE_BINARY_DIR}/images)
 
 #including project files
 include_directories(${PROJECT_SOURCE_DIR})
