@@ -35,7 +35,7 @@ Calc& Calc::operator=(const CE::Calc& other) {
   curr_func_button_ = other.curr_func_button_;
   mode_ = other.mode_;
 
-  SendUpdateSignal();
+  SendSignal(UpdateData);
   return *this;
 }
 
@@ -54,8 +54,12 @@ MQ::MessageQueue Calc::GetDataUpdateMarker() const noexcept {
 }
 
 void Calc::PressButton(Button button) {
+  if (curr_func_button_ != ButNull && button == ButCx) {
+    return;
+  }
+
   if (mode_ == ExecutingProg) {
-    PressedButtonExecutingProg(button);           // ???
+    PressedButtonExecutingProg(button);
   } else if (button == ButP || button == ButF) {  // change curr task
     PressedFuncButton(button);
   } else if (curr_func_button_ == ButP && button == ButStepRight) {
@@ -80,7 +84,7 @@ void Calc::PressButton(Button button) {
 void Calc::TurnOnOff() noexcept {
   if (mode_ == TurnedOff) {
     mode_ = Working;
-    SendUpdateSignal();
+    SendSignal(UpdateData);
   } else {
     *this = Calc();
   }
@@ -89,7 +93,7 @@ void Calc::TurnOnOff() noexcept {
 void Calc::ChangeMode(Mode new_mode) noexcept {
   curr_func_button_ = ButNull;
   mode_ = new_mode;
-  SendUpdateSignal();
+  SendSignal(UpdateData);
 }
 
 CP::OperationCodes Calc::GetOperationCode(CE::Button button) const noexcept {
@@ -102,15 +106,16 @@ void Calc::PressedButtonWorking(Button button) {
     curr_func_button_ == ButP ? PNum(button) : FNum(button);
   } else if (IsNum(button)) {
     Num(button);
+    SendSignal(UpdateData);
   } else if (button == ButStepRight) {
     program_.ExecuteStep(*this);
+    SendSignal(UpdateData);
   } else if (button == ButStepLeft) {
     program_.MakeStep(CP::DirLeft);
+    SendSignal(UpdateData);
   } else {
     ExecuteCommand(GetOperationCode(button));
-    return;
   }
-  SendUpdateSignal();
 }
 
 void Calc::PressedButtonProgramming(Button button) {
@@ -122,12 +127,12 @@ void Calc::PressedButtonProgramming(Button button) {
     program_.EnterCode(GetOperationCode(button));
     curr_func_button_ = ButNull;
   }
-  SendUpdateSignal();
+  SendSignal(UpdateData);
 }
 
 void Calc::PressedFuncButton(Button button) noexcept {
   curr_func_button_ = button;
-  SendUpdateSignal();
+  SendSignal(UpdateData);
 }
 
 void Calc::ExecuteCommand(CP::OperationCodes operation) {
@@ -137,34 +142,45 @@ void Calc::ExecuteCommand(CP::OperationCodes operation) {
 void Calc::ExecutingProgram() {
   while (mode_ == ExecutingProg) {
     std::this_thread::sleep_for(kWait);
-    CP::OperationCodes executing_result = program_.ExecuteStep(*this);
-    SendUpdateSignal();
-    if (executing_result == CP::OpCP) {
+    try {
+      CP::OperationCodes executing_result = program_.ExecuteStep(*this);
+      if (executing_result == CP::OpCP) {
+        break;
+      }
+    } catch (...) {
+      SendSignal(Error);
       break;
     }
   }
-
   ChangeMode(Working);
 }
 
-void Calc::SendUpdateSignal() {
-  update_signal_.Send(UpdateData, MessageFromCalc);
+void Calc::SendSignal(MessageToVisualize message) {
+  update_signal_.Send(message, MessageFromCalc);
   update_signal_.Receive(MessageToCalc, MQ::Wait);
 }
 
 void Calc::PNum(uint8_t num) {
+  if (num > CM::kNumeratedBuffSize) {
+    SendSignal(Error);
+    return;
+  }
   buffer_.PutFronXToZ(num);
-  SendUpdateSignal();
+  SendSignal(UpdateData);
 }
 
 void Calc::FNum(uint8_t num) {
+  if (num > CM::kNumeratedBuffSize) {
+    SendSignal(Error);
+    return;
+  }
   buffer_.PutFromZToX(num);
-  SendUpdateSignal();
+  SendSignal(UpdateData);
 }
 
 void Calc::Num(uint8_t digit) {
   buffer_.GetX0().NumberButton(digit);
-  SendUpdateSignal();
+  SendSignal(UpdateData);
 }
 
 Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
