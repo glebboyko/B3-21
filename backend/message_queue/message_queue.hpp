@@ -18,24 +18,26 @@ class MessageQueue {
 
   explicit MessageQueue(key_t key);
 
-  MessageQueue(const MessageQueue& other) = default;
+  MessageQueue(const MessageQueue&) noexcept;
 
-  ~MessageQueue() = default;
+  ~MessageQueue();
 
-  MessageQueue& operator=(const MessageQueue& other) = default;
+  MessageQueue& operator=(const MessageQueue&) noexcept;
 
   std::optional<int> Receive(int64_t msg_type, Waiting wait);
 
   void Send(int message, int64_t msg_type);
 
-  void DeleteQueue() noexcept;
-
  private:
-  int descriptor_;
+  int descriptor_ = -1;
+  size_t* num_of_class_objects_ = nullptr;
+
   struct MsgBuf {
     int64_t type;
     char msg[MSG_SIZE];
   };
+
+  void DeleteQueue() noexcept;
 };
 
 }  // namespace MQ

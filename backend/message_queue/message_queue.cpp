@@ -14,6 +14,49 @@ MessageQueue::MessageQueue(key_t key) {
       throw errno;
     }
   }
+
+  try {
+    num_of_class_objects_ = new size_t(1);
+  } catch (...) {
+    DeleteQueue();
+    throw;
+  }
+}
+
+MessageQueue::MessageQueue(const MQ::MessageQueue& other) noexcept
+    : descriptor_(other.descriptor_),
+      num_of_class_objects_(other.num_of_class_objects_) {
+  if (num_of_class_objects_ != nullptr) {
+    *num_of_class_objects_ += 1;
+  }
+}
+
+MessageQueue::~MessageQueue() {
+  if (num_of_class_objects_ != nullptr) {
+    *num_of_class_objects_ -= 1;
+    if (*num_of_class_objects_ == 0) {
+      DeleteQueue();
+      delete num_of_class_objects_;
+    }
+  }
+}
+
+MessageQueue& MessageQueue::operator=(const MQ::MessageQueue& other) noexcept {
+  // очищаем старую очередь (если надо)
+  if (num_of_class_objects_ != nullptr) {
+    *num_of_class_objects_ -= 1;
+    if (*num_of_class_objects_ == 0) {
+      DeleteQueue();
+      delete num_of_class_objects_;
+    }
+  }
+
+  descriptor_ = other.descriptor_;
+  num_of_class_objects_ = other.num_of_class_objects_;
+
+  if (num_of_class_objects_ != nullptr) {
+    *num_of_class_objects_ += 1;
+  }
 }
 
 std::optional<int> MessageQueue::Receive(int64_t msg_type, Waiting wait) {
