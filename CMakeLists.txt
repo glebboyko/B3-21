@@ -18,7 +18,7 @@ link_directories(${PROJECT_SOURCE_DIR})
 
 
 #adding executables
-add_executable(B3_21 main.cpp backend/calc_exec/calc_exec.hpp)
+add_executable(B3_21 main.cpp backend/calc_exec/calc_exec.hpp frontend/test.cpp)
 
 
 add_library(backup OBJECT backend/backup/backup.cpp)
