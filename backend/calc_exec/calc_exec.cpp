@@ -130,6 +130,12 @@ void Calc::PressedButtonProgramming(Button button) {
   SendSignal(UpdateData);
 }
 
+void Calc::PressedButtonExecutingProg(CE::Button button) {
+  if (button == ButStepLeft) {
+    ChangeMode(Working);
+  }
+}
+
 void Calc::PressedFuncButton(Button button) noexcept {
   curr_func_button_ = button;
   SendSignal(UpdateData);
