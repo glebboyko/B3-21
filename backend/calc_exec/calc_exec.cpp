@@ -2,8 +2,9 @@
 
 using namespace CE;
 
-bool IsNum(Button button) noexcept { return FS::GetDigit(button, 2) == 4; }
+/*------------------------ вспомогательные функции ---------------------------*/
 
+/*------------ конструкторы / деструктор / оператор присваивания -------------*/
 Calc::Calc() { number_of_class_objects += 1; }
 
 Calc::Calc(const CE::Calc& other)
@@ -19,8 +20,10 @@ Calc::~Calc() {
     mode_ = Working;
     exec_prog_thread_.value().join();
   }
-  update_signal_.Send(GoodBie, MessageFromCalc);
-  update_signal_.DeleteQueue();
+  try {
+    SendSignal(GoodBie);
+  } catch (...) {
+  }
 }
 
 Calc& Calc::operator=(const CE::Calc& other) {
@@ -35,10 +38,10 @@ Calc& Calc::operator=(const CE::Calc& other) {
   curr_func_button_ = other.curr_func_button_;
   mode_ = other.mode_;
 
-  SendSignal(UpdateData);
   return *this;
 }
 
+/*---------------------------- для визуализации ------------------------------*/
 const CP::Program& Calc::GetProgram() const noexcept { return program_; }
 
 const CM::Buffer& Calc::GetRegisterBuffer() const noexcept { return buffer_; }
@@ -53,52 +56,65 @@ MQ::MessageQueue Calc::GetDataUpdateMarker() const noexcept {
   return update_signal_;
 }
 
+/*------------------------ интерфейс взаимодействия --------------------------*/
 void Calc::PressButton(Button button) {
-  if (curr_func_button_ != ButNull && button == ButCx) {
+  if (mode_ == TurnedOff) {
     return;
   }
 
   if (mode_ == ExecutingProg) {
     PressedButtonExecutingProg(button);
-  } else if (button == ButP || button == ButF) {  // change curr task
-    PressedFuncButton(button);
-  } else if (curr_func_button_ == ButP && button == ButStepRight) {
-    ChangeMode(Working);
-  } else if (curr_func_button_ == ButP && button == ButStepLeft) {
-    ChangeMode(Programming);
-  } else if (mode_ == Working && curr_func_button_ == ButNull &&
-             button == ButCP) {
-    if (exec_prog_thread_.has_value()) {
-      exec_prog_thread_.value().join();
-    }
+    return;
+  }
 
-    ChangeMode(ExecutingProg);
-    exec_prog_thread_ = std::thread(&Calc::ExecutingProgram, *this);
-  } else if (mode_ == Working) {
+  if (button == ButP || button == ButF) {
+    PressedFuncButton(button);
+    return;
+  }
+
+  // команда смены режима
+  auto new_mode = IsChangingModeCommand(button);
+  if (new_mode.has_value()) {
+    ChangeMode(new_mode.value());
+    return;
+  }
+
+  if (mode_ == Working) {
     PressedButtonWorking(button);
-  } else if (mode_ == Programming) {
+    return;
+  }
+
+  if (mode_ == Programming) {
     PressedButtonProgramming(button);
+    return;
   }
 }
 
 void Calc::TurnOnOff() noexcept {
   if (mode_ == TurnedOff) {
     mode_ = Working;
-    SendSignal(UpdateData);
   } else {
     *this = Calc();
   }
-}
 
-void Calc::ChangeMode(Mode new_mode) noexcept {
-  curr_func_button_ = ButNull;
-  mode_ = new_mode;
   SendSignal(UpdateData);
 }
 
-CP::OperationCodes Calc::GetOperationCode(CE::Button button) const noexcept {
-  return static_cast<CP::OperationCodes>(
-      (button / 1000) * 10 + FS::GetDigit(button, curr_func_button_));
+/*------------------------------ for restore ---------------------------------*/
+Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
+           CE::Button curr_func_button, CE::Mode mode)
+    : program_(program_buffer),
+      buffer_(register_buffer),
+      curr_func_button_(curr_func_button),
+      mode_(mode) {
+  number_of_class_objects += 1;
+}
+
+/*---------------------------- приватные методы ------------------------------*/
+void Calc::ChangeMode(Mode new_mode) {
+  curr_func_button_ = ButNull;
+  mode_ = new_mode;
+  SendSignal(UpdateData);
 }
 
 void Calc::PressedButtonWorking(Button button) {
@@ -136,64 +152,103 @@ void Calc::PressedButtonExecutingProg(CE::Button button) {
   }
 }
 
-void Calc::PressedFuncButton(Button button) noexcept {
+void Calc::PressedFuncButton(Button button) {
   curr_func_button_ = button;
   SendSignal(UpdateData);
 }
 
 void Calc::ExecuteCommand(CP::OperationCodes operation) {
+  auto num = IsNum(operation);
+  if (num.has_value()) {
+    Num(num.value());
+    return;
+  }
+
+  auto pf_num = IsPFNum(operation);
+  if (pf_num.has_value()) {
+    pf_num.value().first == ButP ? PNum(pf_num.value().second)
+                                 : FNum(pf_num.value().second);
+    return;
+  }
+
   (this->*method_ptr_[operation])();
 }
 
-void Calc::ExecutingProgram() {
-  while (mode_ == ExecutingProg) {
-    std::this_thread::sleep_for(kWait);
-    try {
-      CP::OperationCodes executing_result = program_.ExecuteStep(*this);
-      if (executing_result == CP::OpCP) {
-        break;
-      }
-    } catch (...) {
-      SendSignal(Error);
-      break;
+void Calc::SendSignal(MessageToVisualize message) {
+  update_signal_.Send(message, 0);
+}
+
+/*--------------------------- проверочные методы -----------------------------*/
+CP::OperationCodes Calc::GetOperationCode(CE::Button button) const noexcept {
+  return static_cast<CP::OperationCodes>(
+      (button / 1000) * 10 + FS::GetDigit(button, curr_func_button_));
+}
+
+std::optional<Mode> Calc::IsChangingModeCommand(
+    CE::Button button) const noexcept {
+  if (curr_func_button_ == ButP) {
+    if (button == ButStepRight) {
+      return Working;
+    }
+    if (button == ButStepLeft) {
+      return Programming;
     }
   }
-  ChangeMode(Working);
+
+  return {};
 }
 
-void Calc::SendSignal(MessageToVisualize message) {
-  update_signal_.Send(message, MessageFromCalc);
-  update_signal_.Receive(MessageToCalc, MQ::Wait);
+std::optional<std::pair<CE::Button, uint8_t>> Calc::IsPFNum(
+    CP::OperationCodes operation) noexcept {
+  if (FS::GetDigit(operation, 0) == 1) {
+    return {{ButP, FS::GetDigit(operation, 1)}};
+  }
+  if (FS::GetDigit(operation, 0) == 2) {
+    return {{ButF, FS::GetDigit(operation, 1)}};
+  }
+  return {};
 }
 
+std::optional<uint8_t> Calc::IsNum(CE::Button button) noexcept {
+  if (FS::GetDigit(button, 2) == 4) {
+    return FS::GetDigit(button, 3);
+  }
+
+  return {};
+}
+
+std::optional<uint8_t> Calc::IsNum(CP::OperationCodes operation) noexcept {
+  if (FS::GetDigit(operation, 0) == 4) {
+    return FS::GetDigit(operation, 1);
+  }
+
+  return {};
+}
+
+/*-------------------------- элементарные функции ----------------------------*/
 void Calc::PNum(uint8_t num) {
-  if (num > CM::kNumeratedBuffSize) {
+  try {
+    buffer_.PutFronXToZ(num);
+  } catch (...) {
     SendSignal(Error);
     return;
   }
-  buffer_.PutFronXToZ(num);
+
   SendSignal(UpdateData);
 }
 
 void Calc::FNum(uint8_t num) {
-  if (num > CM::kNumeratedBuffSize) {
+  try {
+    buffer_.PutFromZToX(num);
+  } catch (...) {
     SendSignal(Error);
     return;
   }
-  buffer_.PutFromZToX(num);
+
   SendSignal(UpdateData);
 }
 
 void Calc::Num(uint8_t digit) {
   buffer_.GetX0().NumberButton(digit);
   SendSignal(UpdateData);
-}
-
-Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
-           CE::Button curr_func_button, CE::Mode mode)
-    : program_(program_buffer),
-      buffer_(register_buffer),
-      curr_func_button_(curr_func_button),
-      mode_(mode) {
-  number_of_class_objects += 1;
 }

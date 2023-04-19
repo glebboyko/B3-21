@@ -20,7 +20,12 @@ namespace CE {
 const std::chrono::milliseconds kWait = std::chrono::milliseconds(250);
 
 const char kMessageQueueFile[] = "message_queue_file";
-enum MessageToVisualize { UpdateData, Error, GoodBie, MessageToCalc, MessageFromCalc };
+
+enum MessageToVisualize {
+  UpdateData,
+  Error,
+  GoodBie
+};
 
 const uint8_t kOperationQuantity = 96;
 enum Mode { Working, Programming, ExecutingProg, TurnedOff };
@@ -56,7 +61,7 @@ enum Button {
   ButPlus = 9653,
 
   ButStepLeft,
-  ButStepRight,
+  ButStepRight
 };
 
 class Calc {
@@ -66,16 +71,18 @@ class Calc {
   ~Calc();
   Calc& operator=(const Calc&);
 
+  // для визуализации
   const CP::Program& GetProgram() const noexcept;
   const CM::Buffer& GetRegisterBuffer() const noexcept;
   const Button& GetCurrFuncButton() const noexcept;
   const Mode& GetMode() const noexcept;
   MQ::MessageQueue GetDataUpdateMarker() const noexcept;
 
+  // интерфейс взаимодействия
   void PressButton(Button);
   void TurnOnOff() noexcept;
 
-  // for backup / restore
+  // for restore
   Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
        Button curr_func_button, Mode mode);
 
@@ -92,22 +99,28 @@ class Calc {
 
   static uint8_t number_of_class_objects;
 
-  void ChangeMode(Mode) noexcept;
-
-  CP::OperationCodes GetOperationCode(Button) const noexcept;
+  void ChangeMode(Mode);
 
   void PressedButtonWorking(Button);
   void PressedButtonProgramming(Button);
   void PressedButtonExecutingProg(Button);
 
-  void PressedFuncButton(Button) noexcept;
+  void PressedFuncButton(Button);
 
   void ExecuteCommand(CP::OperationCodes);
 
-  void ExecutingProgram();
-
   void SendSignal(MessageToVisualize);
 
+  // проверочные методы
+  CP::OperationCodes GetOperationCode(Button) const noexcept;
+  std::optional<Mode> IsChangingModeCommand(Button) const noexcept;
+
+  static std::optional<std::pair<CE::Button, uint8_t>> IsPFNum(
+      CP::OperationCodes) noexcept;
+  static std::optional<uint8_t> IsNum(Button) noexcept;
+  static std::optional<uint8_t> IsNum(CP::OperationCodes) noexcept;
+
+  // элементарные функции
   void PNum(uint8_t);
   void FNum(uint8_t);
   void Num(uint8_t);
@@ -131,6 +144,7 @@ class Calc {
   /* 65 */ void FVP();
   /* 66 */ void VP();
   /* 76 */ void Cx();
+  /* 78 */ void CP();
   /* 83 */ void PMinus();
   /* 86 */ void Minus();
   /* 93 */ void PPlus();
@@ -165,7 +179,7 @@ class Calc {
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Cx,           &Calc::Neutral,
-      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::CP,        &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::PMinus,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Minus,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
