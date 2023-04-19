@@ -14,6 +14,7 @@ const uint8_t kProgBufferSize = 60;
 const uint8_t kMaxOperationNum = 96;
 
 enum OperationCodes {
+  OpTrash = -1,
   OpNeutral = 0,
   OpP0 = 1,
   OpF0 = 2,
@@ -114,7 +115,7 @@ class Program {
 
  private:
   std::vector<OperationCodes> data_ =
-      std::vector<OperationCodes>(kProgBufferSize, OpNeutral);
+      std::vector<OperationCodes>(kProgBufferSize, OpTrash);
   uint8_t step_ = 0;
 };
 
