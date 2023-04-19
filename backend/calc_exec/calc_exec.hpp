@@ -20,7 +20,7 @@ namespace CE {
 const std::chrono::milliseconds kWait = std::chrono::milliseconds(250);
 
 const char kMessageQueueFile[] = "message_queue_file";
-enum MessageToVisualize { UpdateData, GoodBie, MessageToCalc, MessageFromCalc };
+enum MessageToVisualize { UpdateData, Error, GoodBie, MessageToCalc, MessageFromCalc };
 
 const uint8_t kOperationQuantity = 96;
 enum Mode { Working, Programming, ExecutingProg, TurnedOff };
@@ -106,7 +106,7 @@ class Calc {
 
   void ExecutingProgram();
 
-  void SendUpdateSignal();
+  void SendSignal(MessageToVisualize);
 
   void PNum(uint8_t);
   void FNum(uint8_t);
