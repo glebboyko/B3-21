@@ -4,7 +4,11 @@ project(B3_21)
 set(CMAKE_CXX_STANDARD 20)
 
 #setting up wxWidgets
-set(wxWidgets_ROOT_DIR </opt/homebrew/bin/wx-config>)
+if(APPLE)
+    set(wxWidgets_ROOT_DIR </opt/homebrew/bin/wx-config>)
+else()
+    set(wxWidgets_ROOT_DIR </usr/include/wx-3.0>)
+endif ()
 set(wxWidgets_CONFIGURATION mswu)
 find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
