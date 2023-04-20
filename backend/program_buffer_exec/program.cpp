@@ -5,7 +5,7 @@
 
 #include "backend/for_society/for_society.hpp"
 
-using namespace CP;
+namespace CP {
 
 /*------------------------ вспомогательные функции ---------------------------*/
 TransferStatus IsTransfer(const CN::Number& number,
@@ -29,7 +29,7 @@ const std::vector<OperationCodes>& Program::GetProgram() const noexcept {
   return data_;
 }
 
-const uint8_t& Program::GetStep() const noexcept { return step_; }
+const uint32_t& Program::GetStep() const noexcept { return step_; }
 
 /*------------------------ интерфейс взаимодействия --------------------------*/
 void Program::EnterCode(OperationCodes code) noexcept { data_[step_] = code; }
@@ -89,7 +89,7 @@ void Program::MakeStep(Direction direction) noexcept {
 }
 
 /*------------------------------ for restore ---------------------------------*/
-Program::Program(const std::vector<OperationCodes>& data, uint8_t step)
+Program::Program(const std::vector<OperationCodes>& data, uint32_t step)
     : data_(data), step_(step) {}
 
 /*--------------------------- проверочные методы -----------------------------*/
@@ -104,7 +104,7 @@ bool Program::IsAbleToStepRight() const noexcept {
   return step_ < kProgBufferSize - 1;
 }
 
-std::optional<uint8_t> Program::IsFork(const CE::Calc& calc) const {
+std::optional<uint32_t> Program::IsFork(const CE::Calc& calc) const {
   // проверка наличия команды перехода
   if (step_ == 0) {
     return {};
@@ -122,4 +122,6 @@ std::optional<uint8_t> Program::IsFork(const CE::Calc& calc) const {
 
   // перевод индекса в десятичную систему
   return FS::FromNotToNot<kNotation, 10>(data_[step_]);
+}
+
 }

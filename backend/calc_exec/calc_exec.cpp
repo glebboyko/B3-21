@@ -1,6 +1,6 @@
 #include "calc_exec.hpp"
 
-using namespace CE;
+namespace CE {
 
 /*------------------------ вспомогательные функции ---------------------------*/
 
@@ -198,7 +198,7 @@ std::optional<Mode> Calc::IsChangingModeCommand(
   return {};
 }
 
-std::optional<std::pair<CE::Button, uint8_t>> Calc::IsPFNum(
+std::optional<std::pair<CE::Button, uint32_t>> Calc::IsPFNum(
     CP::OperationCodes operation) noexcept {
   if (FS::GetDigit(operation, 0) == 1) {
     return {{ButP, FS::GetDigit(operation, 1)}};
@@ -209,7 +209,7 @@ std::optional<std::pair<CE::Button, uint8_t>> Calc::IsPFNum(
   return {};
 }
 
-std::optional<uint8_t> Calc::IsNum(CE::Button button) noexcept {
+std::optional<uint32_t> Calc::IsNum(CE::Button button) noexcept {
   if (FS::GetDigit(button, 2) == 4) {
     return FS::GetDigit(button, 3);
   }
@@ -217,7 +217,7 @@ std::optional<uint8_t> Calc::IsNum(CE::Button button) noexcept {
   return {};
 }
 
-std::optional<uint8_t> Calc::IsNum(CP::OperationCodes operation) noexcept {
+std::optional<uint32_t> Calc::IsNum(CP::OperationCodes operation) noexcept {
   if (FS::GetDigit(operation, 0) == 4) {
     return FS::GetDigit(operation, 1);
   }
@@ -226,7 +226,7 @@ std::optional<uint8_t> Calc::IsNum(CP::OperationCodes operation) noexcept {
 }
 
 /*-------------------------- элементарные функции ----------------------------*/
-void Calc::PNum(uint8_t num) {
+void Calc::PNum(uint32_t num) {
   try {
     buffer_.PutFronXToZ(num);
   } catch (...) {
@@ -237,7 +237,7 @@ void Calc::PNum(uint8_t num) {
   SendSignal(UpdateData);
 }
 
-void Calc::FNum(uint8_t num) {
+void Calc::FNum(uint32_t num) {
   try {
     buffer_.PutFromZToX(num);
   } catch (...) {
@@ -248,7 +248,9 @@ void Calc::FNum(uint8_t num) {
   SendSignal(UpdateData);
 }
 
-void Calc::Num(uint8_t digit) {
+void Calc::Num(uint32_t digit) {
   buffer_.GetX0().NumberButton(digit);
   SendSignal(UpdateData);
+}
+
 }

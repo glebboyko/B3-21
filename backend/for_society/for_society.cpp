@@ -1,7 +1,9 @@
 #include "for_society.hpp"
 
-uint8_t GetDigit(uint8_t number, uint8_t index) noexcept {
-  for (uint8_t i = 0; i < index; ++i) {
+namespace FS {
+
+uint32_t GetDigit(uint32_t number, uint32_t index) noexcept {
+  for (uint32_t i = 0; i < index; ++i) {
     number /= 10;
   }
   return number % 10;
@@ -26,4 +28,6 @@ uint64_t FromNotToNot(uint64_t number) noexcept {
   }
 
   return result;
+}
+
 }
