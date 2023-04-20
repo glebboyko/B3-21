@@ -7,7 +7,7 @@ namespace CN {
 const int kNumOfDigits = 8;
 const int kNumOfCharacteristic = 2;
 
-enum EnterMode { Mantissa, Characteristic };
+enum EnterMode { Mantissa, Characteristic, AfterDot };
 
 class Number {
  public:
@@ -26,6 +26,21 @@ class Number {
   void CharacteristicButton();
   void NumberButton(char);
   void ClearButton() noexcept;
+  void ExitEnterMode() noexcept;
+
+  // операторы сравнения
+  bool operator<(const Number&) const;
+  bool operator<=(const Number&) const;
+  bool operator>(const Number&) const;
+  bool operator>=(const Number&) const;
+  bool operator==(const Number&) const;
+  bool operator!=(const Number&) const;
+
+  // арифметические операции
+  Number operator+(const Number&) const;
+  Number operator-(const Number&) const;
+  Number operator*(const Number&) const;
+  Number operator/(const Number&) const;
 
   // for backup / restore
   struct BackUpIng {
@@ -34,20 +49,8 @@ class Number {
     EnterMode mode;
   };
 
-  Number(int64_t number, int characteristic) noexcept;
+  Number(int64_t number, int characteristic, EnterMode mode) noexcept;
   BackUpIng GetClass() const noexcept;
-
-  bool operator<(const Number&) const;
-  bool operator<=(const Number&) const;
-  bool operator>(const Number&) const;
-  bool operator>=(const Number&) const;
-  bool operator==(const Number&) const;
-  bool operator!=(const Number&) const;
-
-  Number operator+(const Number&) const;
-  Number operator-(const Number&) const;
-  Number operator*(const Number&) const;
-  Number operator/(const Number&) const;
 
  private:
   int64_t number_ = 0;
@@ -55,10 +58,12 @@ class Number {
   EnterMode mode_ = Mantissa;
 
   template <typename T>
-  static void AddNumber(T&, char) noexcept;
+  static void AddDigit(T&, char) noexcept;
 
   std::pair<int, std::string> FullView() const noexcept;
   std::pair<int, std::string> PartView() const noexcept;
+
+  static bool IsThereDot(const std::string&) noexcept;
 };
 
 }  // namespace CN
