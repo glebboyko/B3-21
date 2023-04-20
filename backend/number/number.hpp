@@ -4,50 +4,59 @@
 
 namespace CN {
 
-template <typename A, typename B, typename C>
-struct Trio {
-  A first;
-  B second;
-  C third;
-};
-
 const int kNumOfDigits = 8;
+
+enum EnterMode { Mantissa, Characteristic };
 
 class Number {
  public:
-  Number() noexcept;
-  Number(const Number& other) noexcept;
-  Number& operator=(const Number&) noexcept;
+  Number() = default;
+  Number(const Number& other) = default;
+  Number(int);
 
-  operator int() const noexcept;
+  Number& operator=(const Number&) = default;
 
-  std::string GetNumber() const;
+  // для визуализации (характеристика и мантисса)
+  std::pair<int, std::string> GetNumber() const noexcept;
 
+  // интерфейс взаимодействия
   void SignButton() noexcept;
   void CharacteristicButton();  // не уверен, может ли мантисса выдать ошибку
-  void NumberButton(uint8_t);
+  void NumberButton(char);
   void ClearButton() noexcept;
 
   // for backup / restore
-  Number(uint8_t characteristic, uint8_t mantissa, bool sign) noexcept;
-  Trio<uint8_t, uint8_t, bool> GetClass() const noexcept;
+  struct BackUpIng {
+    int64_t number;
+    int characteristic;
+    EnterMode mode;
+  };
 
-  bool operator<(const Number&);
-  bool operator<=(const Number&);
-  bool operator>(const Number&);
-  bool operator>=(const Number&);
-  bool operator==(const Number&);
-  bool operator!=(const Number&);
+  Number(int64_t number, int characteristic) noexcept;
+  BackUpIng GetClass() const noexcept;
 
-  Number operator+(const Number&);
-  Number operator-(const Number&);
-  Number operator*(const Number&);
-  Number operator/(const Number&);
+  bool operator<(const Number&) const;
+  bool operator<=(const Number&) const;
+  bool operator>(const Number&) const;
+  bool operator>=(const Number&) const;
+  bool operator==(const Number&) const;
+  bool operator!=(const Number&) const;
+
+  Number operator+(const Number&) const;
+  Number operator-(const Number&) const;
+  Number operator*(const Number&) const;
+  Number operator/(const Number&) const;
 
  private:
-  uint8_t number_ = 0;
-  uint8_t mantissa_ = UINT8_MAX;
-  bool sign_ = false;
+  int64_t number_ = 0;
+  int characteristic_ = 0;
+  EnterMode mode_ = Mantissa;
+
+  template <typename T>
+  static void AddNumber(T&, char) noexcept;
+
+  std::pair<int, std::string> FullView() const noexcept;
+  std::pair<int, std::string> PartView() const noexcept;
 };
 
 }  // namespace CN
