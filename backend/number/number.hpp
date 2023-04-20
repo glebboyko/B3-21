@@ -18,7 +18,7 @@ class Number {
   Number& operator=(const Number&) = default;
 
   // для визуализации (характеристика и мантисса)
-  std::pair<int, std::string> GetNumber() const noexcept;
+  std::tuple<bool, int, std::string> GetNumber() const noexcept;
 
   // интерфейс взаимодействия
   void SignButton() noexcept;
@@ -44,24 +44,27 @@ class Number {
 
   // for backup / restore
   struct BackUpIng {
-    int64_t number;
+    bool sign;
+    uint64_t number;
     int characteristic;
     EnterMode mode;
   };
 
-  Number(int64_t number, int characteristic, EnterMode mode) noexcept;
+  Number(bool sign, uint64_t number, int characteristic,
+         EnterMode mode) noexcept;
   BackUpIng GetClass() const noexcept;
 
  private:
-  int64_t number_ = 0;
+  bool sign_;
+  uint64_t number_ = 0;
   int characteristic_ = 0;
   EnterMode mode_ = Mantissa;
 
   template <typename T>
   static void AddDigit(T&, char) noexcept;
 
-  std::pair<int, std::string> FullView() const noexcept;
-  std::pair<int, std::string> PartView() const noexcept;
+  std::tuple<bool, int, std::string> FullView() const noexcept;
+  std::tuple<bool, int, std::string> PartView() const noexcept;
 
   static bool IsThereDot(const std::string&) noexcept;
 };
