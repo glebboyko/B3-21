@@ -27,7 +27,7 @@ enum MessageToVisualize {
   GoodBie
 };
 
-const uint8_t kOperationQuantity = 96;
+const uint32_t kOperationQuantity = 96;
 enum Mode { Working, Programming, ExecutingProg, TurnedOff };
 enum Button {
   ButP = 0,
@@ -97,7 +97,7 @@ class Calc {
       MQ::MessageQueue(ftok(kMessageQueueFile, number_of_class_objects));
   std::optional<std::thread> exec_prog_thread_ = {};
 
-  static uint8_t number_of_class_objects;
+  static uint32_t number_of_class_objects;
 
   void ChangeMode(Mode);
 
@@ -115,15 +115,15 @@ class Calc {
   CP::OperationCodes GetOperationCode(Button) const noexcept;
   std::optional<Mode> IsChangingModeCommand(Button) const noexcept;
 
-  static std::optional<std::pair<CE::Button, uint8_t>> IsPFNum(
+  static std::optional<std::pair<CE::Button, uint32_t>> IsPFNum(
       CP::OperationCodes) noexcept;
-  static std::optional<uint8_t> IsNum(Button) noexcept;
-  static std::optional<uint8_t> IsNum(CP::OperationCodes) noexcept;
+  static std::optional<uint32_t> IsNum(Button) noexcept;
+  static std::optional<uint32_t> IsNum(CP::OperationCodes) noexcept;
 
   // элементарные функции
-  void PNum(uint8_t);
-  void FNum(uint8_t);
-  void Num(uint8_t);
+  void PNum(uint32_t);
+  void FNum(uint32_t);
+  void Num(uint32_t);
 
   void Neutral();
 
@@ -190,6 +190,6 @@ class Calc {
   friend class CP::Program;
 };
 
-uint8_t Calc::number_of_class_objects = 0;
+uint32_t Calc::number_of_class_objects = 0;
 
 }  // namespace CE

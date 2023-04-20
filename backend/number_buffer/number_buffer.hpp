@@ -6,8 +6,8 @@
 
 namespace CM {
 
-const uint8_t kRoundedBuffSize = 6;
-const uint8_t kNumeratedBuffSize = 9;
+const uint32_t kRoundedBuffSize = 6;
+const uint32_t kNumeratedBuffSize = 9;
 
 enum Round { ClockWise, ContrClockWise };
 
@@ -21,8 +21,8 @@ class Buffer {
   const std::vector<CN::Number>& GetRoundedBuffer() const noexcept;
 
   void RoundBuffer(Round) noexcept;
-  void PutFromZToX(uint8_t);
-  void PutFronXToZ(uint8_t);
+  void PutFromZToX(uint32_t);
+  void PutFromXToZ(uint32_t);
 
   CN::Number& GetX0() noexcept;
 

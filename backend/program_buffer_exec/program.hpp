@@ -10,9 +10,9 @@ class Calc;
 
 namespace CP {
 
-const uint8_t kNotation = 6;
-const uint8_t kProgBufferSize = 60;
-const uint8_t kMaxOperationNum = 96;
+const uint32_t kNotation = 6;
+const uint32_t kProgBufferSize = 60;
+const uint32_t kMaxOperationNum = 96;
 
 enum OperationCodes {
   OpTrash = -1,
@@ -110,7 +110,7 @@ class Program {
 
   // для визуализации
   const std::vector<OperationCodes>& GetProgram() const noexcept;
-  const uint8_t& GetStep() const noexcept;
+  const uint32_t& GetStep() const noexcept;
 
   // интерфейс взаимодействия
   void EnterCode(OperationCodes) noexcept;
@@ -121,18 +121,18 @@ class Program {
   void MakeStep(Direction) noexcept;
 
   // for restore
-  Program(const std::vector<OperationCodes>& data, uint8_t step);
+  Program(const std::vector<OperationCodes>& data, uint32_t step);
 
  private:
   std::vector<OperationCodes> data_ =
       std::vector<OperationCodes>(kProgBufferSize, OpTrash);
-  uint8_t step_ = 0;
+  uint32_t step_ = 0;
 
   // проверочные методы
   bool IsThereEndBefore() const noexcept;
   bool IsEnd() const noexcept;
   bool IsAbleToStepRight() const noexcept;
-  std::optional<uint8_t> IsFork(const CE::Calc&) const;
+  std::optional<uint32_t> IsFork(const CE::Calc&) const;
 };
 
 }  // namespace CP
