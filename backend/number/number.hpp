@@ -5,6 +5,7 @@
 namespace CN {
 
 const int kNumOfDigits = 8;
+const int kNumOfCharacteristic = 2;
 
 enum EnterMode { Mantissa, Characteristic };
 
@@ -21,7 +22,8 @@ class Number {
 
   // интерфейс взаимодействия
   void SignButton() noexcept;
-  void CharacteristicButton();  // не уверен, может ли мантисса выдать ошибку
+  void MantissaButton() noexcept;
+  void CharacteristicButton();
   void NumberButton(char);
   void ClearButton() noexcept;
 
