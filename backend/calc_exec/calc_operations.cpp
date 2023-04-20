@@ -1,6 +1,6 @@
 #include "calc_exec.hpp"
 
-using namespace CE;
+namespace CE {
 
 void Calc::CP() {
   // подготовка
@@ -34,4 +34,6 @@ void Calc::CP() {
 
     ChangeMode(Working);
   });
+}
+
 }

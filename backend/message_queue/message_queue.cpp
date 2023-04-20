@@ -1,6 +1,6 @@
 #include "message_queue.hpp"
 
-using namespace MQ;
+namespace MQ {
 
 MessageQueue::MessageQueue(key_t key) {
   descriptor_ = msgget(key, PERM);
@@ -84,4 +84,6 @@ void MessageQueue::Send(int message, int64_t msg_type) {
 
 void MessageQueue::DeleteQueue() noexcept {
   msgctl(descriptor_, IPC_RMID, nullptr);
+}
+
 }
