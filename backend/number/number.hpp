@@ -22,7 +22,7 @@ class Number {
 
   // интерфейс взаимодействия
   void SignButton() noexcept;
-  void MantissaButton() noexcept;
+  void DotButton() noexcept;
   void CharacteristicButton();
   void NumberButton(char);
   void ClearButton() noexcept;
