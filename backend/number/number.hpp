@@ -13,9 +13,11 @@ class Number {
  public:
   Number() = default;
   Number(const Number& other) = default;
+  Number(Number&&) = delete;
   Number(int);
 
   Number& operator=(const Number&) = default;
+  Number& operator=(Number&&) = delete;
 
   // для визуализации (характеристика и мантисса)
   std::tuple<bool, int, std::string> GetNumber() const noexcept;
@@ -36,10 +38,16 @@ class Number {
   bool operator!=(const Number&) const;
 
   // арифметические операции
-  Number operator+(const Number&) const;
-  Number operator-(const Number&) const;
-  Number operator*(const Number&) const;
-  Number operator/(const Number&) const;
+  Number operator-() const;
+  Number operator+(Number) const;
+  Number operator-(Number) const;
+  Number operator*(Number) const;
+  Number operator/(Number) const;
+
+  Number& operator+=(Number);
+  Number& operator-=(Number);
+  Number& operator*=(Number);
+  Number& operator/=(Number);
 
   // for backup / restore
   struct BackUpIng {
@@ -61,7 +69,9 @@ class Number {
   int new_characteristic_ = 0;
   EnterMode mode_ = Mantissa;
 
+ public:
   void ExitEnterMode() noexcept;
+ private:
   void RepairNumber() noexcept;
 
   template <typename T>
