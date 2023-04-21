@@ -26,7 +26,6 @@ class Number {
   void CharacteristicButton();
   void NumberButton(char);
   void ClearButton() noexcept;
-  void ExitEnterMode() noexcept;
 
   // операторы сравнения
   bool operator<(const Number&) const;
@@ -47,10 +46,11 @@ class Number {
     bool sign;
     uint64_t number;
     int characteristic;
+    int new_characteristic;
     EnterMode mode;
   };
 
-  Number(bool sign, uint64_t number, int characteristic,
+  Number(bool sign, uint64_t number, int characteristic, int new_characteristic,
          EnterMode mode) noexcept;
   BackUpIng GetClass() const noexcept;
 
@@ -58,7 +58,11 @@ class Number {
   bool sign_;
   uint64_t number_ = 0;
   int characteristic_ = 0;
+  int new_characteristic_ = 0;
   EnterMode mode_ = Mantissa;
+
+  void ExitEnterMode() noexcept;
+  void RepairNumber() noexcept;
 
   template <typename T>
   static void AddDigit(T&, char) noexcept;
@@ -66,7 +70,9 @@ class Number {
   std::tuple<bool, int, std::string> FullView() const noexcept;
   std::tuple<bool, int, std::string> PartView() const noexcept;
 
+  // проверочные методы
   static bool IsThereDot(const std::string&) noexcept;
+  bool IsFullView() const noexcept;
 };
 
 }  // namespace CN
