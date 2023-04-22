@@ -96,11 +96,7 @@ enum TransferStatus { TsNoCommand, TsTransfer, TsNoTransfer };
 
 enum Direction { DirLeft = -1, DirRight = 1 };
 
-enum ProgramStatus {
-  Continue,
-  Stop,
-  Error
-};
+enum ProgramStatus { Continue, Stop, Error };
 
 class Program {
  public:
@@ -111,6 +107,7 @@ class Program {
   // для визуализации
   const std::vector<OperationCodes>& GetProgram() const noexcept;
   const uint32_t& GetStep() const noexcept;
+  const TransferStatus& GetTransferStatus() const noexcept;
 
   // интерфейс взаимодействия
   void EnterCode(OperationCodes) noexcept;
@@ -121,12 +118,16 @@ class Program {
   void MakeStep(Direction) noexcept;
 
   // for restore
-  Program(const std::vector<OperationCodes>& data, uint32_t step);
+  Program(const std::vector<OperationCodes>& data, uint32_t step,
+          TransferStatus transfer_status);
 
  private:
   std::vector<OperationCodes> data_ =
       std::vector<OperationCodes>(kProgBufferSize, OpTrash);
   uint32_t step_ = 0;
+  mutable TransferStatus transfer_status_ = TsNoCommand;
+
+  void ResetTransferStatus() noexcept;
 
   // проверочные методы
   bool IsThereEndBefore() const noexcept;

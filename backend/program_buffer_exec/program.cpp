@@ -31,8 +31,15 @@ const std::vector<OperationCodes>& Program::GetProgram() const noexcept {
 
 const uint32_t& Program::GetStep() const noexcept { return step_; }
 
+const TransferStatus& Program::GetTransferStatus() const noexcept {
+  return transfer_status_;
+}
+
 /*------------------------ интерфейс взаимодействия --------------------------*/
-void Program::EnterCode(OperationCodes code) noexcept { data_[step_] = code; }
+void Program::EnterCode(OperationCodes code) noexcept {
+  ResetTransferStatus();
+  data_[step_] = code;
+}
 
 ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
   // проверка на конец программы
@@ -55,8 +62,7 @@ ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
         return Stop;
       }
 
-      if (IsAbleToStepRight()) {
-        step_ += 1;
+      if (step_ < kProgBufferSize) {
         return Continue;
       }
 
@@ -76,9 +82,13 @@ ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
   return Error;
 }
 
-void Program::StepToZero() noexcept { step_ = 0; }
+void Program::StepToZero() noexcept {
+  ResetTransferStatus();
+  step_ = 0;
+}
 
 void Program::MakeStep(Direction direction) noexcept {
+  ResetTransferStatus();
   if (step_ == 0 && direction == DirLeft) {
     return;
   }
@@ -89,8 +99,12 @@ void Program::MakeStep(Direction direction) noexcept {
 }
 
 /*------------------------------ for restore ---------------------------------*/
-Program::Program(const std::vector<OperationCodes>& data, uint32_t step)
-    : data_(data), step_(step) {}
+Program::Program(const std::vector<OperationCodes>& data, uint32_t step,
+                 TransferStatus transfer_status)
+    : data_(data), step_(step), transfer_status_(transfer_status) {}
+
+/*---------------------------- приватные методы ------------------------------*/
+void Program::ResetTransferStatus() noexcept { transfer_status_ = TsNoCommand; }
 
 /*--------------------------- проверочные методы -----------------------------*/
 bool Program::IsThereEndBefore() const noexcept {
@@ -105,23 +119,29 @@ bool Program::IsAbleToStepRight() const noexcept {
 }
 
 std::optional<uint32_t> Program::IsFork(const CE::Calc& calc) const {
-  // проверка наличия команды перехода
-  if (step_ == 0) {
-    return {};
-  }
-  if (IsTransfer(calc.buffer_.GetNumeratedBuffer()[0], data_[step_ - 1]) !=
-      TsTransfer) {
-    return {};
-  }
-
-  // проверка корректности индекса
-  if (FS::GetDigit(data_[step_], 0) >= kNotation ||
-      FS::GetDigit(data_[step_], 1) >= kNotation) {
-    throw data_[step_];
+  // проверка состояния перехода
+  if (transfer_status_ == TsTransfer) {
+    // проверка корректности индекса
+    if (FS::GetDigit(data_[step_], 0) >= kNotation ||
+        FS::GetDigit(data_[step_], 1) >= kNotation) {
+      throw data_[step_];
+    }
+    transfer_status_ = TsNoTransfer;
+    // перевод индекса в десятичную систему
+    return FS::FromNotToNot<kNotation, 10>(data_[step_]);
   }
 
-  // перевод индекса в десятичную систему
-  return FS::FromNotToNot<kNotation, 10>(data_[step_]);
+  // может мы стоим на команде перехода?
+  switch (IsTransfer(calc.GetRegisterBuffer().GetNumeratedBuffer()[0],
+                     data_[step_])) {
+    case TsNoCommand:
+      return {};
+    case TsNoTransfer:
+      return step_ + 2;
+    case TsTransfer:
+      transfer_status_ = TsTransfer;
+      return step_ + 1;
+  }
 }
 
-}
+}  // namespace CP
