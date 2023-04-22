@@ -40,10 +40,10 @@ class Number {
 
   // арифметические операции
   Number operator-() const;
-  Number operator+(Number) const;
-  Number operator-(Number) const;
-  Number operator*(Number) const;
-  Number operator/(Number) const;
+  Number operator+(const Number&) const;
+  Number operator-(const Number&) const;
+  Number operator*(const Number&) const;
+  Number operator/(const Number&) const;
 
   Number& operator+=(const Number&);
   Number& operator-=(const Number&);
@@ -82,6 +82,8 @@ class Number {
   std::tuple<bool, int, std::string> PartView() const noexcept;
 
   static Number Abs(Number) noexcept;
+  static void ToEqualDigits(Number& abs_max, Number& abs_min);
+  static void ToEqualDigits(uint64_t&, uint64_t&);
 
   // проверочные методы
   static bool IsThereDot(const std::string&) noexcept;
