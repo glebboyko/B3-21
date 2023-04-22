@@ -12,14 +12,15 @@ enum EnterMode { Mantissa, Characteristic, AfterDot };
 class Number {
  public:
   Number() = default;
-  Number(const Number& other) = default;
-  Number(Number&&) = delete;
+  Number(const Number&);
+  Number(Number&&);
   Number(int);
+  Number(float);
 
-  Number& operator=(const Number&) = default;
-  Number& operator=(Number&&) = delete;
+  Number& operator=(const Number&);
+  Number& operator=(Number&&);
 
-  // для визуализации (характеристика и мантисса)
+  // для визуализации (знак, характеристика и мантисса)
   std::tuple<bool, int, std::string> GetNumber() const noexcept;
 
   // интерфейс взаимодействия
@@ -30,12 +31,12 @@ class Number {
   void ClearButton() noexcept;
 
   // операторы сравнения
-  bool operator<(const Number&) const;
-  bool operator<=(const Number&) const;
-  bool operator>(const Number&) const;
-  bool operator>=(const Number&) const;
-  bool operator==(const Number&) const;
-  bool operator!=(const Number&) const;
+  bool operator<(Number) const;
+  bool operator<=(Number) const;
+  bool operator>(Number) const;
+  bool operator>=(Number) const;
+  bool operator==(Number) const;
+  bool operator!=(Number) const;
 
   // арифметические операции
   Number operator-() const;
@@ -44,8 +45,8 @@ class Number {
   Number operator*(Number) const;
   Number operator/(Number) const;
 
-  Number& operator+=(Number);
-  Number& operator-=(Number);
+  Number& operator+=(const Number&);
+  Number& operator-=(const Number&);
   Number& operator*=(Number);
   Number& operator/=(Number);
 
@@ -63,7 +64,7 @@ class Number {
   BackUpIng GetClass() const noexcept;
 
  private:
-  bool sign_;
+  bool sign_ = false;
   uint64_t number_ = 0;
   int characteristic_ = 0;
   int new_characteristic_ = 0;
@@ -79,6 +80,8 @@ class Number {
 
   std::tuple<bool, int, std::string> FullView() const noexcept;
   std::tuple<bool, int, std::string> PartView() const noexcept;
+
+  static Number Abs(Number) noexcept;
 
   // проверочные методы
   static bool IsThereDot(const std::string&) noexcept;
