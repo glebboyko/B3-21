@@ -53,5 +53,5 @@ void BU::MakeBackup(const CE::Calc& to_backup, const std::string& file_path) {
 
 
 CE::Calc BU::RestoreFromBackup(const std::string& file_path) {
-
+  return CE::Calc();
 }
