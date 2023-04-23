@@ -29,6 +29,7 @@ add_executable(B3_21 main.cpp backend/backup/backup.cpp
         backend/number/number.cpp
         backend/program_buffer_exec/program.cpp
         backend/message_queue/message_queue.cpp
+        backend/number_buffer/number_buffer.cpp
         )
 
 target_link_libraries(B3_21 PRIVATE ${wxWidgets_LIBRARIES})
