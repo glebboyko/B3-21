@@ -312,6 +312,14 @@ Number Number::operator/(const Number& other) const {
   return result /= other;
 }
 
+Number& Number::operator%=(Number other) {
+  return *this = *this - ((*this / other) * other);
+}
+Number Number::operator%(const Number& other) const {
+  Number number = *this;
+  return number %= other;
+}
+
 /*-------------------------- for backup / restore ----------------------------*/
 Number::Number(bool sign, uint64_t number, int characteristic,
                int new_characteristic, EnterMode mode) noexcept
