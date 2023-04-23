@@ -118,12 +118,7 @@ void Calc::ChangeMode(Mode new_mode) {
 }
 
 void Calc::PressedButtonWorking(Button button) {
-  if (curr_func_button_ != ButNull && IsNum(button)) {
-    curr_func_button_ == ButP ? PNum(button) : FNum(button);
-  } else if (IsNum(button)) {
-    Num(button);
-    SendSignal(UpdateData);
-  } else if (button == ButStepRight) {
+  if (button == ButStepRight) {
     program_.ExecuteStep(*this);
     SendSignal(UpdateData);
   } else if (button == ButStepLeft) {
