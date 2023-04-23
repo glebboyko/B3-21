@@ -119,7 +119,7 @@ namespace CE {
   }
 
   void Calc::BO() {
-    buffer_.GetX0().StepToZero();
+    program_->StepToZero();
     curr_func_button_ = ButNull;
     SendSignal(UpdateData); 
   }
@@ -151,7 +151,7 @@ namespace CE {
   }
 
   void Calc::VP() {
-    buffer_.GetX0().CharacteriscticsButton();
+    buffer_.GetX0().CharacteristicButton();
     curr_func_button_ = ButNull;
     SendSignal(UpdateData); 
   }
