@@ -2,28 +2,28 @@
 
 namespace CN {
 
-Number::Number(const Number& other) noexcept
+Number::Number(const Number& other)
     : sign_(other.sign_),
       number_(other.number_),
       characteristic_(other.characteristic_) {
   RepairNumber();
 }
 
-Number::Number(Number&& other) noexcept
+Number::Number(Number&& other)
     : sign_(std::move(other.sign_)),
       number_(std::move(other.number_)),
       characteristic_(std::move(other.characteristic_)) {
   RepairNumber();
 }
 
-Number::Number(int number) noexcept
+Number::Number(int number)
     : number_(abs(number)),
       sign_(number < 0),
       characteristic_(std::to_string(abs(number)).size() - 1) {
   RepairNumber();
 }
 
-Number::Number(float number) noexcept : sign_(number < 0) {
+Number::Number(float number) : sign_(number < 0) {
   if (abs(number) < 0.000001) {
     number_ = 0;
     return;
@@ -50,7 +50,7 @@ Number::Number(float number) noexcept : sign_(number < 0) {
   RepairNumber();
 }
 
-Number& Number::operator=(const Number& other) noexcept {
+Number& Number::operator=(const Number& other) {
   sign_ = other.sign_;
   number_ = other.number_;
   characteristic_ = other.characteristic_;
@@ -62,7 +62,7 @@ Number& Number::operator=(const Number& other) noexcept {
   return *this;
 }
 
-Number& Number::operator=(CN::Number&& other) noexcept {
+Number& Number::operator=(CN::Number&& other) {
   sign_ = std::move(other.sign_);
   number_ = std::move(other.number_);
   characteristic_ = std::move(other.characteristic_);
@@ -114,14 +114,14 @@ void Number::DotButton() noexcept {
   }
 }
 
-void Number::CharacteristicButton() noexcept {
+void Number::CharacteristicButton() {
   if (!IsFullView()) {
     new_characteristic_ = characteristic_;
   }
   mode_ = Characteristic;
 }
 
-void Number::NumberButton(char digit) noexcept {
+void Number::NumberButton(char digit) {
   auto curr_number = GetNumber();
   if (mode_ == Characteristic) {
     if (std::get<2>(curr_number).size() < kNumOfCharacteristic) {
@@ -159,7 +159,7 @@ void Number::NumberButton(char digit) noexcept {
 void Number::ClearButton() noexcept { *this = Number(); }
 
 /*--------------------------- операторы сравнения ----------------------------*/
-bool Number::operator<(Number other) const noexcept {
+bool Number::operator<(Number other) const {
   Number this_num = *this;
   if (this_num.sign_ != other.sign_) {
     return this_num.sign_;
@@ -170,7 +170,7 @@ bool Number::operator<(Number other) const noexcept {
   return this_num.number_ < other.number_;
 }
 
-bool Number::operator<=(Number other) const noexcept {
+bool Number::operator<=(Number other) const {
   Number this_num = *this;
   if (this_num.sign_ != other.sign_) {
     return this_num.sign_;
@@ -181,7 +181,7 @@ bool Number::operator<=(Number other) const noexcept {
   return this_num.number_ <= other.number_;
 }
 
-bool Number::operator>(Number other) const noexcept {
+bool Number::operator>(Number other) const {
   Number this_num = *this;
   if (this_num.sign_ != other.sign_) {
     return other.sign_;
@@ -192,7 +192,7 @@ bool Number::operator>(Number other) const noexcept {
   return this_num.number_ > other.number_;
 }
 
-bool Number::operator>=(Number other) const noexcept {
+bool Number::operator>=(Number other) const {
   Number this_num = *this;
   if (this_num.sign_ != other.sign_) {
     return other.sign_;
@@ -203,14 +203,14 @@ bool Number::operator>=(Number other) const noexcept {
   return this_num.number_ >= other.number_;
 }
 
-bool Number::operator==(Number other) const noexcept {
+bool Number::operator==(Number other) const {
   Number this_num = *this;
   return (this_num.sign_ == other.sign_) &&
          (this_num.characteristic_ == other.characteristic_) &&
          (this_num.number_ == other.number_);
 }
 
-bool Number::operator!=(Number other) const noexcept {
+bool Number::operator!=(Number other) const {
   Number this_num = *this;
   return this_num.sign_ != other.sign_ ||
          this_num.characteristic_ != other.characteristic_ ||
@@ -218,7 +218,7 @@ bool Number::operator!=(Number other) const noexcept {
 }
 
 /*------------------------- арифметические операции --------------------------*/
-Number Number::operator-() const noexcept {
+Number Number::operator-() const {
   Number result = *this;
   result.sign_ = !sign_;
   return result;
@@ -237,8 +237,8 @@ Number& Number::operator+=(const Number& other) {
   Number result;
   result.sign_ = max.sign_;
   result.number_ =
-      max.number_ + static_cast<int>(min.number_) *
-                        (-1 * static_cast<int>(max.sign_ != min.sign_));
+      max.number_ + (static_cast<int>(min.number_) *
+                     (-1 + (2 * static_cast<int>(max.sign_ == min.sign_))));
   result.characteristic_ = max.characteristic_ +
                            std::to_string(result.number_).size() -
                            std::to_string(max.number_).size();
@@ -286,6 +286,10 @@ Number Number::operator*(const Number& other) const {
 }
 
 Number& Number::operator/=(Number other) {
+  if (other == 0) {
+    throw std::invalid_argument("dividing by zero");
+  }
+
   Number tmp_this = *this;
 
   ToEqualDigits(tmp_this.number_, other.number_);
@@ -361,6 +365,7 @@ void Number::RepairNumber() noexcept {
 
   if (number_ == 0) {
     sign_ = false;
+    characteristic_ = 0;
   }
 
   mode_ = old_mode;
@@ -419,7 +424,7 @@ bool Number::IsFullView() const noexcept {
          -characteristic_ + 1 < kNumOfDigits;
 }
 
-void Number::ToEqualDigits(CN::Number& abs_max, CN::Number& abs_min) noexcept {
+void Number::ToEqualDigits(CN::Number& abs_max, CN::Number& abs_min) {
   int dist = static_cast<int>(std::to_string(abs_min.number_).size()) -
              static_cast<int>(std::to_string(abs_max.number_).size()) +
              abs_max.characteristic_ - abs_min.characteristic_;
@@ -435,7 +440,7 @@ void Number::ToEqualDigits(CN::Number& abs_max, CN::Number& abs_min) noexcept {
   }
 }
 
-void Number::ToEqualDigits(uint64_t& first, uint64_t& second) noexcept {
+void Number::ToEqualDigits(uint64_t& first, uint64_t& second) {
   std::string str_first = std::to_string(first);
   std::string str_second = std::to_string(second);
 

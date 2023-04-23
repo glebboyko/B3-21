@@ -12,13 +12,13 @@ enum EnterMode { Mantissa, Characteristic, AfterDot };
 class Number {
  public:
   Number() = default;
-  Number(const Number&) noexcept;
-  Number(Number&&) noexcept;
-  Number(int) noexcept;
-  Number(float) noexcept;
+  Number(const Number&);
+  Number(Number&&);
+  Number(int);
+  Number(float);
 
-  Number& operator=(const Number&) noexcept;
-  Number& operator=(Number&&) noexcept;
+  Number& operator=(const Number&);
+  Number& operator=(Number&&);
 
   // для визуализации (знак, характеристика и мантисса)
   std::tuple<bool, int, std::string> GetNumber() const noexcept;
@@ -26,20 +26,20 @@ class Number {
   // интерфейс взаимодействия
   void SignButton() noexcept;
   void DotButton() noexcept;
-  void CharacteristicButton() noexcept;
-  void NumberButton(char) noexcept;
+  void CharacteristicButton();
+  void NumberButton(char);
   void ClearButton() noexcept;
 
   // операторы сравнения
-  bool operator<(Number) const noexcept;
-  bool operator<=(Number) const noexcept;
-  bool operator>(Number) const noexcept;
-  bool operator>=(Number) const noexcept;
-  bool operator==(Number) const noexcept;
-  bool operator!=(Number) const noexcept;
+  bool operator<(Number) const;
+  bool operator<=(Number) const;
+  bool operator>(Number) const;
+  bool operator>=(Number) const;
+  bool operator==(Number) const;
+  bool operator!=(Number) const;
 
   // арифметические операции
-  Number operator-() const noexcept;
+  Number operator-() const;
   Number operator+(const Number&) const;
   Number operator-(const Number&) const;
   Number operator*(const Number&) const;
@@ -72,7 +72,6 @@ class Number {
 
  public:
   void ExitEnterMode() noexcept;
-
  private:
   void RepairNumber() noexcept;
 
@@ -83,8 +82,8 @@ class Number {
   std::tuple<bool, int, std::string> PartView() const noexcept;
 
   static Number Abs(Number) noexcept;
-  static void ToEqualDigits(Number& abs_max, Number& abs_min) noexcept;
-  static void ToEqualDigits(uint64_t&, uint64_t&) noexcept;
+  static void ToEqualDigits(Number& abs_max, Number& abs_min);
+  static void ToEqualDigits(uint64_t&, uint64_t&);
 
   // проверочные методы
   static bool IsThereDot(const std::string&) noexcept;
