@@ -228,7 +228,7 @@ std::optional<uint32_t> Calc::IsNum(CP::OperationCodes operation) noexcept {
 /*-------------------------- элементарные функции ----------------------------*/
 void Calc::PNum(uint32_t num) {
   try {
-    buffer_.PutFronXToZ(num);
+    buffer_.PutFromXToZ(num);
   } catch (...) {
     SendSignal(Error);
     return;
