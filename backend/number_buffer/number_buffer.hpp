@@ -31,6 +31,8 @@ class Buffer {
          const std::vector<CN::Number>& rounded_buffer);
 
  private:
+  std::vector<int> buffer_body_(kNumeratedBuffSize);
+  std::vector<int> round_buffer_body_(kRoundedBuffSize);
 };
 
 }  // namespace CM
