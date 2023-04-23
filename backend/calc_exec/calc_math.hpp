@@ -1,4 +1,4 @@
-#include "backend/Number/Number.hpp"
+#include "backend/number/number.hpp"
 
 namespace Math {
 
@@ -48,6 +48,7 @@ namespace Math {
         result += term;
         i += 2;
     } while (term > epsilon);
+    return result;
   }
 
   CN::Number Cos(CN::Number x) {
@@ -60,6 +61,8 @@ namespace Math {
         result += term;
         i += 2;
     } while (term > epsilon);
+
+    return result;
   }
 
   CN::Number LnLimited(CN::Number x) {
@@ -110,5 +113,4 @@ namespace Math {
       } while (true);
       return y_next;
   }
-
 };
