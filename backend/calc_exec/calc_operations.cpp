@@ -17,7 +17,7 @@ void Calc::CP() {
       std::this_thread::sleep_for(kWait);
 
       // выполняем команду
-      CP::ProgramStatus executing_result = program_.ExecuteStep(*this);
+      CP::ProgramStatus executing_result = program_->ExecuteStep(*this);
 
       // проверяем результат выполнения
       if (executing_result == CP::Stop) {
@@ -35,5 +35,28 @@ void Calc::CP() {
     ChangeMode(Working);
   });
 }
+
+void Calc::Neutral() {}
+void Calc::PArrowUp() {}
+void Calc::ArrowUp() {}
+void Calc::PXArrowY() {}
+void Calc::XArrowY() {}
+void Calc::PMultiply() {}
+void Calc::Multiply() {}
+void Calc::PDivision() {}
+void Calc::Division() {}
+void Calc::XExpY() {}
+void Calc::FComma() {}
+void Calc::Comma() {}
+void Calc::BO() {}
+void Calc::FPrefixMinus() {}
+void Calc::PrefixMinus() {}
+void Calc::FVP() {}
+void Calc::VP() {}
+void Calc::Cx() {}
+void Calc::PMinus() {}
+void Calc::Minus() {}
+void Calc::PPlus() {}
+void Calc::Plus() {}
 
 }

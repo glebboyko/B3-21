@@ -5,17 +5,22 @@ namespace CE {
 /*------------------------ вспомогательные функции ---------------------------*/
 
 /*------------ конструкторы / деструктор / оператор присваивания -------------*/
-Calc::Calc() { number_of_class_objects += 1; }
+Calc::Calc() {
+  program_ = new CP::Program();
+  number_of_class_objects += 1;
+}
 
 Calc::Calc(const CE::Calc& other)
     : program_(other.program_),
       buffer_(other.buffer_),
       curr_func_button_(other.curr_func_button_),
       mode_(other.mode_) {
+  program_ = new CP::Program();
   number_of_class_objects += 1;
 }
 
 Calc::~Calc() {
+  delete program_;
   if (exec_prog_thread_.has_value()) {
     mode_ = Working;
     exec_prog_thread_.value().join();
@@ -33,7 +38,7 @@ Calc& Calc::operator=(const CE::Calc& other) {
     exec_prog_thread_ = {};
   }
 
-  program_ = other.program_;
+  *program_ = *other.program_;
   buffer_ = other.buffer_;
   curr_func_button_ = other.curr_func_button_;
   mode_ = other.mode_;
@@ -42,7 +47,7 @@ Calc& Calc::operator=(const CE::Calc& other) {
 }
 
 /*---------------------------- для визуализации ------------------------------*/
-const CP::Program& Calc::GetProgram() const noexcept { return program_; }
+const CP::Program& Calc::GetProgram() const noexcept { return *program_; }
 
 const CM::Buffer& Calc::GetRegisterBuffer() const noexcept { return buffer_; }
 
@@ -103,7 +108,7 @@ void Calc::TurnOnOff() noexcept {
 /*------------------------------ for restore ---------------------------------*/
 Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
            CE::Button curr_func_button, CE::Mode mode)
-    : program_(program_buffer),
+    : program_(new CP::Program(program_buffer)),
       buffer_(register_buffer),
       curr_func_button_(curr_func_button),
       mode_(mode) {
@@ -119,10 +124,10 @@ void Calc::ChangeMode(Mode new_mode) {
 
 void Calc::PressedButtonWorking(Button button) {
   if (button == ButStepRight) {
-    program_.ExecuteStep(*this);
+    program_->ExecuteStep(*this);
     SendSignal(UpdateData);
   } else if (button == ButStepLeft) {
-    program_.MakeStep(CP::DirLeft);
+    program_->MakeStep(CP::DirLeft);
     SendSignal(UpdateData);
   } else {
     ExecuteCommand(GetOperationCode(button));
@@ -131,11 +136,11 @@ void Calc::PressedButtonWorking(Button button) {
 
 void Calc::PressedButtonProgramming(Button button) {
   if (button == ButStepRight) {
-    program_.MakeStep(CP::DirRight);
+    program_->MakeStep(CP::DirRight);
   } else if (button == ButStepLeft) {
-    program_.MakeStep(CP::DirLeft);
+    program_->MakeStep(CP::DirLeft);
   } else {
-    program_.EnterCode(GetOperationCode(button));
+    program_->EnterCode(GetOperationCode(button));
     curr_func_button_ = ButNull;
   }
   SendSignal(UpdateData);
