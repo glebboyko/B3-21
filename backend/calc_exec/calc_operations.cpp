@@ -45,45 +45,44 @@ namespace CE {
   void Calc::PArrowUp() {
     CN::Number& x_0 = buffer_.GetX0();
     x_0 = Math::Exp(x_0);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
-
+    SendSignal(UpdateData);
   }
 
   void Calc::ArrowUp() {
     buffer_.PutFromXToZ(1);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::PXArrowY() {
     CN::Number& x_0 = buffer_.GetX0();
     x_0 = Math::Ln(x_0);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::XArrowY() {
     CN::Number tmp = buffer_.GetNumeratedBuffer()[1];
     buffer_.PutFromZToX(1);
     buffer_.GetX0() = tmp;
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::PMultiply() {
     CN::Number& x_0 = buffer_.GetX0();
     x_0 = Math::kPi;
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::Multiply() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
     x = x * y;
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::PDivision() {
@@ -94,89 +93,112 @@ namespace CE {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
     x = x / y;
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::XExpY() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
     x = Math::Pow(x, y);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::FComma() {
     CN::Number& x = buffer_.GetX0();
     x = CN::Number(1) / x;
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::Comma() {
-    SendSignal(UpdateData);
+    buffer_.GetX0().DotButton();
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData); 
   }
 
   void Calc::BO() {
+    program_->StepToZero();
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData); 
   }
+ 
   void Calc::FPrefixMinus() {
     CN::Number& x = buffer_.GetX0();
-    x = Math::Pow(x, 2);
-    SendSignal(UpdateData);
+    try {
+      x = Math::Pow(x, 2);
+    } catch (...) {
+      SendSignal(Error);
+      return;
+    }
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::PrefixMinus() {
     CN::Number& x = buffer_.GetX0();
     x = CN::Number(-1) * x;
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::FVP() {
     CN::Number& x = buffer_.GetX0();
     x = Math::Root(x);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::VP() {
-
+    buffer_.GetX0().CharacteristicButton();
+    curr_func_button_ = ButNull;
+    SendSignal(UpdateData); 
   }
   void Calc::Cx() {
-
+    buffer_.GetX0().ClearButton();
+    curr_func_button_ = ButNull;
+    SendSignal(UpdateData); 
   }
 
   void Calc::PMinus() {
     CN::Number& x = buffer_.GetX0();
     x = Math::Cos(x);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::Minus() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
-    x = x - y;
-    SendSignal(UpdateData);
+    try {
+      x = x - y;
+    } catch (...) {
+      SendSignal(Error);
+      return;
+    }
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::PPlus() {
     CN::Number& x = buffer_.GetX0();
     x = Math::Sin(x);
-    SendSignal(UpdateData);
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 
   void Calc::Plus() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
-    x = x - y;
-    SendSignal(UpdateData);
+    try {
+      x = x + y;
+    } catch (...) {
+      SendSignal(Error);
+      return;
+    }
     curr_func_button_ = ButNull;
+    SendSignal(UpdateData);
   }
 };
 
