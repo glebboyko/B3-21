@@ -30,7 +30,7 @@ uint32_t GetDigit(uint32_t number, uint32_t index) noexcept;
 }  // namespace FS
 
 namespace CE {
-const std::chrono::milliseconds kWait = std::chrono::milliseconds(250);
+const std::chrono::milliseconds kWait = std::chrono::milliseconds(1000);
 
 const char kMessageQueueFile[] = "message_queue_file";
 
@@ -73,7 +73,7 @@ enum Button {
   ButStepRight
 };
 
-}
+}  // namespace CE
 
 namespace CP {
 const uint32_t kNotation = 6;
@@ -158,9 +158,14 @@ enum OperationCodes {
   OpPlus = 96
 };
 
-enum TransferStatus { TsNoCommand, TsTransfer, TsNoTransfer };
+enum TransferStatus {
+  TsNoCommand,
+  TsTransfer,
+  TsNoTransfer,
+  TsUnconditionalTransfer
+};
 
 enum Direction { DirLeft = -1, DirRight = 1 };
 
 enum ProgramStatus { Continue, Stop, Error };
-}
+}  // namespace CP
