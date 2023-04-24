@@ -2,7 +2,7 @@
 
 namespace Math {
 
-  const CN::Number kPi = static_cast<float>(3.14159265359);
+  const CN::Number kPi = (3.14159265359);
 
   CN::Number Pow(CN::Number num, CN::Number power) {
     auto res = num;
@@ -28,7 +28,7 @@ namespace Math {
       CN::Number result = 1;
       CN::Number term;
       int i = 1;
-      CN::Number epsilon = static_cast<float>(1e-5);
+      CN::Number epsilon = 1e-8;
 
       do {
           auto term1 = Pow(x, i);
@@ -45,7 +45,7 @@ namespace Math {
     CN::Number result = x;
     CN::Number term;
     int i = 3;
-    CN::Number epsilon = static_cast<float>(1e-5);
+    CN::Number epsilon = 1e-6;
     CN::Number one = 1;
     do {
         one = one * CN::Number(-1);
@@ -57,26 +57,27 @@ namespace Math {
   }
 
   CN::Number Cos(CN::Number x) {
-    CN::Number result = 1;
+    CN::Number result = 0.000001;
     CN::Number term;
-    int i = 2;
-    CN::Number epsilon = static_cast<float>(1e-5);
+    CN::Number i = 2;
+    CN::Number epsilon = 1e-8;
     CN::Number one = -1;
+
 
     do {
         one = one * CN::Number(-1);
         term = one * (Pow(x, i) / Factorial(i));
         result += term;
-        i += 2;
+        i += CN::Number(2);
     } while ((term > 0 ? term : CN::Number(-1) * term) > epsilon);
 
-    return result;
+    return CN::Number(1) - result;
   }
 
   CN::Number LnLimited(CN::Number x) {
-    CN::Number ln2 = static_cast<float>(0.693147181);
+    CN::Number ln2 = (0.693147181);
     if (x != 1) {
-      CN::Number epsilon = static_cast<float>(1e-5);
+      CN::Number epsilon = 1e-8;
       CN::Number result = 0;
       CN::Number prev_result;
       CN::Number x_power = x;
@@ -109,7 +110,7 @@ namespace Math {
   }
 
   CN::Number Root(CN::Number x) {
-      CN::Number epsilon = static_cast<float>(1e-5);
+      CN::Number epsilon = 1e-8;
       CN::Number y = x;
       CN::Number y_next;
       do {
