@@ -234,6 +234,7 @@ void Calc::PNum(uint32_t num) {
     return;
   }
 
+  curr_func_button_ = ButNull;
   SendSignal(UpdateData);
 }
 
@@ -245,6 +246,7 @@ void Calc::FNum(uint32_t num) {
     return;
   }
 
+  curr_func_button_ = ButNull;
   SendSignal(UpdateData);
 }
 
