@@ -90,6 +90,7 @@ class Number {
   // проверочные методы
   static bool IsThereDot(const std::string&) noexcept;
   bool IsFullView() const noexcept;
+  static void IsOverflow(Number&);
 };
 
 }  // namespace CN

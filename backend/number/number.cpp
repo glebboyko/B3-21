@@ -242,9 +242,7 @@ Number& Number::operator+=(const Number& other) {
   result.characteristic_ = max.characteristic_ +
                            std::to_string(result.number_).size() -
                            std::to_string(max.number_).size();
-  if (std::to_string(result.characteristic_).size() > kNumOfCharacteristic) {
-    throw std::bad_array_new_length();
-  }
+  IsOverflow(result);
 
   return *this = result;
 }
@@ -274,9 +272,7 @@ Number& Number::operator*=(Number other) {
                            std::to_string(other.number_).size() +
                            characteristic_ + other.characteristic_;
 
-  if (std::to_string(result.characteristic_).size() > kNumOfCharacteristic) {
-    throw std::bad_array_new_length();
-  }
+  IsOverflow(result);
 
   return *this = result;
 }
@@ -301,9 +297,7 @@ Number& Number::operator/=(Number other) {
   }
 
   result.characteristic_ += characteristic_ - other.characteristic_;
-  if (std::to_string(result.characteristic_).size() > kNumOfCharacteristic) {
-    throw std::bad_array_new_length();
-  }
+  IsOverflow(result);
 
   return *this = result;
 }
@@ -430,6 +424,16 @@ bool Number::IsThereDot(const std::string& string) noexcept {
 bool Number::IsFullView() const noexcept {
   return characteristic_ + 1 <= kNumOfDigits &&
          -characteristic_ + 1 < kNumOfDigits;
+}
+
+void Number::IsOverflow(CN::Number& number) {
+  if (std::to_string(number.characteristic_).size() > kNumOfCharacteristic) {
+    if (number.characteristic_ < 0) {
+      number = 0;
+    } else {
+      throw std::bad_array_new_length();
+    }
+  }
 }
 
 void Number::ToEqualDigits(CN::Number& abs_max, CN::Number& abs_min) {
