@@ -35,7 +35,7 @@ void PrintCalc(const CE::Calc& calc) {
     printf("%d. %d %c%s\n", i, characteristic, (sign ? '-' : ' '), num.c_str());
   }
   std::cout << "Rounded buffer\n";
-  for (int i = 0; i < CM::kRoundedBuffSize; ++i) {
+  for (int i = 0; i < CM::kRoundedBuffSize - 1; ++i) {
     auto [sign, characteristic, num] =
         calc.GetRegisterBuffer().GetRoundedBuffer()[i].GetNumber();
     printf("%d. %d %c%s\n", i, characteristic, (sign ? '-' : ' '), num.c_str());
@@ -91,6 +91,15 @@ class Debug {
  public:
   Debug() { thread_ = std::thread(&Update, &calc_); }
   ~Debug() { thread_.detach(); }
+
+  void EnterProgram(const std::vector<int>& operations) {
+    if (calc_.GetMode() == CE::Programming) {
+
+    }
+    calc_.PressButton(CE::ButP);
+    calc_.PressButton(CE::ButStepLeft);
+  }
+
   void Work() {
     int input;
     while (true) {
