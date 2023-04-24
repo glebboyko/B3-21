@@ -35,13 +35,9 @@ Number::Number(double number) : sign_(number < 0) {
     number *= -1;
   }
 
-
   std::vector<char> tmp_str_num(100, 0);
   sprintf(tmp_str_num.data(), "%.15f", number);
   std::string str_num = tmp_str_num.data();
-  while (str_num.ends_with("0")) {
-    str_num.pop_back();
-  }
 
   auto begin = str_num.begin();
   if (abs(number) >= 1) {
@@ -179,6 +175,7 @@ bool Number::operator<(Number other) const {
   if (this_num.characteristic_ != other.characteristic_) {
     return this_num.characteristic_ < other.characteristic_;
   }
+  ToEqualDigits(this_num.number_, other.number_);
   return this_num.number_ < other.number_;
 }
 
@@ -190,6 +187,8 @@ bool Number::operator<=(Number other) const {
   if (this_num.characteristic_ != other.characteristic_) {
     return this_num.characteristic_ < other.characteristic_;
   }
+  ToEqualDigits(this_num.number_, other.number_);
+
   return this_num.number_ <= other.number_;
 }
 
@@ -201,6 +200,7 @@ bool Number::operator>(Number other) const {
   if (this_num.characteristic_ != other.characteristic_) {
     return this_num.characteristic_ > other.characteristic_;
   }
+  ToEqualDigits(this_num.number_, other.number_);
   return this_num.number_ > other.number_;
 }
 
@@ -212,6 +212,7 @@ bool Number::operator>=(Number other) const {
   if (this_num.characteristic_ != other.characteristic_) {
     return this_num.characteristic_ > other.characteristic_;
   }
+  ToEqualDigits(this_num.number_, other.number_);
   return this_num.number_ >= other.number_;
 }
 
@@ -302,8 +303,8 @@ Number& Number::operator/=(Number other) {
 
   ToEqualDigits(tmp_this.number_, other.number_);
 
-  Number result =
-      static_cast<float>(tmp_this.number_) / static_cast<float>(other.number_);
+  Number result = static_cast<double>(tmp_this.number_) /
+                  static_cast<double>(other.number_);
   if (result == 0) {
     return *this = 0;
   }
