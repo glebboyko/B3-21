@@ -15,6 +15,17 @@ void PrintCalc(const CE::Calc& calc) {
   }
   std::cout << "\nSteps: "
             << FS::FromNotToNot<10, 6>(calc.GetProgram().GetStep());
+  std::cout << "\nTransfer status: ";
+  switch (calc.GetProgram().GetTransferStatus()) {
+    case CP::TsTransfer:
+      std::cout << "condition is not met - transfer\n";
+      break;
+    case CP::TsNoTransfer:
+      std::cout << "condition is met - no transfer\n";
+      break;
+    default:
+      std::cout << "no command\n";
+  }
 
   std::cout << "\nNumber buffer:\n";
   std::cout << "Numerated buffer:\n";
