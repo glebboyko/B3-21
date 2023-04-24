@@ -62,7 +62,11 @@ namespace CE {
 
   void Calc::PXArrowY() {
     CN::Number& x_0 = buffer_.GetX0();
-    x_0 = Math::Ln(x_0);
+    try {
+      x_0 = Math::Ln(x_0);
+    } catch (...) {
+      SendSignal(Error);
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
@@ -77,7 +81,11 @@ namespace CE {
 
   void Calc::PMultiply() {
     CN::Number& x_0 = buffer_.GetX0();
-    x_0 = Math::kPi;
+    try {
+      x_0 = Math::kPi;
+    } catch (...) {
+      SendSignal(Error);
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
@@ -85,7 +93,11 @@ namespace CE {
   void Calc::Multiply() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
-    x = x * y;
+    try {
+      x = x * y;
+    } catch (...) {
+      SendSignal(Error);
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
@@ -97,7 +109,11 @@ namespace CE {
   void Calc::Division() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
-    x = x / y;
+    try {
+      x = x / y;
+    } catch (...) {
+      SendSignal(Error);
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
@@ -105,14 +121,22 @@ namespace CE {
   void Calc::XExpY() {
     CN::Number y = buffer_.GetNumeratedBuffer()[1];
     CN::Number& x = buffer_.GetX0();
-    x = Math::Pow(x, y);
+    try {
+      x = Math::Pow(x, y);
+    } catch (...) {
+      SendSignal(Error);
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
 
   void Calc::FComma() {
     CN::Number& x = buffer_.GetX0();
-    x = CN::Number(1) / x;
+    try {
+      x = CN::Number(1) / x;
+    } catch (...) {
+      SendSignal(Error);
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
