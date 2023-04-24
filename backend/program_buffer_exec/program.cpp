@@ -74,7 +74,7 @@ ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
   }
 
   // стандартный случай
-  calc.ExecuteCommand(data_[step_]);
+  calc.ExecuteCommandInProgram(data_[step_]);
   if (IsAbleToStepRight()) {
     step_ += 1;
     return Continue;
