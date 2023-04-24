@@ -1,5 +1,7 @@
 #include "number.hpp"
 
+#include <vector>
+
 namespace CN {
 
 Number::Number(const Number& other)
@@ -23,13 +25,23 @@ Number::Number(int number)
   RepairNumber();
 }
 
-Number::Number(float number) : sign_(number < 0) {
-  if (abs(number) < 0.000001) {
+Number::Number(double number) : sign_(number < 0) {
+  if (number == 0) {
     number_ = 0;
     return;
   }
 
-  std::string str_num = std::to_string(abs(number));
+  if (number < 0) {
+    number *= -1;
+  }
+
+
+  std::vector<char> tmp_str_num(100, 0);
+  sprintf(tmp_str_num.data(), "%.15f", number);
+  std::string str_num = tmp_str_num.data();
+  while (str_num.ends_with("0")) {
+    str_num.pop_back();
+  }
 
   auto begin = str_num.begin();
   if (abs(number) >= 1) {

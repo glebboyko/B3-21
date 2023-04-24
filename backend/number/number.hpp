@@ -15,7 +15,7 @@ class Number {
   Number(const Number&);
   Number(Number&&);
   Number(int);
-  Number(float);
+  Number(double);
 
   Number& operator=(const Number&);
   Number& operator=(Number&&);
