@@ -1,10 +1,8 @@
 #include "calc_exec.hpp"
 
 namespace CE {
-
-uint32_t Calc::number_of_class_objects = 0;
-
 /*------------------------ вспомогательные функции ---------------------------*/
+uint32_t Calc::number_of_class_objects = 1;
 
 /*------------ конструкторы / деструктор / оператор присваивания -------------*/
 Calc::Calc() {
@@ -177,7 +175,7 @@ void Calc::ExecuteCommand(CP::OperationCodes operation) {
 }
 
 void Calc::SendSignal(MessageToVisualize message) {
-  update_signal_.Send(message, 0);
+  update_signal_.Send(message, 1);
 }
 
 /*--------------------------- проверочные методы -----------------------------*/
@@ -255,4 +253,4 @@ void Calc::Num(uint32_t digit) {
   SendSignal(UpdateData);
 }
 
-}
+}  // namespace CE
