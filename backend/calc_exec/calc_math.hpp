@@ -6,8 +6,9 @@ namespace Math {
 
   CN::Number Pow(CN::Number num, CN::Number power) {
     auto res = num;
-    for (CN::Number i = 0; i < power; i = i + CN::Number(1)) {
-      res *= res;
+    auto number = num;
+    for (CN::Number i = 0; i < power - 1; i = i + CN::Number(1)) {
+      res *= number;
     }
     return res;
   }
@@ -27,10 +28,12 @@ namespace Math {
       CN::Number result = 1;
       CN::Number term;
       int i = 1;
-      CN::Number epsilon = static_cast<float>(1e-6);
+      CN::Number epsilon = static_cast<float>(1e-5);
 
       do {
-          term = Pow(x, i) / Factorial(i);
+          auto term1 = Pow(x, i);
+          auto term2 = Factorial(i);
+          term = term1 / term2;
           result += term;
           ++i;
       } while (term > epsilon);
@@ -42,12 +45,14 @@ namespace Math {
     CN::Number result = x;
     CN::Number term;
     int i = 3;
-      CN::Number epsilon = static_cast<float>(1e-6);
+    CN::Number epsilon = static_cast<float>(1e-5);
+    CN::Number one = 1;
     do {
-        term = (Pow(CN::Number(-1), i) * (Pow(x, i) / Factorial(i)));
+        one = one * CN::Number(-1);
+        term = one * (Pow(x, i) / Factorial(i));
         result += term;
         i += 2;
-    } while (term > epsilon);
+    } while ((term > 0 ? term : CN::Number(-1) * term) > epsilon);
     return result;
   }
 
@@ -55,12 +60,15 @@ namespace Math {
     CN::Number result = 1;
     CN::Number term;
     int i = 2;
-    CN::Number epsilon = static_cast<float>(1e-6);
+    CN::Number epsilon = static_cast<float>(1e-5);
+    CN::Number one = -1;
+
     do {
-        term = (Pow(CN::Number(-1), i + 1) * (Pow(x, i) / Factorial(i)));
+        one = one * CN::Number(-1);
+        term = one * (Pow(x, i) / Factorial(i));
         result += term;
         i += 2;
-    } while (term > epsilon);
+    } while ((term > 0 ? term : CN::Number(-1) * term) > epsilon);
 
     return result;
   }
@@ -68,7 +76,7 @@ namespace Math {
   CN::Number LnLimited(CN::Number x) {
     CN::Number ln2 = static_cast<float>(0.693147181);
     if (x != 1) {
-      CN::Number epsilon = static_cast<float>(1e-6);
+      CN::Number epsilon = static_cast<float>(1e-5);
       CN::Number result = 0;
       CN::Number prev_result;
       CN::Number x_power = x;
@@ -93,7 +101,7 @@ namespace Math {
     }
     CN::Number y = x / 2;
     int count = 1;
-    while (y >= 2) {
+    while (y > 2) {
       y = y / 2;
       ++count;
     }
@@ -101,7 +109,7 @@ namespace Math {
   }
 
   CN::Number Root(CN::Number x) {
-      CN::Number epsilon = static_cast<float>(1e-6);
+      CN::Number epsilon = static_cast<float>(1e-5);
       CN::Number y = x;
       CN::Number y_next;
       do {

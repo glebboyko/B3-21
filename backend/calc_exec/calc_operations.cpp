@@ -44,7 +44,12 @@ namespace CE {
 
   void Calc::PArrowUp() {
     CN::Number& x_0 = buffer_.GetX0();
-    x_0 = Math::Exp(x_0);
+    try {
+      x_0 = Math::Exp(x_0);
+    } catch (...) {
+      SendSignal(Error);
+      return;
+    }
     curr_func_button_ = ButNull;
     SendSignal(UpdateData);
   }
