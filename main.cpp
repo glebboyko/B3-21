@@ -13,6 +13,8 @@ void PrintCalc(const CE::Calc& calc) {
   for (int i = 0; i < CP::kProgBufferSize; ++i) {
     printf("%3d ", calc.GetProgram().GetProgram()[i]);
   }
+  std::cout << "\nSteps: "
+            << FS::FromNotToNot<10, 6>(calc.GetProgram().GetStep());
 
   std::cout << "\nNumber buffer:\n";
   std::cout << "Numerated buffer:\n";
