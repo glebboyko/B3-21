@@ -60,8 +60,10 @@ class Calc {
 
   void PressedFuncButton(Button);
 
- public:
   void ExecuteCommand(CP::OperationCodes);
+
+ public:
+  void ExecuteCommandInProgram(CP::OperationCodes);
 
  private:
   void SendSignal(MessageToVisualize);

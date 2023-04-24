@@ -173,6 +173,14 @@ void Calc::ExecuteCommand(CP::OperationCodes operation) {
 
   (this->*method_ptr_[operation])();
 }
+void Calc::ExecuteCommandInProgram(CP::OperationCodes operation) {
+  auto num = IsNum(operation);
+  if (num.has_value()) {
+    buffer_.GetX0().ClearButton();
+  }
+
+  ExecuteCommand(operation);
+}
 
 void Calc::SendSignal(MessageToVisualize message) {
   update_signal_.Send(message, 1);
