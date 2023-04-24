@@ -92,12 +92,17 @@ class Debug {
   Debug() { thread_ = std::thread(&Update, &calc_); }
   ~Debug() { thread_.detach(); }
 
-  void EnterProgram(const std::vector<int>& operations) {
-    if (calc_.GetMode() == CE::Programming) {
-
-    }
+  void EnterProgram(const std::vector<int>& buttons) {
     calc_.PressButton(CE::ButP);
     calc_.PressButton(CE::ButStepLeft);
+
+    for (auto elem : buttons) {
+      calc_.PressButton(static_cast<CE::Button>(elem));
+      if (elem == CE::ButP || elem == CE::ButF) {
+        continue ;
+      }
+      calc_.PressButton(CE::ButStepRight);
+    }
   }
 
   void Work() {
@@ -109,6 +114,17 @@ class Debug {
       }
       if (input == -1) {
         calc_.TurnOnOff();
+      } else if (input == -3) {
+        int input;
+        std::vector<int> program;
+        while (true) {
+          std::cin >> input;
+          if (input < 0) {
+            break;
+          }
+          program.push_back(input);
+        }
+        EnterProgram(program);
       } else {
         calc_.PressButton(static_cast<CE::Button>(input));
       }
