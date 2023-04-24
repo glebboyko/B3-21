@@ -44,6 +44,7 @@ class Program {
   void ResetTransferStatus() noexcept;
 
   // проверочные методы
+  int FindEnd() const;
   bool IsThereEndBefore() const noexcept;
   bool IsEnd() const noexcept;
   bool IsAbleToStepRight() const noexcept;
