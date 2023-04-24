@@ -23,6 +23,8 @@ void PrintCalc(const CE::Calc& calc) {
     case CP::TsNoTransfer:
       std::cout << "condition is met - no transfer\n";
       break;
+    case CP::TsUnconditionalTransfer:
+      std::cout << "transfer\n";
     default:
       std::cout << "no command\n";
   }
