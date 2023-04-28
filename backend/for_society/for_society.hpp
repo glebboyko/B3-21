@@ -167,5 +167,5 @@ enum TransferStatus {
 
 enum Direction { DirLeft = -1, DirRight = 1 };
 
-enum ProgramStatus { Continue, Stop, Error };
+enum ProgramStatus { ContinueUpdate, ContinueNoUpdate, Stop, Error };
 }  // namespace CP
