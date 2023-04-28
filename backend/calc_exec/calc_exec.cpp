@@ -124,8 +124,18 @@ void Calc::ChangeMode(Mode new_mode) {
 
 void Calc::PressedButtonWorking(Button button) {
   if (button == ButStepRight) {
-    program_->ExecuteStep(*this);
-    SendSignal(UpdateData);
+    CP::ProgramStatus status = program_->ExecuteStep(*this);
+    switch (status) {
+      case CP::ContinueUpdate:
+        SendSignal(UpdateData);
+        break;
+      case CP::Stop:
+        SendSignal(UpdateData);
+        break;
+      case CP::Error:
+        SendSignal(Error);
+        break;
+    }
   } else if (button == ButStepLeft) {
     program_->MakeStep(CP::DirLeft);
     SendSignal(UpdateData);
