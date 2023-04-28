@@ -66,7 +66,7 @@ ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
       }
 
       if (step_ < kProgBufferSize) {
-        return Continue;
+        return ContinueUpdate;
       }
 
       return Error;
@@ -79,7 +79,7 @@ ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
   calc.ExecuteCommandInProgram(data_[step_]);
   if (IsAbleToStepRight()) {
     step_ += 1;
-    return Continue;
+    return ContinueNoUpdate;
   }
 
   return Error;
