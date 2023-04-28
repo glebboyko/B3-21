@@ -14,9 +14,6 @@ namespace CE {
     exec_prog_thread_ = std::thread([this]() {
       // исполняем, пока можно
       while (mode_ == ExecutingProg) {
-        // здоровый сон
-        std::this_thread::sleep_for(kWait);
-
         // выполняем команду
         CP::ProgramStatus executing_result = program_->ExecuteStep(*this);
 
@@ -31,6 +28,9 @@ namespace CE {
 
         // обновляем визуализацию
         SendSignal(UpdateData);
+
+        // здоровый сон
+        std::this_thread::sleep_for(kWait);
       }
 
       ChangeMode(Working);
