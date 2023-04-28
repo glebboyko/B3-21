@@ -17,17 +17,15 @@ namespace CE {
         // выполняем команду
         CP::ProgramStatus executing_result = program_->ExecuteStep(*this);
 
-        // проверяем результат выполнения
-        if (executing_result == CP::Stop) {
+        // проверяем результат выполнения и обновляем визуализацию
+        if (executing_result == CP::ContinueUpdate) {
+          SendSignal(UpdateData);
+        } else if (executing_result == CP::Stop) {
           break;
-        }
-        if (executing_result == CP::Error) {
+        } else if (executing_result == CP::Error) {
           SendSignal(Error);
           break;
         }
-
-        // обновляем визуализацию
-        SendSignal(UpdateData);
 
         // здоровый сон
         std::this_thread::sleep_for(kWait);
