@@ -186,4 +186,3 @@ class CalculatorApp : public wxApp {
     return true;
   }
 };
-wxIMPLEMENT_APP(CalculatorApp); // Определение точки входа в приложение.
