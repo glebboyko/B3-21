@@ -1,11 +1,82 @@
 #include <wx/wx.h>
 #include <wx/stattext.h>
 #include "backend/for_society/for_society.hpp"
+#include "backend/calc_exec/calc_exec.hpp"
+#include <vector>
+
+void PrintCalc(const CE::Calc& calc) {
+  std::cout << "Program:\n";
+  for (int i = 0; i < CP::kProgBufferSize; ++i) {
+    printf("%3d ", FS::FromNotToNot<10, 6>(i));
+  }
+  printf("\n");
+  for (int i = 0; i < CP::kProgBufferSize; ++i) {
+    printf("%3d ", calc.GetProgram().GetProgram()[i]);
+  }
+  std::cout << "\nSteps: "
+            << FS::FromNotToNot<10, 6>(calc.GetProgram().GetStep());
+  std::cout << "\nTransfer status: ";
+  switch (calc.GetProgram().GetTransferStatus()) {
+    case CP::TsTransfer:
+      std::cout << "condition is not met - transfer\n";
+      break;
+    case CP::TsNoTransfer:
+      std::cout << "condition is met - no transfer\n";
+      break;
+    case CP::TsUnconditionalTransfer:
+      std::cout << "transfer\n";
+    default:
+      std::cout << "no command\n";
+  }
+
+  std::cout << "\nNumber buffer:\n";
+  std::cout << "Numerated buffer:\n";
+  for (int i = 0; i < CM::kNumeratedBuffSize; ++i) {
+    auto [sign, characteristic, num] =
+        calc.GetRegisterBuffer().GetNumeratedBuffer()[i].GetNumber();
+    printf("%d. %d %c%s\n", i, characteristic, (sign ? '-' : ' '), num.c_str());
+  }
+  std::cout << "Rounded buffer\n";
+  for (int i = 0; i < CM::kRoundedBuffSize - 1; ++i) {
+    auto [sign, characteristic, num] =
+        calc.GetRegisterBuffer().GetRoundedBuffer()[i].GetNumber();
+    printf("%d. %d %c%s\n", i, characteristic, (sign ? '-' : ' '), num.c_str());
+  }
+
+  std::cout << "\nFunction Button: ";
+  switch (calc.GetCurrFuncButton()) {
+    case CE::ButP:
+      std::cout << "P\n";
+      break;
+    case CE::ButF:
+      std::cout << "F\n";
+      break;
+    default:
+      std::cout << "NULL\n";
+  }
+
+  std::cout << "\nMode: ";
+  switch (calc.GetMode()) {
+    case CE::Working:
+      std::cout << "working\n";
+      break;
+    case CE::Programming:
+      std::cout << "programming\n";
+      break;
+    case CE::ExecutingProg:
+      std::cout << "executing program\n";
+      break;
+    default:
+      std::cout << "turned off\n";
+  }
+}
 
 class CalculatorFrame: public wxFrame {
  public:
-  CalculatorFrame(const std::string& title)
-      : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(700, 500)) {    // Создание панели для размещения элементов управления
+  CalculatorFrame(const std::string& title, CE::Calc* calc)
+      : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(700, 500)), calc_(calc) {    // Создание панели для размещения элементов управления
+    PrintCalc(*calc_);
+
     wxPanel* panel = new wxPanel(this, wxID_ANY);
 
     // Создание ячеек для отображения чисел
@@ -13,6 +84,7 @@ class CalculatorFrame: public wxFrame {
       wxStaticText* text = new wxStaticText(panel, i, "0", wxPoint(i * 50, 50));
       text->SetFont(wxFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
     }
+
 
     wxButton* button0 = new wxButton(panel, CE::ButNum0, "0", wxPoint(10, 80), wxSize(70, 70));
     wxButton* button1 = new wxButton(panel, CE::ButNum1, "1", wxPoint(90, 80), wxSize(70, 70));
@@ -30,7 +102,8 @@ class CalculatorFrame: public wxFrame {
     wxButton* buttonDiv = new wxButton(panel, CE::ButDivision, "/ (exp(x))", wxPoint(250, 260), wxSize(50, 50));
     wxButton* buttonClear = new wxButton(panel, CE::ButCx, "C", wxPoint(250, 320), wxSize(50, 50));
 
-    wxButton* buttonSin = new wxButton(panel, wxID_ANY, "sin", wxPoint(10, 400), wxSize(70, 30));
+    wxButton* button_on_off = new wxButton(panel, CE::ButNull, "Switch", wxPoint(10, 400), wxSize(70, 30));
+    /*wxButton* buttonSin = new wxButton(panel, wxID_ANY, "sin", wxPoint(10, 400), wxSize(70, 30));
     wxButton* buttonCos = new wxButton(panel, wxID_ANY, "cos", wxPoint(90, 400), wxSize(70, 30));
     wxButton* buttonExp = new wxButton(panel, wxID_ANY, "exp", wxPoint(170, 400), wxSize(70, 30));
     wxButton* buttonInvert = new wxButton(panel, wxID_ANY, "1/x", wxPoint(250, 400), wxSize(50, 30));
@@ -41,43 +114,50 @@ class CalculatorFrame: public wxFrame {
     wxButton* buttonEqual = new wxButton(panel, wxID_ANY, "=", wxPoint(250, 440), wxSize(50, 30));
 
     wxButton* buttonLarger = new wxButton(panel, wxID_ANY, wxT("В/О(x>=0)"), wxPoint(10, 370), wxSize(70, 30));
-    wxButton* buttonSquare = new wxButton(panel, wxID_ANY, "/-/(x^2)", wxPoint(90, 370), wxSize(70, 30));
-    wxButton* buttonF = new wxButton(panel, wxID_ANY, "F", wxPoint(170, 370), wxSize(70, 30));
-    button0->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton0Click, this);
-    button1->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton1Click, this);
-    button2->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton2Click, this);
-    button3->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton3Click, this);
-    button4->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton4Click, this);
-    button5->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton5Click, this);
-    button6->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton6Click, this);
-    button7->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton7Click, this);
-    button8->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton8Click, this);
-    button9->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButton9Click, this);
-    buttonAdd->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonAddClick, this);
-    buttonSub->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonSubClick, this);
-    buttonMul->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonMulClick, this);
-    buttonDiv->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonDivClick, this);
-    buttonClear->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonClearClick, this);
-    buttonSin->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonSinClick, this);
-    buttonCos->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonCosClick, this);
-    buttonExp->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonExpClick, this);
-    buttonInvert->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonInvertClick, this);
-    buttonAbs->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonAbsClick, this);
-    buttonRoot->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonRootClick, this);
-    buttonPower->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonPowerClick, this);
-    buttonEqual->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonEqualClick, this);
-    buttonLarger->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonLargerClick, this);
-    buttonSquare->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonSquareClick, this);
-    buttonF->Bind(wxEVT_BUTTON, &CalculatorFrame::OnButtonFClick, this);
+    wxButton* buttonSquare = new wxButton(panel, wxID_ANY, "/-/(x^2)", wxPoint(90, 370), wxSize(70, 30));*/
+    wxButton* buttonP = new wxButton(panel, CE::ButP, "P", wxPoint(170, 370), wxSize(70, 30));
+    button0->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button1->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button2->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button3->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button4->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button5->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button6->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button7->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button8->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button9->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonAdd->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonSub->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonMul->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonDiv->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonClear->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    button_on_off->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    /*buttonCos->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonExp->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonInvert->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonAbs->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonRoot->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonPower->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonEqual->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonLarger->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonSquare->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);*/
+    buttonP->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
   }
  private:
-  // Обработчики событий для кнопок
-  void OnButton0Click(wxCommandEvent& event) {
-    // TODO: Обработчик нажатия на кнопку
 
+  CE::Calc* calc_;
+  // Обработчики событий для кнопок
+  void ButtonClick(wxCommandEvent& event) {
+    if (event.GetId() == CE::ButNull) {
+      calc_->TurnOnOff();
+    }
+    else {
+      calc_->PressButton(static_cast<CE::Button>(event.GetId()));
+    }
+    PrintCalc(*calc_);
   }
+  void OnButton0Click(wxCommandEvent& event) {}
   void OnButton1Click(wxCommandEvent& event) {
-    // TODO: Обработчик нажатия на кнопку 1
   }
 
   void OnButton2Click(wxCommandEvent& event) {
@@ -140,7 +220,7 @@ class CalculatorFrame: public wxFrame {
   void OnButtonFClick(wxCommandEvent& event) {
   }
   //// Объявление компонентов пользовательского интерфейса
-  wxBoxSizer* mainSizer;
+ /* wxBoxSizer* mainSizer;
   wxGridSizer* gridSizer;
   wxStaticText* label0;
   wxStaticText* label1;
@@ -175,13 +255,15 @@ class CalculatorFrame: public wxFrame {
   wxButton* buttonEqual;
   wxButton* buttonLarger;
   wxButton* buttonSquare;
-  wxButton* buttonF;
+  wxButton* buttonF;*/
 };
 
 class CalculatorApp : public wxApp {
  public:
   virtual bool OnInit() {  // Создание главного окна калькулятора
-    CalculatorFrame* frame = new CalculatorFrame("Calculator");
+    CE::Calc* calc = new CE::Calc();
+
+    CalculatorFrame* frame = new CalculatorFrame("Calculator", calc);
     frame->Show(true);
     return true;
   }
