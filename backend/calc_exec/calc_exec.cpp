@@ -115,6 +115,10 @@ Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
   number_of_class_objects += 1;
 }
 
+void Calc::SetProgram(const std::vector<CP::OperationCodes>& program) {
+  program_->SetProgram(program);
+}
+
 /*---------------------------- приватные методы ------------------------------*/
 void Calc::ChangeMode(Mode new_mode) {
   curr_func_button_ = ButNull;

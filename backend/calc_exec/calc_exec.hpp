@@ -38,6 +38,7 @@ class Calc {
   // for restore
   Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
        Button curr_func_button, Mode mode);
+  void SetProgram(const std::vector<CP::OperationCodes>& program);
 
  private:
   CP::Program* program_;

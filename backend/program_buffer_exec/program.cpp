@@ -106,6 +106,15 @@ Program::Program(const std::vector<OperationCodes>& data, uint32_t step,
                  TransferStatus transfer_status)
     : data_(data), step_(step), transfer_status_(transfer_status) {}
 
+void Program::SetProgram(const std::vector<OperationCodes>& program) {
+  for (size_t i = 0; i < program.size(); ++i) {
+    data_[i] = program[i];
+  }
+  for (size_t i = program.size(); i < data_.size() - program.size(); ++i) {
+    data_[i] = OpTrash;
+  }
+}
+
 /*---------------------------- приватные методы ------------------------------*/
 void Program::ResetTransferStatus() noexcept { transfer_status_ = TsNoCommand; }
 

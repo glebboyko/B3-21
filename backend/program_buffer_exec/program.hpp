@@ -34,6 +34,7 @@ class Program {
   // for restore
   Program(const std::vector<OperationCodes>& data, uint32_t step,
           TransferStatus transfer_status);
+  void SetProgram(const std::vector<OperationCodes>& program);
 
  private:
   std::vector<OperationCodes> data_ =
