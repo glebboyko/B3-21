@@ -1,5 +1,6 @@
 #include <wx/wx.h>
 #include <wx/stattext.h>
+#include "backend/for_society/for_society.hpp"
 
 class CalculatorFrame: public wxFrame {
  public:
@@ -13,21 +14,21 @@ class CalculatorFrame: public wxFrame {
       text->SetFont(wxFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
     }
 
-    wxButton* button0 = new wxButton(panel, wxID_ANY, "0", wxPoint(10, 80), wxSize(70, 70));
-    wxButton* button1 = new wxButton(panel, wxID_ANY, "1", wxPoint(90, 80), wxSize(70, 70));
-    wxButton* button2 = new wxButton(panel, wxID_ANY, "2", wxPoint(170, 80), wxSize(70, 70));
-    wxButton* button3 = new wxButton(panel, wxID_ANY, "3", wxPoint(10, 160), wxSize(70, 70));
-    wxButton* button4 = new wxButton(panel, wxID_ANY, "4", wxPoint(90, 160), wxSize(70, 70));
-    wxButton* button5 = new wxButton(panel, wxID_ANY, "5", wxPoint(170, 160), wxSize(70, 70));
-    wxButton* button6 = new wxButton(panel, wxID_ANY, "6", wxPoint(10, 240), wxSize(70, 70));
-    wxButton* button7 = new wxButton(panel, wxID_ANY, "7", wxPoint(90, 240), wxSize(70, 70));
-    wxButton* button8 = new wxButton(panel, wxID_ANY, "8", wxPoint(170, 240), wxSize(70, 70));
-    wxButton* button9 = new wxButton(panel, wxID_ANY, "9", wxPoint(10, 320), wxSize(70, 70));
-    wxButton* buttonAdd = new wxButton(panel, wxID_ANY, "+ (sin)", wxPoint(250, 80), wxSize(50, 50));
-    wxButton* buttonSub = new wxButton(panel, wxID_ANY, "- (cos)", wxPoint(250, 140), wxSize(50, 50));
-    wxButton* buttonMul = new wxButton(panel, wxID_ANY, "* (pi)", wxPoint(250, 200), wxSize(50, 50));
-    wxButton* buttonDiv = new wxButton(panel, wxID_ANY, "/ (exp(x))", wxPoint(250, 260), wxSize(50, 50));
-    wxButton* buttonClear = new wxButton(panel, wxID_ANY, "C", wxPoint(250, 320), wxSize(50, 50));
+    wxButton* button0 = new wxButton(panel, CE::ButNum0, "0", wxPoint(10, 80), wxSize(70, 70));
+    wxButton* button1 = new wxButton(panel, CE::ButNum1, "1", wxPoint(90, 80), wxSize(70, 70));
+    wxButton* button2 = new wxButton(panel, CE::ButNum2, "2", wxPoint(170, 80), wxSize(70, 70));
+    wxButton* button3 = new wxButton(panel, CE::ButNum3, "3", wxPoint(10, 160), wxSize(70, 70));
+    wxButton* button4 = new wxButton(panel, CE::ButNum4, "4", wxPoint(90, 160), wxSize(70, 70));
+    wxButton* button5 = new wxButton(panel, CE::ButNum5, "5", wxPoint(170, 160), wxSize(70, 70));
+    wxButton* button6 = new wxButton(panel, CE::ButNum6, "6", wxPoint(10, 240), wxSize(70, 70));
+    wxButton* button7 = new wxButton(panel, CE::ButNum7, "7", wxPoint(90, 240), wxSize(70, 70));
+    wxButton* button8 = new wxButton(panel, CE::ButNum8, "8", wxPoint(170, 240), wxSize(70, 70));
+    wxButton* button9 = new wxButton(panel, CE::ButNum9, "9", wxPoint(10, 320), wxSize(70, 70));
+    wxButton* buttonAdd = new wxButton(panel, CE::ButPlus, "+ (sin)", wxPoint(250, 80), wxSize(50, 50));
+    wxButton* buttonSub = new wxButton(panel, CE::ButMinus, "- (cos)", wxPoint(250, 140), wxSize(50, 50));
+    wxButton* buttonMul = new wxButton(panel, CE::ButMultiply, "* (pi)", wxPoint(250, 200), wxSize(50, 50));
+    wxButton* buttonDiv = new wxButton(panel, CE::ButDivision, "/ (exp(x))", wxPoint(250, 260), wxSize(50, 50));
+    wxButton* buttonClear = new wxButton(panel, CE::ButCx, "C", wxPoint(250, 320), wxSize(50, 50));
 
     wxButton* buttonSin = new wxButton(panel, wxID_ANY, "sin", wxPoint(10, 400), wxSize(70, 30));
     wxButton* buttonCos = new wxButton(panel, wxID_ANY, "cos", wxPoint(90, 400), wxSize(70, 30));
@@ -72,7 +73,8 @@ class CalculatorFrame: public wxFrame {
  private:
   // Обработчики событий для кнопок
   void OnButton0Click(wxCommandEvent& event) {
-    // TODO: Обработчик нажатия на кнопку 0
+    // TODO: Обработчик нажатия на кнопку
+
   }
   void OnButton1Click(wxCommandEvent& event) {
     // TODO: Обработчик нажатия на кнопку 1
