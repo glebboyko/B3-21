@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "backend/calc_exec/calc_exec.hpp"
+
 namespace IV {
 // класс - визуализатор
 class Visualization {
