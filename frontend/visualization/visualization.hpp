@@ -9,7 +9,7 @@ namespace IV {
 class Visualization {
  public:
   // конструкторы и деструкторы
-  Visualization(CE::Calc*);
+  Visualization(std::shared_ptr<CE::Calc>);
   Visualization(const Visualization&);
   Visualization(Visualization&&);
 

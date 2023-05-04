@@ -66,13 +66,13 @@ struct VerticalTextBlockList {
 };
 
 const uint8_t kNumOfPrevOperations = 3;
-struct InterfaceObjects {
+struct VisualisationTemplate {
   TextBlock step = TextBlock(/*Shoislom*/);
   TextBlock main_number = TextBlock(/*Shoislom*/);
   std::vector<TextBlock> last_operations = {/*Shoislom*/};
   TextBlock mode = TextBlock(/*Shoislom*/);
   TextBlock function_button = TextBlock(/*Shoislom*/);
-  VerticalTextBlockList program = VerticalTextBlockList(/*Shoislom*/);
+  std::vector<VerticalTextBlockList> program = {/*Shoislom*/};
   VerticalTextBlockList numerated_buffer = VerticalTextBlockList(/*Shoislom*/);
   VerticalTextBlockList rounded_buffer = VerticalTextBlockList(/*Shoislom*/);
 };
