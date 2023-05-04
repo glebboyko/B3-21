@@ -9,7 +9,7 @@ namespace IV {
 class Visualization {
  public:
   // конструкторы и деструкторы
-  Visualization();
+  Visualization(CE::Calc*);
   Visualization(const Visualization&);
   Visualization(Visualization&&);
 
@@ -20,7 +20,7 @@ class Visualization {
   Visualization& operator=(Visualization&&);
 
   // интерфейс взаимодействия
-  void UpdateData(const CE::Calc& calc);
+  void UpdateData();
 
  private:
 };
