@@ -26,6 +26,17 @@ struct TextParameters {
   int32_t x_offset;
 };
 
+struct TableParameters {
+  int32_t init_x;
+  int32_t init_y;
+
+  int32_t raw_offset;
+  int32_t column_offset;
+
+  uint8_t raw_num;
+  uint8_t column_num;
+};
+
 struct TextBlock {
   TextBlock() = default;
   TextBlock(uint8_t size, TextParameters parameters, WxTextArgs other_args);
@@ -38,37 +49,29 @@ struct Number {
   TextBlock characteristic;
 };
 
-struct VerticalTextBlockList {
-  VerticalTextBlockList() = default;
-  VerticalTextBlockList(uint8_t size, int32_t y_offset,
-                        TextBlock template_block);
-
-  std::vector<TextBlock> list;
-};
-
 struct TextBlockTable {
   TextBlockTable() = default;
-  TextBlockTable(uint8_t number_of_columns, int32_t column_y_offset,
-                 VerticalTextBlockList template_list);
+  TextBlockTable(TableParameters table_parameters,
+                 TextBlock template_text_block);
 
-  std::vector<VerticalTextBlockList> columns;
+  std::vector<TextBlock> table;
 };
 
-struct VerticalNumberList {
-  VerticalTextBlockList number;
-  VerticalTextBlockList characteristic;
+struct NumberList {
+  TextBlockTable number;
+  TextBlockTable characteristic;
 };
 
 const uint8_t kNumOfPrevOperations = 3;
 struct VisualisationTemplate {
   TextBlock step = TextBlock(/*Shoislom*/);
   TextBlock main_number = TextBlock(/*Shoislom*/);
-  VerticalTextBlockList last_operations = VerticalTextBlockList(/*Shoislom*/);
+  TextBlockTable last_operations = TextBlockTable(/*Shoislom*/);
   TextBlock mode = TextBlock(/*Shoislom*/);
   TextBlock function_button = TextBlock(/*Shoislom*/);
   TextBlockTable program = TextBlockTable(/*Shoislom*/);
-  VerticalNumberList numerated_buffer = {/*Shoislom*/};
-  VerticalNumberList rounded_buffer = {/*Shoislom*/};
+  NumberList numerated_buffer = {/*Shoislom*/};
+  NumberList rounded_buffer = {/*Shoislom*/};
 };
 
 }  // namespace ID

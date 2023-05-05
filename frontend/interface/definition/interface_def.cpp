@@ -15,26 +15,27 @@ TextBlock::TextBlock(uint8_t size, ID::TextParameters parameters,
   }
 }
 
-VerticalTextBlockList::VerticalTextBlockList(uint8_t size, int32_t y_offset,
-                                             ID::TextBlock template_block) {
-  list.resize(size);
-  for (uint8_t i = 0; i < size; ++i) {
-    list[i] = template_block;
-    for (auto& atom : list[i].object) {
-      atom.location.y += i * y_offset;
-    }
-  }
-}
+TextBlockTable::TextBlockTable(ID::TableParameters parameters,
+                               ID::TextBlock template_text_block) {
+  table.resize(parameters.init_x * parameters.init_y);
 
-TextBlockTable::TextBlockTable(uint8_t number_of_columns,
-                               int32_t column_y_offset,
-                               ID::VerticalTextBlockList template_list) {
-  columns.resize(number_of_columns);
-  for (uint8_t i = 0; i < number_of_columns; ++i) {
-    columns[i] = template_list;
-    for (auto& block : columns[i].list) {
-      for (auto& atom : block.object) {
-        atom.location.y += i * column_y_offset;
+  const int32_t kSymbolOffset =
+      template_text_block.object.size() > 1
+          ? template_text_block.object[1].location.x -
+                template_text_block.object[0].location.x
+          : 0;
+
+  for (uint8_t i = 0; i < parameters.column_num; ++i) {
+    for (uint8_t j = 0; j < parameters.raw_num; ++j) {
+      std::pair<int32_t, int32_t> curr_init = {
+          parameters.init_x + (i * parameters.column_offset),
+          parameters.init_y + (j * parameters.raw_offset)};
+      auto& container = table[i * parameters.raw_num + j];
+
+      container = template_text_block;
+      for (int32_t k = 0; i < container.object.size(); ++i) {
+        container.object[k].location =
+            wxPoint(curr_init.first + (k * kSymbolOffset), curr_init.second);
       }
     }
   }
