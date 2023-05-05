@@ -23,6 +23,12 @@ class CalculatorFrame : public wxFrame {
 
   // Обработчики событий для кнопок
   void ButtonClick(wxCommandEvent& event);
+
+  void MakeBackUp(wxCommandEvent& event);
+  void LoadFromBackUp(wxCommandEvent& event);
+
+  void SaveProgram(wxCommandEvent& event);
+  void LoadProgram(wxCommandEvent& event);
 };
 
 }  // namespace IF
