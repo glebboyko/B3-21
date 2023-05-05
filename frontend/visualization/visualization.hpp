@@ -14,7 +14,7 @@ class TextBlock {
   TextBlock();
   explicit TextBlock(const ID::TextBlock&);
   TextBlock(const TextBlock&) = delete;
-  TextBlock(TextBlock&&) = delete;
+  TextBlock(TextBlock&&);
 
   ~TextBlock();
 
@@ -35,7 +35,7 @@ class Visualization {
   // конструкторы и деструкторы
   Visualization() = delete;
   Visualization(std::shared_ptr<CE::Calc>,
-                const ID::VisualisationTemplate& visualisation_template);
+                const ID::VisualisationTemplate& vis_temp);
   Visualization(const Visualization&);
   Visualization(Visualization&&);
 
@@ -53,7 +53,7 @@ class Visualization {
 
 
   TextBlock step_;
-  std::vector<TextBlock> main_number_;
+  std::pair<TextBlock, TextBlock> main_number_;
   std::vector<TextBlock> last_operations_;
   TextBlock mode_;
   TextBlock function_button_;
