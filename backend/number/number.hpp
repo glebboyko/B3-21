@@ -21,7 +21,7 @@ class Number {
   Number& operator=(Number&&);
 
   // для визуализации (знак, характеристика и мантисса)
-  std::tuple<bool, int, std::string> GetNumber() const noexcept;
+  std::tuple<int, std::string> GetNumber() const noexcept;
 
   // интерфейс взаимодействия
   void SignButton() noexcept;
@@ -86,6 +86,8 @@ class Number {
   static Number Abs(Number) noexcept;
   static void ToEqualDigits(Number& abs_max, Number& abs_min);
   static void ToEqualDigits(uint64_t&, uint64_t&);
+
+  std::tuple<bool, int, std::string> GetNumberPrivate() const noexcept;
 
   // проверочные методы
   static bool IsThereDot(const std::string&) noexcept;

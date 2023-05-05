@@ -83,22 +83,14 @@ Number& Number::operator=(CN::Number&& other) {
 }
 
 /*---------------------------- для визуализации ------------------------------*/
-std::tuple<bool, int, std::string> Number::GetNumber() const noexcept {
-  if (mode_ == Characteristic) {
-    return {new_characteristic_ < 0, 0,
-            std::to_string(abs(new_characteristic_))};
+std::tuple<int, std::string> Number::GetNumber() const noexcept {
+  auto [sign, characteristic, number] = GetNumberPrivate();
+  if (sign) {
+    number.insert(number.begin(), '-');
   }
-
-  // может ли число быть представлено полностью
-  auto curr_num = IsFullView() ? FullView() : PartView();
-
-  // Вставка точки в конец после нажатия клавиши "."
-  if (mode_ == AfterDot && !IsThereDot(std::get<2>(curr_num))) {
-    std::get<2>(curr_num).insert(std::get<2>(curr_num).end(), '.');
-  }
-
-  return curr_num;
+  return {characteristic, number};
 }
+
 
 /*------------------------ интерфейс взаимодействия --------------------------*/
 void Number::SignButton() noexcept {
@@ -110,7 +102,7 @@ void Number::SignButton() noexcept {
 }
 
 void Number::DotButton() noexcept {
-  auto curr_num = GetNumber();
+  auto curr_num = GetNumberPrivate();
   // проверка наличия требуемого режима, полноты представления и возможности
   // использования кнопки в дальнейшем
   if (mode_ == Mantissa && std::get<1>(curr_num) == 0 &&
@@ -130,7 +122,7 @@ void Number::CharacteristicButton() {
 }
 
 void Number::NumberButton(char digit) {
-  auto curr_number = GetNumber();
+  auto curr_number = GetNumberPrivate();
   if (mode_ == Characteristic) {
     if (std::get<2>(curr_number).size() < kNumOfCharacteristic) {
       AddDigit(new_characteristic_, digit);
@@ -360,7 +352,7 @@ void Number::ExitEnterMode() noexcept {
 void Number::RepairNumber() noexcept {
   auto old_mode = mode_;
   mode_ = Mantissa;
-  auto curr_number = GetNumber();
+  auto curr_number = GetNumberPrivate();
 
   // удаление чисел, не помещающихся на экран
   while (std::get<2>(curr_number).size() > kNumOfDigits) {
@@ -427,6 +419,23 @@ std::tuple<bool, int, std::string> Number::PartView() const noexcept {
 
 Number Number::Abs(Number number) noexcept {
   return number >= 0 ? number : -number;
+}
+
+std::tuple<bool, int, std::string> Number::GetNumberPrivate() const noexcept {
+  if (mode_ == Characteristic) {
+    return {new_characteristic_ < 0, 0,
+            std::to_string(abs(new_characteristic_))};
+  }
+
+  // может ли число быть представлено полностью
+  auto curr_num = IsFullView() ? FullView() : PartView();
+
+  // Вставка точки в конец после нажатия клавиши "."
+  if (mode_ == AfterDot && !IsThereDot(std::get<2>(curr_num))) {
+    std::get<2>(curr_num).insert(std::get<2>(curr_num).end(), '.');
+  }
+
+  return curr_num;
 }
 
 /*--------------------------- проверочные методы -----------------------------*/
