@@ -1,7 +1,9 @@
 #include <memory>
 #include <thread>
 
-#include "frontend/interface/interface_def.hpp"
+#include "backend/calc_exec/calc_exec.hpp"
+#include "frontend/interface/definition/interface_def.hpp"
+#include "frontend/interface/frame/frame.hpp"
 #include "frontend/visualization/visualization.hpp"
 
 class CalculatorApp : public wxApp {
@@ -9,10 +11,10 @@ class CalculatorApp : public wxApp {
   virtual bool OnInit() {  // Создание главного окна калькулятора
     std::shared_ptr<CE::Calc> calc(new CE::Calc());
 
-    ID::CalculatorFrame* frame = new ID::CalculatorFrame("Calculator", calc);
+    IF::CalculatorFrame* frame = new IF::CalculatorFrame("Calculator", calc);
     frame->Show(true);
 
-    std::thread updater = std::thread(IV::Updater, calc);
+    std::thread updater = std::thread(IV::Updater, calc, frame->GetTemplate());
     updater.detach();
     return true;
   }
