@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <string>
+#include <wx/stattext.h>
+#include <wx/wx.h>
 
 #include "backend/calc_exec/calc_exec.hpp"
 #include "frontend/interface/definition/interface_def.hpp"
@@ -20,8 +22,11 @@ class TextBlock {
   TextBlock& operator=(TextBlock&&);
 
   void Update(const std::string&);
+  // rewrite
 
  private:
+  ID::TextBlock pre_upd_;
+  std::vector<wxStaticText*> curr_text_;
 };
 
 // класс - визуализатор
@@ -37,13 +42,24 @@ class Visualization {
   ~Visualization();
 
   // операторы присваивания
-  Visualization& operator=(const Visualization&);
-  Visualization& operator=(Visualization&&);
+  Visualization& operator=(const Visualization&) = delete;
+  Visualization& operator=(Visualization&&) = delete;
 
   // интерфейс взаимодействия
   void UpdateData();
 
  private:
+  std::shared_ptr<CE::Calc> new_data_;
+
+
+  TextBlock step_;
+  std::vector<TextBlock> main_number_;
+  std::vector<TextBlock> last_operations_;
+  TextBlock mode_;
+  TextBlock function_button_;
+  std::vector<TextBlock> program_;
+  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> numerated_buffer_;
+  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> rounded_buffer_;
 };
 
 // функция, следящая за изменениями в калькуляторе (отдельный поток)
