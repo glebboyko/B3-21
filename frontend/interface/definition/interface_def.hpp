@@ -65,7 +65,7 @@ struct NumberList {
 const uint8_t kNumOfPrevOperations = 3;
 struct VisualisationTemplate {
   TextBlock step = TextBlock(/*Shoislom*/);
-  Number main_number = TextBlock(/*Shoislom*/);
+  Number main_number = Number(/*Shoislom*/);
   TextBlockTable last_operations = TextBlockTable(/*Shoislom*/);
   TextBlock mode = TextBlock(/*Shoislom*/);
   TextBlock function_button = TextBlock(/*Shoislom*/);
