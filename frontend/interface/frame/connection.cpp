@@ -1,6 +1,6 @@
-#include "interface_def.hpp"
+#include "frame.hpp"
 
-namespace ID {
+namespace IF {
 
 void CalculatorFrame::ButtonClick(wxCommandEvent& event) {
   if (event.GetId() == CE::ButNull) {
@@ -10,4 +10,4 @@ void CalculatorFrame::ButtonClick(wxCommandEvent& event) {
   }
 }
 
-}  // namespace ID
+}  // namespace IF
