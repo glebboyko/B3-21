@@ -48,15 +48,32 @@ Visualization::Visualization(std::shared_ptr<CE::Calc> calc,
 }
 
 void Visualization::UpdateData() {
-  const auto& program_buf = new_data_->GetProgram();
-  const auto& num_buf = new_data_->GetRegisterBuffer().GetNumeratedBuffer();
-  auto rounded_buf = new_data_->GetRegisterBuffer().GetRoundedBuffer();
+  const auto& program_buf = calc->GetProgram();
+  const auto& num_buf = calc->GetRegisterBuffer().GetNumeratedBuffer();
+  auto rounded_buf = calc->GetRegisterBuffer().GetRoundedBuffer();
 
   step_.Update(std::to_string(program_buf.GetStep()));
 
   {
-    const auto& [sign, characteristic, number] = num_buf[0].GetNumber();
+    const auto& [characteristic, number] = num_buf[0].GetNumber();
+    main_number_.first.Update(number);
+    main_number_.second.Update(std::to_string(characteristic));
+  }
 
+  for (size_t i = 0; i < last_operations_.size(); ++i) {
+    if (static_cast<int32_t>(program_buf.GetStep()) - static_cast<int32_t>(i) <
+        0) {
+      last_operations_[i].Update("");
+    } else {
+      last_operations_[i].Update(
+          std::to_string(program_buf.GetProgram()[program_buf.GetStep() - i]));
+    }
+  }
+
+  {
+    auto func_but = calc->GetCurrFuncButton();
+    function_button_.Update(
+        func_but == CE::ButP ? "P" : (func_but == CE::ButF ? "F" : "NULL"));
   }
 }
 }  // namespace IV

@@ -49,7 +49,7 @@ class Visualization {
   void UpdateData();
 
  private:
-  std::shared_ptr<CE::Calc> new_data_;
+  std::shared_ptr<CE::Calc> calc;
 
 
   TextBlock step_;
