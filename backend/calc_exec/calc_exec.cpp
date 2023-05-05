@@ -116,6 +116,9 @@ Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
 }
 
 void Calc::SetProgram(const std::vector<CP::OperationCodes>& program) {
+  if (mode_ == ExecutingProg) {
+    mode_ = Working;
+  }
   program_->SetProgram(program);
 }
 
