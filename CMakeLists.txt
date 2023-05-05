@@ -4,9 +4,9 @@ project(B3_21)
 set(CMAKE_CXX_STANDARD 20)
 
 #setting up wxWidgets
-if(APPLE)
+if (APPLE)
     set(wxWidgets_ROOT_DIR </opt/homebrew/bin/wx-config>)
-else()
+else ()
     set(wxWidgets_ROOT_DIR </usr/include/wx-3.0>)
 endif ()
 set(wxWidgets_CONFIGURATION mswu)
@@ -31,6 +31,7 @@ add_executable(B3_21 main.cpp backend/backup/backup.cpp
         backend/message_queue/message_queue.cpp
         backend/number_buffer/number_buffer.cpp
         frontend/visualization/visualization_class.cpp frontend/visualization/updater.cpp
-        frontend/interface/interface_def.cpp frontend/interface/connection.cpp)
+        frontend/interface/definition/interface_def.cpp
+        frontend/interface/frame/connection.cpp frontend/interface/frame/frame.cpp)
 
 target_link_libraries(B3_21 PRIVATE ${wxWidgets_LIBRARIES})
