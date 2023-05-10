@@ -141,13 +141,14 @@ TextBlock::~TextBlock() {
 void TextBlock::Update(const std::string& str) {
   int i = 0;
   for (i = 0; i < str.size(); ++i) {
-    if(pre_upd_.object[i].text == str[i]) {
-      continue ;
+    if (pre_upd_.object[i].text == str[i]) {
+      continue;
     }
     delete curr_text_[i];
     pre_upd_.object[i].text = str[i];
-    curr_text_[i] = new wxStaticText(pre_upd_.object[i].panel, pre_upd_.object[i].id,
-                                     pre_upd_.object[i].text, pre_upd_.object[i].location);
+    curr_text_[i] =
+        new wxStaticText(pre_upd_.object[i].panel, pre_upd_.object[i].id,
+                         pre_upd_.object[i].text, pre_upd_.object[i].location);
     curr_text_[i]->SetFont(pre_upd_.object[i].font);
   }
 
