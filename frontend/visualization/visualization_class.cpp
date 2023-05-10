@@ -109,6 +109,7 @@ void Visualization::UpdateData() {
 }
 
 TextBlock::TextBlock(const ID::TextBlock& raw) {
+  curr_text_.resize(raw.object.size());
   for (int i = 0; i < raw.object.size(); ++i) {
     curr_text_[i] = new wxStaticText(raw.object[i].panel, raw.object[i].id, raw.object[i].text, raw.object[i].location);
     curr_text_[i]->SetFont(raw.object[i].font);
@@ -116,6 +117,11 @@ TextBlock::TextBlock(const ID::TextBlock& raw) {
   pre_upd_ = raw;
 }
 TextBlock::TextBlock(IV::TextBlock&& outer) {
+  pre_upd_ = outer.pre_upd_;
+  curr_text_ = outer.curr_text_;
 
+  outer.curr_text_.clear();
 }
+
+TextBlock::T
 }  // namespace IV
