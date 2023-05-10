@@ -66,9 +66,14 @@ CE::Calc BU::RestoreFromBackup(const std::string& file_path) {
   int mode_cp;
   file >> mode_cp;
 
-  std::vector<int> program_data_cp(CP::kProgBufferSize);
+  std::vector<CP::OperationCodes> program_data_cp(CP::kProgBufferSize);
   for (int i = 0; i < CP::kProgBufferSize; ++i) {
-    file >> program_data_cp[i];
+    int operation_code;
+    file >> operation_code;
+    if (!CP::IsOperationCode(operation_code)) {
+      throw std::invalid_argument("not number code");
+    }
+    program_data_cp[i] = static_cast<CP::OperationCodes>(operation_code);
   }
 
   int program_step_cp;
@@ -97,4 +102,57 @@ CE::Calc BU::RestoreFromBackup(const std::string& file_path) {
     file >> mode;
     backUping_cp_round[i].mode = static_cast<CN::EnterMode>(mode);
   }
+
+  CP::Program program(program_data_cp, program_step_cp,
+                      static_cast<CP::TransferStatus>(program_transfer_cp));
+
+  std::vector<CN::Number> numerated_buffer;
+  numerated_buffer.reserve(backUping_cp.size());
+  for (int i = 0; i < numerated_buffer.capacity(); ++i) {
+    numerated_buffer.emplace_back(backUping_cp[i].sign, backUping_cp[i].number,
+                                  backUping_cp[i].characteristic,
+                                  backUping_cp[i].new_characteristic,
+                                  backUping_cp[i].mode);
+  }
+  std::vector<CN::Number> rounded_buffer;
+  rounded_buffer.reserve(backUping_cp_round.size());
+  for (int i = 0; i < rounded_buffer.capacity(); ++i) {
+    rounded_buffer.emplace_back(
+        backUping_cp_round[i].sign, backUping_cp_round[i].number,
+        backUping_cp_round[i].characteristic,
+        backUping_cp_round[i].new_characteristic, backUping_cp_round[i].mode);
+  }
+  CM::Buffer buffer(numerated_buffer, rounded_buffer);
+  return CE::Calc(program, buffer, static_cast<CE::Button>(button_cp),
+                  static_cast<CE::Mode>(mode_cp));
+}
+
+void BU::SaveProgram(const std::vector<CP::OperationCodes>& to_save, const std::string& file_path) {
+  std::ofstream output_file(file_path,
+                            std::ofstream::out | std::ofstream::trunc);
+  if (!output_file.is_open()) {
+    std::cerr << "Не удалось открыть файл" << std::endl;
+    throw errno;
+  }
+  for(int i = 0; i < to_save.size(); ++i) {
+    output_file << static_cast<int>(to_save[i]);
+  }
+  output_file.close();
+}
+
+std::vector<CP::OperationCodes> BU::LoadProgram(const std::string& file_path) {
+  std::ifstream file(file_path);
+  if (!file) {
+    throw std::invalid_argument("Файл не открылся");
+  }
+  std::vector<CP::OperationCodes> result(CP::kProgBufferSize);
+  for(int i = 0; i < CP::kProgBufferSize; ++i) {
+    int operation_code;
+    file >> operation_code;
+    if (!CP::IsOperationCode(operation_code)) {
+      throw std::invalid_argument("Not operation code");
+    }
+    result[i] = static_cast<CP::OperationCodes>(operation_code);
+  }
+  return result;
 }
