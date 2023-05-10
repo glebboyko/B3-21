@@ -111,7 +111,9 @@ void Visualization::UpdateData() {
 TextBlock::TextBlock(const ID::TextBlock& raw) {
   curr_text_.resize(raw.object.size());
   for (int i = 0; i < raw.object.size(); ++i) {
-    curr_text_[i] = new wxStaticText(raw.object[i].panel, raw.object[i].id, raw.object[i].text, raw.object[i].location);
+    curr_text_[i] =
+        new wxStaticText(raw.object[i].panel, raw.object[i].id,
+                         raw.object[i].text, raw.object[i].location);
     curr_text_[i]->SetFont(raw.object[i].font);
   }
   pre_upd_ = raw;
@@ -123,5 +125,35 @@ TextBlock::TextBlock(IV::TextBlock&& outer) {
   outer.curr_text_.clear();
 }
 
-TextBlock::T
+TextBlock& TextBlock::operator=(IV::TextBlock&& outer) {
+  for (auto elem : curr_text_) {
+    delete elem;
+  }
+  curr_text_ = outer.curr_text_;
+  outer.curr_text_.clear();
+}
+
+TextBlock::~TextBlock() {
+  for (auto elem : curr_text_) {
+    delete elem;
+  }
+}
+void TextBlock::Update(const std::string& str) {
+  int i = 0;
+  for (i = 0; i < str.size(); ++i) {
+    if(pre_upd_.object[i].text == str[i]) {
+      continue ;
+    }
+    delete curr_text_[i];
+    pre_upd_.object[i].text = str[i];
+    curr_text_[i] = new wxStaticText(pre_upd_.object[i].panel, pre_upd_.object[i].id,
+                                     pre_upd_.object[i].text, pre_upd_.object[i].location);
+    curr_text_[i]->SetFont(pre_upd_.object[i].font);
+  }
+
+  for (; i < curr_text_.size(); ++i) {
+    delete curr_text_[i];
+    pre_upd_.object[i].text = ' ';
+  }
+}
 }  // namespace IV
