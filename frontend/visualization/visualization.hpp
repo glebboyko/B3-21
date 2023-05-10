@@ -11,7 +11,7 @@
 namespace IV {
 class TextBlock {
  public:
-  TextBlock();
+  TextBlock() = default;
   explicit TextBlock(const ID::TextBlock&);
   TextBlock(const TextBlock&) = delete;
   TextBlock(TextBlock&&);
@@ -36,10 +36,10 @@ class Visualization {
   Visualization() = delete;
   Visualization(std::shared_ptr<CE::Calc>,
                 const ID::VisualisationTemplate& vis_temp);
-  Visualization(const Visualization&);
-  Visualization(Visualization&&);
+  Visualization(const Visualization&) = delete;
+  Visualization(Visualization&&) = delete;
 
-  ~Visualization();
+  ~Visualization() = default;
 
   // операторы присваивания
   Visualization& operator=(const Visualization&) = delete;
@@ -52,14 +52,14 @@ class Visualization {
   std::shared_ptr<CE::Calc> calc;
 
 
-  TextBlock step_;
-  std::pair<TextBlock, TextBlock> main_number_;
-  std::vector<TextBlock> last_operations_;
-  TextBlock mode_;
-  TextBlock function_button_;
-  std::vector<TextBlock> program_;
-  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> numerated_buffer_;
-  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> rounded_buffer_;
+  TextBlock step_; //
+  std::pair<TextBlock, TextBlock> main_number_; //
+  std::vector<TextBlock> last_operations_; //
+  TextBlock mode_; //
+  TextBlock function_button_; //
+  std::vector<TextBlock> program_; //
+  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> numerated_buffer_; //
+  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> rounded_buffer_; //
 };
 
 // функция, следящая за изменениями в калькуляторе (отдельный поток)

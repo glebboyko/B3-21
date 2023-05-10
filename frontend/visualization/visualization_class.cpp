@@ -75,5 +75,47 @@ void Visualization::UpdateData() {
     function_button_.Update(
         func_but == CE::ButP ? "P" : (func_but == CE::ButF ? "F" : "NULL"));
   }
+
+  {
+    auto mode = calc->GetMode();
+    mode_.Update(
+        mode == CE::Working
+            ? "Working"
+            : (mode == CE::Programming
+                   ? "Programming"
+                   : (mode == CE::ExecutingProg ? "Executing" : "TurnedOff")));
+  }
+
+  for (size_t i = 0; i < program_.size(); ++i) {
+    program_[i].Update(
+        std::to_string(program_buf.GetProgram()[program_buf.GetStep() - i]));
+  }
+
+  {
+    for (int i = 0; i < numerated_buffer_.first.size(); ++i) {
+      const auto& [characteristic, number] = num_buf[i].GetNumber();
+      numerated_buffer_.second[i].Update(std::to_string(characteristic));
+      numerated_buffer_.first[i].Update(number);
+    }
+  }
+
+  {
+    for (int i = 0; i < rounded_buffer_.first.size(); ++i) {
+      const auto& [characteristic, number] = num_buf[i].GetNumber();
+      rounded_buffer_.second[i].Update(std::to_string(characteristic));
+      rounded_buffer_.first[i].Update(number);
+    }
+  }
+}
+
+TextBlock::TextBlock(const ID::TextBlock& raw) {
+  for (int i = 0; i < raw.object.size(); ++i) {
+    curr_text_[i] = new wxStaticText(raw.object[i].panel, raw.object[i].id, raw.object[i].text, raw.object[i].location);
+    curr_text_[i]->SetFont(raw.object[i].font);
+  }
+  pre_upd_ = raw;
+}
+TextBlock::TextBlock(IV::TextBlock&& outer) {
+
 }
 }  // namespace IV
