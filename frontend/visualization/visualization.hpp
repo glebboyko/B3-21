@@ -22,7 +22,7 @@ class TextBlock {
   TextBlock& operator=(TextBlock&&);
 
   void Update(const std::string&);
-  // rewrite
+  void SwitchFont();
 
  private:
   ID::TextBlock pre_upd_;
