@@ -16,8 +16,11 @@ struct WxTextArgs {
   int id = wxID_ANY;
   char text = ' ';
   wxPoint location = wxPoint(0, 0);
-  wxFont font = wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT,
-                       wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+  std::pair<wxFont, wxFont> font = {
+      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+             wxFONTWEIGHT_BOLD),
+      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+             wxFONTWEIGHT_BOLD)};
 };
 
 struct TextParameters {
