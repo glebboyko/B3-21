@@ -20,6 +20,7 @@ class CalculatorFrame : public wxFrame {
 
  private:
   std::shared_ptr<CE::Calc> calc_;
+  ID::VisualisationTemplate visual_template_;
 
   // Обработчики событий для кнопок
   void ButtonClick(wxCommandEvent& event);
