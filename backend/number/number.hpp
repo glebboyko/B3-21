@@ -21,7 +21,8 @@ class Number {
   Number& operator=(Number&&);
 
   // для визуализации (знак, характеристика и мантисса)
-  std::tuple<int, std::string> GetNumber() const noexcept;
+  std::tuple<int, std::string> GetStaticNumber() const noexcept;
+  std::tuple<int, std::string> GetMainNumber() const noexcept;
 
   // интерфейс взаимодействия
   void SignButton() noexcept;

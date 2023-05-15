@@ -83,14 +83,28 @@ Number& Number::operator=(CN::Number&& other) {
 }
 
 /*---------------------------- для визуализации ------------------------------*/
-std::tuple<int, std::string> Number::GetNumber() const noexcept {
+std::tuple<int, std::string> Number::GetStaticNumber() const noexcept {
+  // может ли число быть представлено полностью
+  auto [sign, characteristic, number] = IsFullView() ? FullView() : PartView();
+
+  // Вставка точки в конец после нажатия клавиши "."
+  if (mode_ == AfterDot && !IsThereDot(number)) {
+    number.insert(number.end(), '.');
+  }
+  if (sign) {
+    number.insert(number.begin(), '-');
+  }
+
+  return {characteristic, number};
+}
+
+std::tuple<int, std::string> Number::GetMainNumber() const noexcept {
   auto [sign, characteristic, number] = GetNumberPrivate();
   if (sign) {
     number.insert(number.begin(), '-');
   }
   return {characteristic, number};
 }
-
 
 /*------------------------ интерфейс взаимодействия --------------------------*/
 void Number::SignButton() noexcept {
