@@ -41,4 +41,63 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
   }
 }
 
+  VisualisationTemplate() {
+    const uint8_t kTableSize = 10;
+    const int32_t kXOffset = 10;
+    const int32_t kRawOffset = 10;
+  
+    WxTextArgs static_text_args;
+    static_text_args.font = {};
+    
+    //---------PROGRAM------------
+    {
+      TableParameters table_parameters = {0, 0, kRawOffset, 100, 20, 3};
+      TextBlock text_block(kTableSize, {0, 0, kXOffset}, static_text_args);
+      program = TextBlockTable(table_parameters, text_block);
+    }
+    //--------STEP-----------
+    {
+      TextParameters parameters = {0, 0, kXOffset};
+      step = TextBlock(kTableSize, parameters, static_text_args);
+    }
+    //----------MAIN_NUMBER---------
+    {
+      TextParameters parameters = {0, 0, kXOffset};
+      TextBlock number = {kTableSize, parameters, static_text_args};
+      TextBlock characteristic = {kTabelSize, parameters, static_text_args};
+      main_number = Number(number, characteristic);
+    }
+    //-------------LAST_OPERATIONS-------------
+    {
+      TableParameters parameters = {0, 0, kRawOffset, 0, 0, 0};
+      TextBlock text_block = {kTableSize, parameters, static_text_args};
+      last_operations = TextBlockTable(parameters, text_block);
+    }
+    //-------------MODE-------------
+    {
+      TextParameters parameters = {0, 0, kXOffset};
+      mode = TextBlock(kTableSize, parameters, static_text_args);
+    }
+    //------------FUNCTION_BUTTON------------
+    {
+      TextParameters parameters = {0, 0, kXOffset};
+      function_button = TextBlock(kTableSize, parameters, static_text_args);
+    }
+    //--------------NUMERATED_BUFFER------------
+    {
+      TableParameters parameters = {0, 0, kXOffset};
+      TextBlock text_block = {kTableSize, parameters, static_text_args};
+      TextBlockTable number = {parameters, text_block};
+      TextBlockTable characteristic = {parameters, text_block};
+      numerated_buffer = {number, characteristic};
+    }
+    //---------------ROUNDED_BUFFER-----------
+    {
+      TableParameters parameters = {0, 0, kXOffset};
+      TextBlock text_block = {kTableSize, parameters, static_text_args};
+      TextBlockTable number = {parameters, text_block};
+      TextBlockTable characteristic = {parameters, text_block};
+      rounded_buffer = {number, characteristic};
+    }  
+  }
 };  // namespace ID

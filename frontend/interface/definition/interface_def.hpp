@@ -66,14 +66,20 @@ struct NumberList {
 };
 
 const uint8_t kNumOfPrevOperations = 3;
+const uint8_t kNumofModes = 11;
+const uint8_t kNumofFb = 4;
 struct VisualisationTemplate {
-  TextBlock step = TextBlock(0, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}});
-  Number main_number = Number({CN::kNumOfDigits + 1, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}}, {CN::kNumOfCharacteristic + 1, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}});
-  TextBlockTable last_operations = TextBlockTable({0, 0, 0, 0, 0, 0}, {CN::kNumOfCharacteristic, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}});
-  TextBlock mode = TextBlock(kNumofModes, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}});
-  TextBlock function_button = TextBlock(kNumofFb, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}});
-  TextBlockTable program = TextBlockTable({0, 0, 0, 0, 0, 0}, {CN::kNumOfCharacteristic, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}});
-  NumberList numerated_buffer = {{0, 0, 0, 0, 0, 0}, {CN::kNumOfDigits, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}}, {0, 0, 0, 0, 0, 0}, {CN::kNumOfCharacteristic, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}}};
-  NumberList rounded_buffer = {{0, 0, 0, 0, 0, 0}, {CN::kNumOfDigits, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}}, {0, 0, 0, 0, 0, 0}, {CN::kNumOfCharacteristic, {0, 0, 0}, {nullptr, wxID_ANY, ' ', {}, {}}}};};
+  TextBlock step;
+  Number main_number;
+  TextBlockTable last_operations;
+  TextBlock mode;
+  TextBlock function_button;
+  TextBlockTable program;
+  NumberList numerated_buffer;
+  NumberList rounded_buffer;
 
-}  // namespace ID
+  VisualisationTemplate();
+  void SetPanel(wxPanel*);
+  
+};  // namespace ID
+
