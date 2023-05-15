@@ -16,4 +16,5 @@ void Updater(std::shared_ptr<CE::Calc> calc,
     }
   }
 }
+
 }  // namespace IV

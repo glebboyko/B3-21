@@ -25,6 +25,7 @@ class TextBlock {
   void SwitchFont();
 
  private:
+  bool curr_font_ = false;
   ID::TextBlock pre_upd_;
   std::vector<wxStaticText*> curr_text_;
 };
@@ -49,10 +50,11 @@ class Visualization {
   void UpdateData();
 
  private:
-  std::shared_ptr<CE::Calc> calc;
+  std::shared_ptr<CE::Calc> calc_;
 
 
   TextBlock step_; //
+  int step_mem_ = -1;
   std::pair<TextBlock, TextBlock> main_number_; //
   std::vector<TextBlock> last_operations_; //
   TextBlock mode_; //

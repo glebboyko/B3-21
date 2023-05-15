@@ -48,14 +48,25 @@ Visualization::Visualization(std::shared_ptr<CE::Calc> calc,
 }
 
 void Visualization::UpdateData() {
-  const auto& program_buf = calc->GetProgram();
-  const auto& num_buf = calc->GetRegisterBuffer().GetNumeratedBuffer();
-  auto rounded_buf = calc->GetRegisterBuffer().GetRoundedBuffer();
+  const auto& program_buf = calc_->GetProgram();
+  const auto& num_buf = calc_->GetRegisterBuffer().GetNumeratedBuffer();
+  auto rounded_buf = calc_->GetRegisterBuffer().GetRoundedBuffer();
 
   step_.Update(std::to_string(program_buf.GetStep()));
 
+  if (step_mem_ != -1) {
+    if (step_mem_ != program_buf.GetStep()) {
+      program_[step_mem_].SwitchFont();
+      step_mem_ = program_buf.GetStep();
+      program_[step_mem_].SwitchFont();
+    }
+  } else {
+    step_mem_ = program_buf.GetStep();
+    program_[step_mem_].SwitchFont();
+  }
+
   {
-    const auto& [characteristic, number] = num_buf[0].GetNumber();
+    const auto& [characteristic, number] = num_buf[0].GetMainNumber();
     main_number_.first.Update(number);
     main_number_.second.Update(std::to_string(characteristic));
   }
@@ -71,13 +82,13 @@ void Visualization::UpdateData() {
   }
 
   {
-    auto func_but = calc->GetCurrFuncButton();
+    auto func_but = calc_->GetCurrFuncButton();
     function_button_.Update(
         func_but == CE::ButP ? "P" : (func_but == CE::ButF ? "F" : "NULL"));
   }
 
   {
-    auto mode = calc->GetMode();
+    auto mode = calc_->GetMode();
     mode_.Update(
         mode == CE::Working
             ? "Working"
@@ -93,7 +104,7 @@ void Visualization::UpdateData() {
 
   {
     for (int i = 0; i < numerated_buffer_.first.size(); ++i) {
-      const auto& [characteristic, number] = num_buf[i].GetNumber();
+      const auto& [characteristic, number] = num_buf[i].GetStaticNumber();
       numerated_buffer_.second[i].Update(std::to_string(characteristic));
       numerated_buffer_.first[i].Update(number);
     }
@@ -101,10 +112,17 @@ void Visualization::UpdateData() {
 
   {
     for (int i = 0; i < rounded_buffer_.first.size(); ++i) {
-      const auto& [characteristic, number] = num_buf[i].GetNumber();
+      const auto& [characteristic, number] = num_buf[i].GetStaticNumber();
       rounded_buffer_.second[i].Update(std::to_string(characteristic));
       rounded_buffer_.first[i].Update(number);
     }
+  }
+}
+
+void TextBlock::SwitchFont() {
+  curr_font_ = !(curr_font_);
+  for (int i = 0; i < curr_text_.size(); ++i) {
+    curr_text_[i]->SetFont(curr_font_ ? pre_upd_.object[i].font.second : pre_upd_.object[i].font.first);
   }
 }
 
@@ -114,13 +132,14 @@ TextBlock::TextBlock(const ID::TextBlock& raw) {
     curr_text_[i] =
         new wxStaticText(raw.object[i].panel, raw.object[i].id,
                          raw.object[i].text, raw.object[i].location);
-    curr_text_[i]->SetFont(raw.object[i].font);
+    curr_text_[i]->SetFont(raw.object[i].font.first);
   }
   pre_upd_ = raw;
 }
 TextBlock::TextBlock(IV::TextBlock&& outer) {
   pre_upd_ = outer.pre_upd_;
   curr_text_ = outer.curr_text_;
+  curr_font_ = outer.curr_font_;
 
   outer.curr_text_.clear();
 }
@@ -131,6 +150,7 @@ TextBlock& TextBlock::operator=(IV::TextBlock&& outer) {
   }
   curr_text_ = outer.curr_text_;
   outer.curr_text_.clear();
+  curr_font_ = outer.curr_font_;
 }
 
 TextBlock::~TextBlock() {
@@ -149,7 +169,7 @@ void TextBlock::Update(const std::string& str) {
     curr_text_[i] =
         new wxStaticText(pre_upd_.object[i].panel, pre_upd_.object[i].id,
                          pre_upd_.object[i].text, pre_upd_.object[i].location);
-    curr_text_[i]->SetFont(pre_upd_.object[i].font);
+    curr_text_[i]->SetFont(curr_font_ ? pre_upd_.object[i].font.second : pre_upd_.object[i].font.first);
   }
 
   for (; i < curr_text_.size(); ++i) {

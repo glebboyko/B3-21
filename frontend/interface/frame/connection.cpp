@@ -13,7 +13,7 @@ void CalculatorFrame::ButtonClick(wxCommandEvent& event) {
 
 void CalculatorFrame::MakeBackUp(wxCommandEvent& event) {
   wxFileDialog file_dialog(this, _("Make backup"), "", "",
-                           "CALC files (*.calc)|*.calc",
+                           "CALC files (*.calc_)|*.calc_",
                            wxFD_SAVE | wxFD_FILE_MUST_EXIST);
   if (file_dialog.ShowModal() != wxID_CANCEL) {
     BU::MakeBackup(*calc_, file_dialog.GetPath().ToStdString());
@@ -22,7 +22,7 @@ void CalculatorFrame::MakeBackUp(wxCommandEvent& event) {
 
 void CalculatorFrame::LoadFromBackUp(wxCommandEvent& event) {
   wxFileDialog file_dialog(this, _("Load from backup"), "", "",
-                           "CALC files (*.calc)|*.calc",
+                           "CALC files (*.calc_)|*.calc_",
                            wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (file_dialog.ShowModal() != wxID_CANCEL) {
     *calc_ = BU::RestoreFromBackup(file_dialog.GetPath().ToStdString());
