@@ -17,7 +17,7 @@ TextBlock::TextBlock(uint8_t size, ID::TextParameters parameters,
 
 TextBlockTable::TextBlockTable(ID::TableParameters parameters,
                                ID::TextBlock template_text_block) {
-  table.resize(parameters.init_x * parameters.init_y);
+  table.resize(parameters.column_num * parameters.raw_num);
 
   const int32_t kSymbolOffset =
       template_text_block.object.size() > 1
@@ -41,104 +41,140 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
   }
 }
 
-  VisualisationTemplate::VisualisationTemplate() {
-    const uint8_t kTableSize = 10;
-    const int32_t kXOffset = 10;
-    const int32_t kRawOffset = 30;
-    const int32_t kNumofOperDigits = 2;
-    const int32_t kNumofStep = 2;
-    const uint8_t kNumOfPrevOperations = 3;
-    const int32_t kNumofCharacteristic = 3;
-    const uint8_t kNumofModes = 11;
-    const uint8_t kNumofFb = 4;
-    const int32_t kNumofNumber = 9;
-    WxTextArgs static_text_args;
-    static_text_args.font = {};
-    
-    //---------PROGRAM------------
-    {
-      TableParameters table_parameters = {547, 142, kRawOffset, 145, 20, 3};
-      TextBlock text_block(kNumofOperDigits, {0, 0, kXOffset}, static_text_args);
-      program = TextBlockTable(table_parameters, text_block);
-    }
-    //--------STEP-----------
-    {
-      TextParameters parameters = {0, 0, kXOffset};
-      step = TextBlock(kNumofStep, parameters, static_text_args);
-    }
-    //----------MAIN_NUMBER---------
-    {
-      TextParameters parameters = {0, 0, kXOffset};
-      TextBlock number(kNumofNumber, parameters, static_text_args);
-      TextBlock characteristic(kNumofCharacteristic, parameters, static_text_args);
-      main_number = {number, characteristic};
-    }
-    //-------------LAST_OPERATIONS-------------
-    {
-      TextParameters text_parameters = {0, 0, kXOffset};
-      TableParameters parameters = {0, 0, kRawOffset, 0, 0, 0};
-      TextBlock text_block(kNumOfPrevOperations, text_parameters, static_text_args);
-      last_operations = TextBlockTable(parameters, text_block);
-    }
-    //-------------MODE-------------
-    {
-      TextParameters parameters = {0, 0, kXOffset};
-      mode = TextBlock(kNumofFb, parameters, static_text_args);
-    }
-    //------------FUNCTION_BUTTON------------
-    {
-      TextParameters parameters = {0, 0, kXOffset};
-      function_button = TextBlock(kNumofModes, parameters, static_text_args);
-    }
-    //--------------NUMERATED_BUFFER------------
-    {
-      TextParameters text_parameters = {0, 0, kXOffset};
-      TableParameters table_parameters_number = {1135, 140, kRawOffset, 0, 8, 1};
-      TableParameters table_parameters_characteristic = {1050, 140, kRawOffset, 0, 8, 1};
-      TextBlock text_block_number = {kNumofNumber, text_parameters, static_text_args};
-      TextBlock text_block_characteristic = {kNumofCharacteristic, text_parameters, static_text_args};
-      TextBlockTable number = {table_parameters_number, text_block_number};
-      TextBlockTable characteristic = {table_parameters_characteristic, text_block_characteristic};
-      numerated_buffer = {number, characteristic};
-    }
-    //---------------ROUNDED_BUFFER-----------
-    {
-      TextParameters text_parameters = {0, 0, kXOffset};
-      TableParameters table_parameters_number = {1135, 410, kRawOffset, 0, 6, 1};
-      TableParameters table_parameters_characteristic = {1050, 410, kRawOffset, 0, 6, 1};
-      TextBlock text_block_number = {kNumofNumber, text_parameters, static_text_args};
-      TextBlock text_block_characteristic = {kNumofCharacteristic, text_parameters, static_text_args};
-      TextBlockTable number = {table_parameters_number, text_block_number};
-      TextBlockTable characteristic = {table_parameters_characteristic, text_block_characteristic};
-      rounded_buffer = {number, characteristic};
-    }
+VisualisationTemplate::VisualisationTemplate() {
+  const int32_t kTableSymbolOffset = 9;
+  const int32_t kRawOffset = 30;
+  const int32_t kNumofOperDigits = 2;
+  const int32_t kNumofStepDigits = 2;
+  const uint8_t kNumOfPrevOperations = 3;
+  const int32_t kNumofCharacteristic = CN::kNumOfCharacteristic + 1;
+  const uint8_t kNumofModes = 11;
+  const uint8_t kNumofFb = 4;
+  const int32_t kNumofNumber = CN::kNumOfDigits + 1;
+  WxTextArgs static_text_args;
+
+  //---------PROGRAM------------
+  {
+    TableParameters table_parameters = {574, 143, kRawOffset, 145, 20, 3};
+    TextBlock text_block(kNumofOperDigits, {0, 0, kTableSymbolOffset},
+                         static_text_args);
+    program = TextBlockTable(table_parameters, text_block);
   }
-  void TextBlock::SetPanel(wxPanel* panel) {
-    for (auto& elem : object) {
-      elem.panel = panel;
-    }
+  //--------STEP-----------
+  {
+    TextParameters parameters = {136, 176, 8};
+    const int kSymbolSize = 10;
+    WxTextArgs step_args;
+    step_args.font.first = wxFont(kSymbolSize, wxFONTFAMILY_DEFAULT,
+                             wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    step = TextBlock(kNumofStepDigits, parameters, step_args);
   }
+  //----------MAIN_NUMBER---------
+  {
+    TextParameters num_parameters = {170, 194, 21};
+    TextParameters char_parameters = {130, 204, 10};
 
-  void TextBlockTable::SetPanel(wxPanel* panel) {
-    for (auto& elem : table) {
-      elem.SetPanel(panel);
-    }
+    WxTextArgs num_text_args;
+    num_text_args.font.first = wxFont(26, wxFONTFAMILY_DEFAULT,
+                                 wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    WxTextArgs char_text_args;
+    char_text_args.font.first = wxFont(11, wxFONTFAMILY_DEFAULT,
+                                  wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+
+    TextBlock number(kNumofNumber, num_parameters, num_text_args);
+    TextBlock characteristic(kNumofCharacteristic, char_parameters,
+                             char_text_args);
+    main_number = {number, characteristic};
   }
-  void VisualisationTemplate::SetPanel(wxPanel* panel) {
-    step.SetPanel(panel);
+  //-------------LAST_OPERATIONS-------------
+  {
+    TextParameters text_parameters = {0, 0, 10};
 
-    main_number.number.SetPanel(panel);
-    main_number.characteristic.SetPanel(panel);
+    WxTextArgs lo_text_args;
+    lo_text_args.font.first = wxFont(11, wxFONTFAMILY_DEFAULT,
+                                     wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
-    last_operations.SetPanel(panel);
-    mode.SetPanel(panel);
-    function_button.SetPanel(panel);
-    program.SetPanel(panel);
+    TextBlock text_block(kNumofOperDigits, text_parameters, lo_text_args);
 
-    numerated_buffer.number.SetPanel(panel);
-    numerated_buffer.characteristic.SetPanel(panel);
+    const int kLORawOffset = 13;
+    TableParameters parameters = {
+        360, 178, kLORawOffset, 0, kNumOfPrevOperations, 1};
 
-    rounded_buffer.number.SetPanel(panel);
-    rounded_buffer.characteristic.SetPanel(panel);
+    last_operations = TextBlockTable(parameters, text_block);
   }
+  //-------------MODE-------------
+  {
+    TextParameters parameters = {544, 108, 10};
+    WxTextArgs mode_text_args;
+    mode_text_args.font.first = wxFont(13, wxFONTFAMILY_DEFAULT,
+                                  wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    mode = TextBlock(kNumofFb, parameters, mode_text_args);
+  }
+  //------------FUNCTION_BUTTON------------
+  {
+    TextParameters parameters = {648, 79, 10};
+    WxTextArgs fb_text_args;
+    fb_text_args.font.first = wxFont(13, wxFONTFAMILY_DEFAULT,
+                                       wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    function_button = TextBlock(kNumofModes, parameters, fb_text_args);
+  }
+  //--------------NUMERATED_BUFFER------------
+  {
+    TextParameters text_parameters = {0, 0, kTableSymbolOffset};
+    TableParameters table_parameters_number = {1135, 140, kRawOffset, 0, 8, 1};
+    TableParameters table_parameters_characteristic = {1050, 140, kRawOffset,
+                                                       0,    8,   1};
+    TextBlock text_block_number = {kNumofNumber, text_parameters,
+                                   static_text_args};
+    TextBlock text_block_characteristic = {kNumofCharacteristic,
+                                           text_parameters, static_text_args};
+    TextBlockTable number = {table_parameters_number, text_block_number};
+    TextBlockTable characteristic = {table_parameters_characteristic,
+                                     text_block_characteristic};
+    numerated_buffer = {number, characteristic};
+  }
+  //---------------ROUNDED_BUFFER-----------
+  {
+    TextParameters text_parameters = {0, 0, kTableSymbolOffset};
+    TableParameters table_parameters_number = {1135, 410, kRawOffset, 0, 6, 1};
+    TableParameters table_parameters_characteristic = {1050, 410, kRawOffset,
+                                                       0,    6,   1};
+    TextBlock text_block_number = {kNumofNumber, text_parameters,
+                                   static_text_args};
+    TextBlock text_block_characteristic = {kNumofCharacteristic,
+                                           text_parameters, static_text_args};
+    TextBlockTable number = {table_parameters_number, text_block_number};
+    TextBlockTable characteristic = {table_parameters_characteristic,
+                                     text_block_characteristic};
+    rounded_buffer = {number, characteristic};
+  }
+}
+void TextBlock::SetPanel(wxPanel* panel) {
+  for (auto& elem : object) {
+    elem.panel = panel;
+  }
+}
+
+void TextBlockTable::SetPanel(wxPanel* panel) {
+  for (auto& elem : table) {
+    elem.SetPanel(panel);
+  }
+}
+void VisualisationTemplate::SetPanel(wxPanel* panel) {
+  step.SetPanel(panel);
+
+  main_number.number.SetPanel(panel);
+  main_number.characteristic.SetPanel(panel);
+
+  last_operations.SetPanel(panel);
+  mode.SetPanel(panel);
+  function_button.SetPanel(panel);
+  program.SetPanel(panel);
+
+  numerated_buffer.number.SetPanel(panel);
+  numerated_buffer.characteristic.SetPanel(panel);
+
+  rounded_buffer.number.SetPanel(panel);
+  rounded_buffer.characteristic.SetPanel(panel);
+}
 };  // namespace ID
