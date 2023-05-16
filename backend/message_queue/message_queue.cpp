@@ -57,6 +57,7 @@ MessageQueue& MessageQueue::operator=(const MQ::MessageQueue& other) noexcept {
   if (num_of_class_objects_ != nullptr) {
     *num_of_class_objects_ += 1;
   }
+  return *this;
 }
 
 std::optional<int> MessageQueue::Receive(int64_t msg_type, Waiting wait) {

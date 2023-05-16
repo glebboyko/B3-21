@@ -138,6 +138,7 @@ TextBlock& TextBlock::operator=(IV::TextBlock&& outer) {
   curr_text_ = outer.curr_text_;
   outer.curr_text_ = nullptr;
   curr_font_ = outer.curr_font_;
+  pre_upd_ = outer.pre_upd_;
   return *this;
 }
 
