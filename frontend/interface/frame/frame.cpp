@@ -13,6 +13,13 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
 
   visual_template_.SetPanel(panel);
 
+  wxInitAllImageHandlers();
+  wxImage pict1(wxT("images/interface.png"), wxBITMAP_TYPE_PNG);
+  wxBitmap backgroundBitmap(pict1);
+  wxStaticBitmap* background = new wxStaticBitmap(this, wxID_ANY, backgroundBitmap, wxDefaultPosition, wxSize(1361, 800));
+  SetSize(backgroundBitmap.GetSize());
+
+
   wxMenuBar* menu_bar = new wxMenuBar();
   wxMenu* backup_menu = new wxMenu();
   wxMenu* program_menu = new wxMenu();
