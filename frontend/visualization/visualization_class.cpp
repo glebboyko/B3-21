@@ -11,7 +11,7 @@ Visualization::Visualization(std::shared_ptr<CE::Calc> calc,
 
   last_operations_.resize(vis_temp.last_operations.table.size());
   for (size_t i = 0; i < last_operations_.size(); ++i) {
-    last_operations_[i] = TextBlock(vis_temp.last_operations.table[i]);
+    last_operations_.at(i) = TextBlock(vis_temp.last_operations.table.at(i));
   }
 
   mode_ = TextBlock(vis_temp.mode);
@@ -20,31 +20,31 @@ Visualization::Visualization(std::shared_ptr<CE::Calc> calc,
 
   program_.resize(vis_temp.program.table.size());
   for (size_t i = 0; i < program_.size(); ++i) {
-    program_[i] = TextBlock(vis_temp.program.table[i]);
+    program_.at(i) = TextBlock(vis_temp.program.table.at(i));
   }
 
   numerated_buffer_.first.resize(vis_temp.numerated_buffer.number.table.size());
   for (size_t i = 0; i < numerated_buffer_.first.size(); ++i) {
-    numerated_buffer_.first[i] =
-        TextBlock(vis_temp.numerated_buffer.number.table[i]);
+    numerated_buffer_.first.at(i) =
+        TextBlock(vis_temp.numerated_buffer.number.table.at(i));
   }
   numerated_buffer_.second.resize(
       vis_temp.numerated_buffer.characteristic.table.size());
   for (size_t i = 0; i < numerated_buffer_.second.size(); ++i) {
-    numerated_buffer_.second[i] =
-        TextBlock(vis_temp.numerated_buffer.characteristic.table[i]);
+    numerated_buffer_.second.at(i) =
+        TextBlock(vis_temp.numerated_buffer.characteristic.table.at(i));
   }
 
   rounded_buffer_.first.resize(vis_temp.rounded_buffer.number.table.size());
   for (size_t i = 0; i < rounded_buffer_.first.size(); ++i) {
-    rounded_buffer_.first[i] =
-        TextBlock(vis_temp.rounded_buffer.number.table[i]);
+    rounded_buffer_.first.at(i) =
+        TextBlock(vis_temp.rounded_buffer.number.table.at(i));
   }
   rounded_buffer_.second.resize(
       vis_temp.rounded_buffer.characteristic.table.size());
   for (size_t i = 0; i < rounded_buffer_.second.size(); ++i) {
-    rounded_buffer_.second[i] =
-        TextBlock(vis_temp.rounded_buffer.characteristic.table[i]);
+    rounded_buffer_.second.at(i) =
+        TextBlock(vis_temp.rounded_buffer.characteristic.table.at(i));
   }
 }
 
@@ -57,17 +57,17 @@ void Visualization::UpdateData() {
 
   if (step_mem_ != -1) {
     if (step_mem_ != program_buf.GetStep()) {
-      program_[step_mem_].SwitchFont();
+      program_.at(step_mem_).SwitchFont();
       step_mem_ = program_buf.GetStep();
-      program_[step_mem_].SwitchFont();
+      program_.at(step_mem_).SwitchFont();
     }
   } else {
     step_mem_ = program_buf.GetStep();
-    program_[step_mem_].SwitchFont();
+    program_.at(step_mem_).SwitchFont();
   }
 
   {
-    const auto& [characteristic, number] = num_buf[0].GetMainNumber();
+    const auto& [characteristic, number] = num_buf.at(0).GetMainNumber();
     main_number_.first.Update(number);
     main_number_.second.Update(std::to_string(characteristic));
   }
@@ -75,10 +75,10 @@ void Visualization::UpdateData() {
   for (size_t i = 0; i < last_operations_.size(); ++i) {
     if (static_cast<int32_t>(program_buf.GetStep()) - static_cast<int32_t>(i) <
         0) {
-      last_operations_[i].Update("");
+      last_operations_.at(i).Update("");
     } else {
-      last_operations_[i].Update(
-          std::to_string(program_buf.GetProgram()[program_buf.GetStep() - i]));
+      last_operations_.at(i).Update(std::to_string(
+          program_buf.GetProgram().at(program_buf.GetStep() - i)));
     }
   }
 
@@ -99,23 +99,22 @@ void Visualization::UpdateData() {
   }
 
   for (size_t i = 0; i < program_.size(); ++i) {
-    program_[i].Update(
-        std::to_string(program_buf.GetProgram()[program_buf.GetStep() - i]));
+    program_.at(i).Update(std::to_string(program_buf.GetProgram().at(i)));
   }
 
   {
     for (int i = 0; i < numerated_buffer_.first.size(); ++i) {
-      const auto& [characteristic, number] = num_buf[i].GetStaticNumber();
-      numerated_buffer_.second[i].Update(std::to_string(characteristic));
-      numerated_buffer_.first[i].Update(number);
+      const auto& [characteristic, number] = num_buf.at(i).GetStaticNumber();
+      numerated_buffer_.second.at(i).Update(std::to_string(characteristic));
+      numerated_buffer_.first.at(i).Update(number);
     }
   }
 
   {
     for (int i = 0; i < rounded_buffer_.first.size(); ++i) {
-      const auto& [characteristic, number] = num_buf[i].GetStaticNumber();
-      rounded_buffer_.second[i].Update(std::to_string(characteristic));
-      rounded_buffer_.first[i].Update(number);
+      const auto& [characteristic, number] = num_buf.at(i).GetStaticNumber();
+      rounded_buffer_.second.at(i).Update(std::to_string(characteristic));
+      rounded_buffer_.first.at(i).Update(number);
     }
   }
 }
@@ -146,6 +145,9 @@ TextBlock::~TextBlock() { delete curr_text_; }
 void TextBlock::Update(const std::string& str) {
   if (pre_upd_.text != str) {
     pre_upd_.text = str;
+    if (curr_text_ == nullptr) {
+      throw std::invalid_argument("curr_text_");
+    }
     delete curr_text_;
     curr_text_ = new wxStaticText(pre_upd_.panel, pre_upd_.id, pre_upd_.text,
                                   pre_upd_.location);
