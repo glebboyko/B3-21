@@ -44,62 +44,72 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
   VisualisationTemplate::VisualisationTemplate() {
     const uint8_t kTableSize = 10;
     const int32_t kXOffset = 10;
-    const int32_t kRawOffset = 10;
-  
+    const int32_t kRawOffset = 30;
+    const int32_t kNumofOperDigits = 2;
+    const int32_t kNumofStep = 2;
+    const uint8_t kNumOfPrevOperations = 3;
+    const int32_t kNumofCharacteristic = 3;
+    const uint8_t kNumofModes = 11;
+    const uint8_t kNumofFb = 4;
+    const int32_t kNumofNumber = 9;
     WxTextArgs static_text_args;
     static_text_args.font = {};
     
     //---------PROGRAM------------
     {
-      TableParameters table_parameters = {0, 0, kRawOffset, 100, 20, 3};
-      TextBlock text_block(kTableSize, {0, 0, kXOffset}, static_text_args);
+      TableParameters table_parameters = {547, 142, kRawOffset, 145, 20, 3};
+      TextBlock text_block(kNumofOperDigits, {0, 0, kXOffset}, static_text_args);
       program = TextBlockTable(table_parameters, text_block);
     }
     //--------STEP-----------
     {
       TextParameters parameters = {0, 0, kXOffset};
-      step = TextBlock(kTableSize, parameters, static_text_args);
+      step = TextBlock(kNumofStep, parameters, static_text_args);
     }
     //----------MAIN_NUMBER---------
     {
       TextParameters parameters = {0, 0, kXOffset};
-      TextBlock number(kTableSize, parameters, static_text_args);
-      TextBlock characteristic(kTableSize, parameters, static_text_args);
+      TextBlock number(kNumofNumber, parameters, static_text_args);
+      TextBlock characteristic(kNumofCharacteristic, parameters, static_text_args);
       main_number = {number, characteristic};
     }
     //-------------LAST_OPERATIONS-------------
     {
-      TextParameters text_parameters = {/* Shoislom */};
+      TextParameters text_parameters = {0, 0, kXOffset};
       TableParameters parameters = {0, 0, kRawOffset, 0, 0, 0};
-      TextBlock text_block(kTableSize, text_parameters, static_text_args);
+      TextBlock text_block(kNumOfPrevOperations, text_parameters, static_text_args);
       last_operations = TextBlockTable(parameters, text_block);
     }
     //-------------MODE-------------
     {
       TextParameters parameters = {0, 0, kXOffset};
-      mode = TextBlock(kTableSize, parameters, static_text_args);
+      mode = TextBlock(kNumofFb, parameters, static_text_args);
     }
     //------------FUNCTION_BUTTON------------
     {
       TextParameters parameters = {0, 0, kXOffset};
-      function_button = TextBlock(kTableSize, parameters, static_text_args);
+      function_button = TextBlock(kNumofModes, parameters, static_text_args);
     }
     //--------------NUMERATED_BUFFER------------
     {
-      TextParameters text_parameters = {/* Shoislom */};
-      TableParameters parameters = {0, 0, kXOffset};
-      TextBlock text_block = {kTableSize, text_parameters, static_text_args};
-      TextBlockTable number = {parameters, text_block};
-      TextBlockTable characteristic = {parameters, text_block};
+      TextParameters text_parameters = {0, 0, kXOffset};
+      TableParameters table_parameters_number = {1135, 140, kRawOffset, 0, 8, 1};
+      TableParameters table_parameters_characteristic = {1050, 140, kRawOffset, 0, 8, 1};
+      TextBlock text_block_number = {kNumofNumber, text_parameters, static_text_args};
+      TextBlock text_block_characteristic = {kNumofCharacteristic, text_parameters, static_text_args};
+      TextBlockTable number = {table_parameters_number, text_block_number};
+      TextBlockTable characteristic = {table_parameters_characteristic, text_block_characteristic};
       numerated_buffer = {number, characteristic};
     }
     //---------------ROUNDED_BUFFER-----------
     {
-      TextParameters text_parameters = {/* Shoislom */};
-      TableParameters parameters = {0, 0, kXOffset};
-      TextBlock text_block = {kTableSize, text_parameters, static_text_args};
-      TextBlockTable number = {parameters, text_block};
-      TextBlockTable characteristic = {parameters, text_block};
+      TextParameters text_parameters = {0, 0, kXOffset};
+      TableParameters table_parameters_number = {1135, 410, kRawOffset, 0, 6, 1};
+      TableParameters table_parameters_characteristic = {1050, 410, kRawOffset, 0, 6, 1};
+      TextBlock text_block_number = {kNumofNumber, text_parameters, static_text_args};
+      TextBlock text_block_characteristic = {kNumofCharacteristic, text_parameters, static_text_args};
+      TextBlockTable number = {table_parameters_number, text_block_number};
+      TextBlockTable characteristic = {table_parameters_characteristic, text_block_characteristic};
       rounded_buffer = {number, characteristic};
     }
   }

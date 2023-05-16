@@ -69,9 +69,7 @@ struct NumberList {
   TextBlockTable characteristic;
 };
 
-const uint8_t kNumOfPrevOperations = 3;
-const uint8_t kNumofModes = 11;
-const uint8_t kNumofFb = 4;
+
 struct VisualisationTemplate {
   TextBlock step;
   Number main_number;
