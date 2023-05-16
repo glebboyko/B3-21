@@ -9,7 +9,7 @@
 
 namespace ID {
 
-const uint8_t kDefaultTextSize = 16;
+const uint8_t kDefaultTextSize = 13;
 
 struct WxTextArgs {
   wxPanel* panel = nullptr;
