@@ -2,7 +2,6 @@
 #include "frame.hpp"
 
 namespace IF {
-
 void CalculatorFrame::ButtonClick(wxCommandEvent& event) {
   if (event.GetId() == CE::ButNull) {
     calc_->TurnOnOff();
@@ -34,7 +33,8 @@ void CalculatorFrame::SaveProgram(wxCommandEvent& event) {
                            "PROG files (*.prog)|*.prog",
                            wxFD_SAVE | wxFD_FILE_MUST_EXIST);
   if (file_dialog.ShowModal() != wxID_CANCEL) {
-    BU::SaveProgram(calc_->GetProgram(), file_dialog.GetPath().ToStdString());
+    BU::SaveProgram(calc_->GetProgram().GetProgram(),
+                    file_dialog.GetPath().ToStdString());
   }
 }
 

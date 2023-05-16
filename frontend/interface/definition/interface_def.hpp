@@ -79,7 +79,8 @@ struct VisualisationTemplate {
   NumberList rounded_buffer;
 
   VisualisationTemplate();
-  void SetPanel(wxPanel*);
+  void SetPanel(wxPanel*) {/*Shoislom*/};
+};
   
-};  // namespace ID
+}  // namespace ID
 

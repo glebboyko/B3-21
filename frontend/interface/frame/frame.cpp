@@ -2,7 +2,7 @@
 
 enum WxIds { IdMakeBackUp = 1, IdLoadFromBackUp, IdSaveProgram, IdLoadProgram };
 
-IF::CalculatorFrame::GetTemplate() const {
+ID::VisualisationTemplate IF::CalculatorFrame::GetTemplate() const {
     return visual_template_;
 }
 
@@ -89,7 +89,7 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title, std::shared_ptr<C
     buttonArrowUp->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
     buttonXArrowY->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
 
-    buttonCp->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
+    buttonCP->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
     buttonBvP->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
     buttonXExpY->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
     buttonF->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);

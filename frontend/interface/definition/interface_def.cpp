@@ -41,7 +41,7 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
   }
 }
 
-  VisualisationTemplate() {
+  VisualisationTemplate::VisualisationTemplate() {
     const uint8_t kTableSize = 10;
     const int32_t kXOffset = 10;
     const int32_t kRawOffset = 10;
@@ -63,14 +63,15 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
     //----------MAIN_NUMBER---------
     {
       TextParameters parameters = {0, 0, kXOffset};
-      TextBlock number = {kTableSize, parameters, static_text_args};
-      TextBlock characteristic = {kTabelSize, parameters, static_text_args};
-      main_number = Number(number, characteristic);
+      TextBlock number(kTableSize, parameters, static_text_args);
+      TextBlock characteristic(kTableSize, parameters, static_text_args);
+      main_number = {number, characteristic};
     }
     //-------------LAST_OPERATIONS-------------
     {
+      TextParameters text_parameters = {/* Shoislom */};
       TableParameters parameters = {0, 0, kRawOffset, 0, 0, 0};
-      TextBlock text_block = {kTableSize, parameters, static_text_args};
+      TextBlock text_block(kTableSize, text_parameters, static_text_args);
       last_operations = TextBlockTable(parameters, text_block);
     }
     //-------------MODE-------------
@@ -85,16 +86,18 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
     }
     //--------------NUMERATED_BUFFER------------
     {
+      TextParameters text_parameters = {/* Shoislom */};
       TableParameters parameters = {0, 0, kXOffset};
-      TextBlock text_block = {kTableSize, parameters, static_text_args};
+      TextBlock text_block = {kTableSize, text_parameters, static_text_args};
       TextBlockTable number = {parameters, text_block};
       TextBlockTable characteristic = {parameters, text_block};
       numerated_buffer = {number, characteristic};
     }
     //---------------ROUNDED_BUFFER-----------
     {
+      TextParameters text_parameters = {/* Shoislom */};
       TableParameters parameters = {0, 0, kXOffset};
-      TextBlock text_block = {kTableSize, parameters, static_text_args};
+      TextBlock text_block = {kTableSize, text_parameters, static_text_args};
       TextBlockTable number = {parameters, text_block};
       TextBlockTable characteristic = {parameters, text_block};
       rounded_buffer = {number, characteristic};
