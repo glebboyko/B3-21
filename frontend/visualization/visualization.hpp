@@ -27,7 +27,7 @@ class TextBlock {
  private:
   bool curr_font_ = false;
   ID::TextBlock pre_upd_;
-  std::vector<wxStaticText*> curr_text_;
+  wxStaticText* curr_text_ = nullptr;
 };
 
 // класс - визуализатор
