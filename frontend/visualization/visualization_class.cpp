@@ -4,6 +4,7 @@ namespace IV {
 Visualization::Visualization(std::shared_ptr<CE::Calc> calc,
                              const ID::VisualisationTemplate& vis_temp) {
   step_ = TextBlock(vis_temp.step);
+  calc_ = calc;
 
   main_number_.first = TextBlock(vis_temp.main_number.number);
   main_number_.second = TextBlock(vis_temp.main_number.characteristic);
@@ -119,21 +120,9 @@ void Visualization::UpdateData() {
   }
 }
 
-void TextBlock::SwitchFont() {
-  curr_font_ = !(curr_font_);
-  for (int i = 0; i < curr_text_.size(); ++i) {
-    curr_text_[i]->SetFont(curr_font_ ? pre_upd_.object[i].font.second : pre_upd_.object[i].font.first);
-  }
-}
-
 TextBlock::TextBlock(const ID::TextBlock& raw) {
-  curr_text_.resize(raw.object.size());
-  for (int i = 0; i < raw.object.size(); ++i) {
-    curr_text_[i] =
-        new wxStaticText(raw.object[i].panel, raw.object[i].id,
-                         raw.object[i].text, raw.object[i].location);
-    curr_text_[i]->SetFont(raw.object[i].font.first);
-  }
+  curr_text_ = new wxStaticText(raw.panel, raw.id, raw.text, raw.location);
+  curr_text_->SetFont(raw.font.first);
   pre_upd_ = raw;
 }
 TextBlock::TextBlock(IV::TextBlock&& outer) {
@@ -141,41 +130,32 @@ TextBlock::TextBlock(IV::TextBlock&& outer) {
   curr_text_ = outer.curr_text_;
   curr_font_ = outer.curr_font_;
 
-  outer.curr_text_.clear();
+  outer.curr_text_ = nullptr;
 }
 
 TextBlock& TextBlock::operator=(IV::TextBlock&& outer) {
-  for (auto elem : curr_text_) {
-    delete elem;
-  }
+  delete curr_text_;
   curr_text_ = outer.curr_text_;
-  outer.curr_text_.clear();
+  outer.curr_text_ = nullptr;
   curr_font_ = outer.curr_font_;
   return *this;
 }
 
-TextBlock::~TextBlock() {
-  for (auto elem : curr_text_) {
-    delete elem;
-  }
-}
+TextBlock::~TextBlock() { delete curr_text_; }
 void TextBlock::Update(const std::string& str) {
-  int i = 0;
-  for (i = 0; i < str.size(); ++i) {
-    if (pre_upd_.object[i].text == str[i]) {
-      continue;
-    }
-    delete curr_text_[i];
-    pre_upd_.object[i].text = str[i];
-    curr_text_[i] =
-        new wxStaticText(pre_upd_.object[i].panel, pre_upd_.object[i].id,
-                         pre_upd_.object[i].text, pre_upd_.object[i].location);
-    curr_text_[i]->SetFont(curr_font_ ? pre_upd_.object[i].font.second : pre_upd_.object[i].font.first);
-  }
-
-  for (; i < curr_text_.size(); ++i) {
-    delete curr_text_[i];
-    pre_upd_.object[i].text = ' ';
+  if (pre_upd_.text != str) {
+    pre_upd_.text = str;
+    delete curr_text_;
+    curr_text_ = new wxStaticText(pre_upd_.panel, pre_upd_.id, pre_upd_.text,
+                                  pre_upd_.location);
+    curr_text_->SetFont(curr_font_ ? pre_upd_.font.second
+                                   : pre_upd_.font.first);
   }
 }
+
+void TextBlock::SwitchFont() {
+  curr_font_ = !(curr_font_);
+  curr_text_->SetFont(curr_font_ ? pre_upd_.font.second : pre_upd_.font.first);
+}
+
 }  // namespace IV
