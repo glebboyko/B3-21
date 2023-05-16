@@ -3,6 +3,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
+#include <iostream>
 #include <optional>
 
 #define MSG_SIZE 22
