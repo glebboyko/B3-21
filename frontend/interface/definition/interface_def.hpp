@@ -3,6 +3,7 @@
 #include <wx/stattext.h>
 #include <wx/wx.h>
 
+#include <string>
 #include <vector>
 
 #include "backend/calc_exec/calc_exec.hpp"
@@ -10,24 +11,6 @@
 namespace ID {
 
 const uint32_t kDefaultTextSize = 13;
-
-struct WxTextArgs {
-  wxPanel* panel = nullptr;
-  int id = wxID_ANY;
-  char text = ' ';
-  wxPoint location = wxPoint(0, 0);
-  std::pair<wxFont, wxFont> font = {
-      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-             wxFONTWEIGHT_BOLD),
-      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-             wxFONTWEIGHT_BOLD)};
-};
-
-struct TextParameters {
-  int32_t init_x;
-  int32_t init_y;
-  int32_t x_offset;
-};
 
 struct TableParameters {
   int32_t init_x;
@@ -41,12 +24,15 @@ struct TableParameters {
 };
 
 struct TextBlock {
-  TextBlock() = default;
-  TextBlock(uint32_t size, TextParameters parameters, WxTextArgs other_args);
-
-  void SetPanel(wxPanel*);
-
-  std::vector<WxTextArgs> object;
+  wxPanel* panel = nullptr;
+  int id = wxID_ANY;
+  std::string text;
+  wxPoint location = wxPoint(0, 0);
+  std::pair<wxFont, wxFont> font = {
+      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+             wxFONTWEIGHT_BOLD),
+      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+             wxFONTWEIGHT_BOLD)};
 };
 
 struct Number {
@@ -69,7 +55,6 @@ struct NumberList {
   TextBlockTable characteristic;
 };
 
-
 struct VisualisationTemplate {
   TextBlock step;
   Number main_number;
@@ -83,6 +68,5 @@ struct VisualisationTemplate {
   VisualisationTemplate();
   void SetPanel(wxPanel*);
 };
-  
-}  // namespace ID
 
+}  // namespace ID
