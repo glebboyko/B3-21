@@ -4,6 +4,7 @@ namespace IV {
 Visualization::Visualization(std::shared_ptr<CE::Calc> calc,
                              const ID::VisualisationTemplate& vis_temp) {
   step_ = TextBlock(vis_temp.step);
+  calc_ = calc;
 
   main_number_.first = TextBlock(vis_temp.main_number.number);
   main_number_.second = TextBlock(vis_temp.main_number.characteristic);
