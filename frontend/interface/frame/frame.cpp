@@ -9,6 +9,8 @@ ID::VisualisationTemplate IF::CalculatorFrame::GetTemplate() const {
 IF::CalculatorFrame::CalculatorFrame(const std::string& title, std::shared_ptr<CE::Calc> calc): wxFrame(NULL, CE::ButNum2, title, wxDefaultPosition, wxSize(700, 500)) {
     wxPanel* panel = new wxPanel(this, wxID_ANY);
 
+    visual_template_.SetPanel(panel);
+
     wxMenuBar* menu_bar = new wxMenuBar();
     wxMenu* backup_menu = new wxMenu();
     wxMenu* program_menu = new wxMenu();

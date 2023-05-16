@@ -103,18 +103,32 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
       rounded_buffer = {number, characteristic};
     }
   }
-  TextBlock::SetPanel(wxPanel* panel) {
+  void TextBlock::SetPanel(wxPanel* panel) {
     for (auto& elem : object) {
       elem.panel = panel;
     }
   }
 
-  TextBlockTable::SetPanel(wxPanel* panel) {
+  void TextBlockTable::SetPanel(wxPanel* panel) {
     for (auto& elem : table) {
       elem.SetPanel(panel);
     }
   }
   void VisualisationTemplate::SetPanel(wxPanel* panel) {
-    step.
+    step.SetPanel(panel);
+
+    main_number.number.SetPanel(panel);
+    main_number.characteristic.SetPanel(panel);
+
+    last_operations.SetPanel(panel);
+    mode.SetPanel(panel);
+    function_button.SetPanel(panel);
+    program.SetPanel(panel);
+
+    numerated_buffer.number.SetPanel(panel);
+    numerated_buffer.characteristic.SetPanel(panel);
+
+    rounded_buffer.number.SetPanel(panel);
+    rounded_buffer.characteristic.SetPanel(panel);
   }
 };  // namespace ID
