@@ -24,7 +24,7 @@ struct TableParameters {
 };
 
 struct TextBlock {
-  wxPanel* panel = nullptr;
+  wxWindow* panel = nullptr;
   int id = wxID_ANY;
   std::string text;
   wxPoint location = wxPoint(0, 0);
@@ -45,7 +45,7 @@ struct TextBlockTable {
   TextBlockTable(TableParameters table_parameters,
                  TextBlock template_text_block);
 
-  void SetPanel(wxPanel*);
+  void SetPanel(wxWindow*);
 
   std::vector<TextBlock> table;
 };
@@ -66,7 +66,7 @@ struct VisualisationTemplate {
   NumberList rounded_buffer;
 
   VisualisationTemplate();
-  void SetPanel(wxPanel*);
+  void SetPanel(wxWindow*);
 };
 
 }  // namespace ID

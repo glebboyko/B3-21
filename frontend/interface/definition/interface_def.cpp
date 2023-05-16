@@ -89,12 +89,12 @@ VisualisationTemplate::VisualisationTemplate() {
   }
 }
 
-void TextBlockTable::SetPanel(wxPanel* panel) {
+void TextBlockTable::SetPanel(wxWindow* panel) {
   for (auto& elem : table) {
     elem.panel = panel;
   }
 }
-void VisualisationTemplate::SetPanel(wxPanel* panel) {
+void VisualisationTemplate::SetPanel(wxWindow* panel) {
   step.panel = panel;
 
   main_number.number.panel = panel;
