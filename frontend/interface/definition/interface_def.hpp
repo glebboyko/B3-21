@@ -9,7 +9,7 @@
 
 namespace ID {
 
-const uint8_t kDefaultTextSize = 13;
+const uint32_t kDefaultTextSize = 13;
 
 struct WxTextArgs {
   wxPanel* panel = nullptr;
@@ -36,13 +36,13 @@ struct TableParameters {
   int32_t raw_offset;
   int32_t column_offset;
 
-  uint8_t raw_num;
-  uint8_t column_num;
+  uint32_t raw_num;
+  uint32_t column_num;
 };
 
 struct TextBlock {
   TextBlock() = default;
-  TextBlock(uint8_t size, TextParameters parameters, WxTextArgs other_args);
+  TextBlock(uint32_t size, TextParameters parameters, WxTextArgs other_args);
 
   void SetPanel(wxPanel*);
 
