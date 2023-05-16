@@ -101,6 +101,20 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
       TextBlockTable number = {parameters, text_block};
       TextBlockTable characteristic = {parameters, text_block};
       rounded_buffer = {number, characteristic};
-    }  
+    }
+  }
+  TextBlock::SetPanel(wxPanel* panel) {
+    for (auto& elem : object) {
+      elem.panel = panel;
+    }
+  }
+
+  TextBlockTable::SetPanel(wxPanel* panel) {
+    for (auto& elem : table) {
+      elem.SetPanel(panel);
+    }
+  }
+  void VisualisationTemplate::SetPanel(wxPanel* panel) {
+    step.
   }
 };  // namespace ID

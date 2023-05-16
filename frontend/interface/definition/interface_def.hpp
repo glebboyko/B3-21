@@ -44,6 +44,8 @@ struct TextBlock {
   TextBlock() = default;
   TextBlock(uint8_t size, TextParameters parameters, WxTextArgs other_args);
 
+  void SetPanel(wxPanel*);
+
   std::vector<WxTextArgs> object;
 };
 
@@ -56,6 +58,8 @@ struct TextBlockTable {
   TextBlockTable() = default;
   TextBlockTable(TableParameters table_parameters,
                  TextBlock template_text_block);
+
+  void SetPanel(wxPanel*);
 
   std::vector<TextBlock> table;
 };
@@ -79,7 +83,7 @@ struct VisualisationTemplate {
   NumberList rounded_buffer;
 
   VisualisationTemplate();
-  void SetPanel(wxPanel*) {/*Shoislom*/};
+  void SetPanel(wxPanel*);
 };
   
 }  // namespace ID
