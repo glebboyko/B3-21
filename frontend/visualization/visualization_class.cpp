@@ -151,6 +151,7 @@ TextBlock& TextBlock::operator=(IV::TextBlock&& outer) {
   curr_text_ = outer.curr_text_;
   outer.curr_text_.clear();
   curr_font_ = outer.curr_font_;
+  return *this;
 }
 
 TextBlock::~TextBlock() {
