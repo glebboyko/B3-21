@@ -63,7 +63,7 @@ void Visualization::UpdateData() {
   auto rounded_buf = calc_->GetRegisterBuffer().GetRoundedBuffer();
 
   /*--------------------------------- step -----------------------------------*/
-  step_.Update(std::to_string(program_buf.GetStep()));
+  step_.Update(std::to_string(FS::FromNotToNot<10, 6>(program_buf.GetStep())));
 
   /*-------------------------- step highlighting -----------------------------*/
   if (step_mem_ != -1) {
