@@ -8,7 +8,9 @@
 
 #include "backend/calc_exec/calc_exec.hpp"
 #include "frontend/interface/definition/interface_def.hpp"
+#include "frontend/interface/frame/frame.hpp"
 
+namespace IU {
 // функция, следящая за изменениями в калькуляторе (отдельный поток)
-void Updater(std::shared_ptr<CE::Calc> calc,
-             ID::VisualisationTemplate visualisation_template);
+void Updater(std::shared_ptr<CE::Calc> calc, wxFrame* window);
+}  // namespace IU
