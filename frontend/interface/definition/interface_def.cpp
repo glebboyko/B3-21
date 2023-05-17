@@ -62,7 +62,7 @@ VisualisationTemplate::VisualisationTemplate() {
 
   //---------PROGRAM------------
   {
-    TableParameters table_parameters = {574, 143, kRawOffset, 145, 20, 3};
+    TableParameters table_parameters = {564, 138, kRawOffset, 145, 20, 3};
     program = TextBlockTable(table_parameters, TextBlock());
   }
   //--------------NUMERATED_BUFFER------------
