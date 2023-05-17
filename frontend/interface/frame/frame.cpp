@@ -45,8 +45,8 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
 
   const wxSize BUTTON_SIZE(39, 36);
 
-  wxButton* button0 = new wxButton(background, CE::ButNum0, "0",
-                                   wxPoint(151, 655), BUTTON_SIZE);
+  wxButton* button0 =
+      new wxButton(background, CE::ButNum0, "", wxPoint(133, 638), BUTTON_SIZE, wxNO_BORDER);
   wxButton* button1 = new wxButton(background, CE::ButNum1, "1",
                                    wxPoint(151, 603), BUTTON_SIZE);
   wxButton* button2 = new wxButton(background, CE::ButNum2, "2",
