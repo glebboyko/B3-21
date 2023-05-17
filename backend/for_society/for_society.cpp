@@ -12,6 +12,9 @@ uint32_t GetDigit(uint32_t number, uint32_t index) noexcept {
 }
 
 bool CP::IsOperationCode(int code) noexcept {
+  if (code == CP::OpTrash) {
+    return true;
+  }
   if (code == 73 || code == 75) {
     return false;
   }
