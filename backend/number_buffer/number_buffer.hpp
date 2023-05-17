@@ -32,10 +32,12 @@ class Buffer {
          const std::vector<CN::Number>& rounded_buffer);
 
  private:
+  //const int kRealRoundBuffer = kRoundedBuffSize - 1;
+
   std::vector<CN::Number> buffer_body_ =
       std::vector<CN::Number>(kNumeratedBuffSize);
   std::vector<CN::Number> round_buffer_body_ =
-      std::vector<CN::Number>(kRoundedBuffSize);
+      std::vector<CN::Number>(kRoundedBuffSize - 1);
   void RoundClockWise();
 };
 
