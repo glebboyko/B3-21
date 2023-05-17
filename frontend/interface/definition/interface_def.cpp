@@ -18,7 +18,7 @@ TextBlockTable::TextBlockTable(ID::TableParameters parameters,
 }
 
 VisualisationTemplate::VisualisationTemplate() {
-  const int32_t kRawOffset = 30;
+  const double kRawOffset = 29.65;
   const uint32_t kNumOfPrevOperations = 3;
 
   wxFontInfo font_info;
@@ -34,7 +34,7 @@ VisualisationTemplate::VisualisationTemplate() {
     font.SetPointSize(10);
 
     step.font.first = {font, col_screen};
-    step.location = {136, 176};
+    step.location = {130, 170};
   }
 
   //----------MAIN_NUMBER---------
@@ -42,12 +42,12 @@ VisualisationTemplate::VisualisationTemplate() {
     wxFont font_num(font_info);
     font_num.SetPointSize(26);
     main_number.number.font.first = {font_num, col_screen};
-    main_number.number.location = {170, 194};
+    main_number.number.location = {170, 180};
 
     wxFont font_char(font_info);
     font_char.SetPointSize(10);
     main_number.characteristic.font.first = {font_char, col_screen};
-    main_number.characteristic.location = {130, 204};
+    main_number.characteristic.location = {130, 195};
   };
 
   //-------------LAST_OPERATIONS-------------
@@ -71,7 +71,7 @@ VisualisationTemplate::VisualisationTemplate() {
     font.SetPointSize(kDefaultTextSize);
     font.MakeBold();
 
-    mode.location = {544, 108};
+    mode.location = {544, 98};
     mode.font.first = {font, col_tables_main};
   }
 
@@ -81,7 +81,7 @@ VisualisationTemplate::VisualisationTemplate() {
     font.SetPointSize(kDefaultTextSize);
     font.MakeBold();
 
-    function_button.location = {648, 79};
+    function_button.location = {640, 70};
     function_button.font.first = {font, col_tables_main};
   }
 
@@ -95,16 +95,16 @@ VisualisationTemplate::VisualisationTemplate() {
   text_block.font.second.font.MakeBold();
   //---------PROGRAM------------
   {
-    TableParameters table_parameters = {564, 138, kRawOffset, 145, 20, 3};
+    TableParameters table_parameters = {550, 134, kRawOffset, 145, 20, 3};
     program = TextBlockTable(table_parameters, text_block);
   }
   //--------------NUMERATED_BUFFER------------
   {
-    TableParameters table_parameters_number = {1135, 140, kRawOffset, 0, 8, 1};
+    TableParameters table_parameters_number = {1135, 135, kRawOffset, 0, 8, 1};
     numerated_buffer.number =
         TextBlockTable(table_parameters_number, text_block);
 
-    TableParameters table_parameters_characteristic = {1050, 140, kRawOffset,
+    TableParameters table_parameters_characteristic = {1055, 135, kRawOffset,
                                                        0,    8,   1};
     numerated_buffer.characteristic =
         TextBlockTable(table_parameters_characteristic, text_block);
@@ -112,11 +112,11 @@ VisualisationTemplate::VisualisationTemplate() {
   //---------------ROUNDED_BUFFER-----------
   {
     TableParameters table_parameters_number = {
-        1135, 410, kRawOffset, 0, CM::kRoundedBuffSize, 1};
+        1135, 400, kRawOffset, 0, CM::kRoundedBuffSize, 1};
     rounded_buffer.number = TextBlockTable(table_parameters_number, text_block);
 
     TableParameters table_parameters_characteristic = {
-        1050, 410, kRawOffset, 0, CM::kRoundedBuffSize, 1};
+        1055, 400, kRawOffset, 0, CM::kRoundedBuffSize, 1};
     rounded_buffer.characteristic =
         TextBlockTable(table_parameters_characteristic, text_block);
   }
