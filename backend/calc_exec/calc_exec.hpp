@@ -95,9 +95,11 @@ class Calc {
   /* 33 */ void PDivision();
   /* 36 */ void Division();
   /* 38 */ void XExpY();
+  /* 43 */ void PComma();
   /* 45 */ void FComma();
   /* 46 */ void Comma();
   /* 48 */ void BO();
+  /* 53 */ void PPrefixMinus();
   /* 55 */ void FPrefixMinus();
   /* 56 */ void PrefixMinus();
   /* 65 */ void FVP();
@@ -126,10 +128,10 @@ class Calc {
       &Calc::PDivision, &Calc::Neutral,      &Calc::Neutral,
       &Calc::Division,  &Calc::Neutral,      &Calc::XExpY,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
-      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::PComma,      &Calc::Neutral,
       &Calc::FComma,    &Calc::Comma,        &Calc::Neutral,
       &Calc::BO,        &Calc::Neutral,      &Calc::Neutral,
-      &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
+      &Calc::Neutral,   &Calc::Neutral,      &Calc::PPrefixMinus,
       &Calc::Neutral,   &Calc::FPrefixMinus, &Calc::PrefixMinus,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
       &Calc::Neutral,   &Calc::Neutral,      &Calc::Neutral,
