@@ -67,16 +67,16 @@ class Number {
   BackUpIng GetClass() const noexcept;
 
  private:
-  bool sign_ = false;
-  uint64_t number_ = 0;
-  int characteristic_ = 0;
-  int new_characteristic_ = 0;
-  EnterMode mode_ = Mantissa;
+  mutable bool sign_ = false;
+  mutable uint64_t number_ = 0;
+  mutable int characteristic_ = 0;
+  mutable int new_characteristic_ = 0;
+  mutable EnterMode mode_ = Mantissa;
 
  public:
-  void ExitEnterMode() noexcept;
+  void ExitEnterMode() const noexcept;
  private:
-  void RepairNumber() noexcept;
+  void RepairNumber() const noexcept;
 
   template <typename T>
   static void AddDigit(T&, char) noexcept;
