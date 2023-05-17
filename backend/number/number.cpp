@@ -394,7 +394,7 @@ void Number::ExitEnterMode() const noexcept {
   mode_ = Mantissa;
 }
 
-void Number::RepairNumber() const noexcept {
+void Number::RepairNumber()const noexcept {
   auto old_mode = mode_;
   mode_ = Mantissa;
   auto curr_number = GetNumberPrivate();
@@ -489,7 +489,11 @@ bool Number::IsThereDot(const std::string& string) noexcept {
 }
 
 bool Number::IsFullView() const noexcept {
-  return abs(characteristic_) + 1 <= kNumOfDigits;
+  if (number_ == 0) {
+    return true;
+  }
+  return characteristic_ + 1 <= kNumOfDigits &&
+         -characteristic_ + 1 < kNumOfDigits;
 }
 
 void Number::IsOverflow(CN::Number& number) {
