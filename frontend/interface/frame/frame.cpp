@@ -1,10 +1,12 @@
 #include "frame.hpp"
 
-enum WxIds { IdMakeBackUp = 1, IdLoadFromBackUp, IdSaveProgram, IdLoadProgram };
+const wxEventType IF::CalculatorFrame::kEventUpdate = wxNewEventType();
 
-ID::VisualisationTemplate IF::CalculatorFrame::GetTemplate() const {
-  return visual_template_;
-}
+BEGIN_EVENT_TABLE(IF::CalculatorFrame, wxFrame)
+EVT_COMMAND(wxID_ANY, kEventUpdate, IF::CalculatorFrame::UpdateCalc)
+END_EVENT_TABLE()
+
+enum WxIds { IdMakeBackUp = 1, IdLoadFromBackUp, IdSaveProgram, IdLoadProgram };
 
 IF::CalculatorFrame::CalculatorFrame(const std::string& title,
                                      std::shared_ptr<CE::Calc> calc)
@@ -12,10 +14,10 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
   wxPanel* panel = new wxPanel(this, wxID_ANY);
 
   wxInitAllImageHandlers();
-  wxImage pict1(wxT("images/interface.png"), wxBITMAP_TYPE_PNG);
+  wxImage pict1(wxT("images/transparent-button.png"), wxBITMAP_TYPE_PNG);
   wxBitmap backgroundBitmap(pict1);
-  wxStaticBitmap* background = new wxStaticBitmap(this, wxID_ANY, backgroundBitmap, wxDefaultPosition, wxSize(1361, 800));
-
+  wxStaticBitmap* background = new wxStaticBitmap(
+      this, wxID_ANY, backgroundBitmap, wxDefaultPosition, wxSize(1361, 800));
 
   wxMenuBar* menu_bar = new wxMenuBar();
   wxMenu* backup_menu = new wxMenu();
@@ -38,42 +40,42 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
 
   const wxSize BUTTON_SIZE(39, 36);
 
-  wxButton* button0 =
-      new wxButton(background, CE::ButNum0, "0", wxPoint(151, 655), BUTTON_SIZE);
-  wxButton* button1 =
-      new wxButton(background, CE::ButNum1, "1", wxPoint(151, 603), BUTTON_SIZE);
-  wxButton* button2 =
-      new wxButton(background, CE::ButNum2, "2", wxPoint(200, 603), BUTTON_SIZE);
-  wxButton* button3 =
-      new wxButton(background, CE::ButNum3, "3", wxPoint(250, 603), BUTTON_SIZE);
-  wxButton* button4 =
-      new wxButton(background, CE::ButNum4, "4", wxPoint(151, 550), BUTTON_SIZE);
-  wxButton* button5 =
-      new wxButton(background, CE::ButNum5, "5", wxPoint(200, 550), BUTTON_SIZE);
-  wxButton* button6 =
-      new wxButton(background, CE::ButNum6, "6", wxPoint(250, 550), BUTTON_SIZE);
-  wxButton* button7 =
-      new wxButton(background, CE::ButNum7, "7", wxPoint(151, 497), BUTTON_SIZE);
-  wxButton* button8 =
-      new wxButton(background, CE::ButNum8, "8", wxPoint(200, 497), BUTTON_SIZE);
-  wxButton* button9 =
-      new wxButton(background, CE::ButNum9, "9", wxPoint(250, 497), BUTTON_SIZE);
+  wxButton* button0 = new wxButton(background, CE::ButNum0, "0",
+                                   wxPoint(151, 655), BUTTON_SIZE);
+  wxButton* button1 = new wxButton(background, CE::ButNum1, "1",
+                                   wxPoint(151, 603), BUTTON_SIZE);
+  wxButton* button2 = new wxButton(background, CE::ButNum2, "2",
+                                   wxPoint(200, 603), BUTTON_SIZE);
+  wxButton* button3 = new wxButton(background, CE::ButNum3, "3",
+                                   wxPoint(250, 603), BUTTON_SIZE);
+  wxButton* button4 = new wxButton(background, CE::ButNum4, "4",
+                                   wxPoint(151, 550), BUTTON_SIZE);
+  wxButton* button5 = new wxButton(background, CE::ButNum5, "5",
+                                   wxPoint(200, 550), BUTTON_SIZE);
+  wxButton* button6 = new wxButton(background, CE::ButNum6, "6",
+                                   wxPoint(250, 550), BUTTON_SIZE);
+  wxButton* button7 = new wxButton(background, CE::ButNum7, "7",
+                                   wxPoint(151, 497), BUTTON_SIZE);
+  wxButton* button8 = new wxButton(background, CE::ButNum8, "8",
+                                   wxPoint(200, 497), BUTTON_SIZE);
+  wxButton* button9 = new wxButton(background, CE::ButNum9, "9",
+                                   wxPoint(250, 497), BUTTON_SIZE);
 
-  wxButton* buttonPlus =
-      new wxButton(background, CE::ButPlus, "+", wxPoint(347, 550), BUTTON_SIZE);
-  wxButton* buttonMin =
-      new wxButton(background, CE::ButMinus, "-", wxPoint(347, 603), BUTTON_SIZE);
-  wxButton* buttonMul =
-      new wxButton(background, CE::ButMultiply, "*", wxPoint(300, 550), BUTTON_SIZE);
-  wxButton* buttonDiv =
-      new wxButton(background, CE::ButDivision, "/", wxPoint(300, 603), BUTTON_SIZE);
+  wxButton* buttonPlus = new wxButton(background, CE::ButPlus, "+",
+                                      wxPoint(347, 550), BUTTON_SIZE);
+  wxButton* buttonMin = new wxButton(background, CE::ButMinus, "-",
+                                     wxPoint(347, 603), BUTTON_SIZE);
+  wxButton* buttonMul = new wxButton(background, CE::ButMultiply, "*",
+                                     wxPoint(300, 550), BUTTON_SIZE);
+  wxButton* buttonDiv = new wxButton(background, CE::ButDivision, "/",
+                                     wxPoint(300, 603), BUTTON_SIZE);
   wxButton* buttonCx =
-      new wxButton(background, CE::ButCx, "Cx", wxPoint(250, 444), BUTTON_SIZE);
+      new wxButton(background, CE::ButCx, "Cx", wxPoint(151, 444), BUTTON_SIZE);
 
   wxButton* buttonP =
       new wxButton(background, CE::ButP, "P", wxPoint(200, 444), BUTTON_SIZE);
-  wxButton* buttonNull =
-      new wxButton(background, CE::ButNull, "Null", wxPoint(151, 284), BUTTON_SIZE);
+  wxButton* buttonNull = new wxButton(background, CE::ButNull, "Null",
+                                      wxPoint(151, 284), BUTTON_SIZE);
   wxButton* buttonArrowUp = new wxButton(background, CE::ButArrowUp, "ArrowUp",
                                          wxPoint(347, 497), BUTTON_SIZE);
   wxButton* buttonXArrowY = new wxButton(background, CE::ButXArrowY, "XArrowY",
@@ -83,8 +85,8 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
                                     wxPoint(347, 391), BUTTON_SIZE);
   wxButton* buttonBvP = new wxButton(background, CE::ButBvP, wxT("ВП"),
                                      wxPoint(300, 655), BUTTON_SIZE);
-  wxButton* buttonXExpY =
-      new wxButton(background, CE::ButXExpY, "x^y", wxPoint(250, 444), BUTTON_SIZE);
+  wxButton* buttonXExpY = new wxButton(background, CE::ButXExpY, "x^y",
+                                       wxPoint(250, 444), BUTTON_SIZE);
   wxButton* buttonF =
       new wxButton(background, CE::ButF, "F", wxPoint(347, 655), BUTTON_SIZE);
 
@@ -92,17 +94,17 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
                                        wxPoint(200, 655), BUTTON_SIZE);
   wxButton* buttonBO = new wxButton(background, CE::ButBO, wxT("В/О"),
                                     wxPoint(300, 391), BUTTON_SIZE);
-  wxButton* buttonPrefixMinus = new wxButton(background, CE::ButPrefixMinus, "/-/",
-                                             wxPoint(250, 655), BUTTON_SIZE);
-  wxButton* buttonBbP =
-      new wxButton(background, CE::ButBbP, "БП", wxPoint(300, 444), BUTTON_SIZE);
+  wxButton* buttonPrefixMinus = new wxButton(
+      background, CE::ButPrefixMinus, "/-/", wxPoint(250, 655), BUTTON_SIZE);
+  wxButton* buttonBbP = new wxButton(background, CE::ButBbP, "БП",
+                                     wxPoint(300, 444), BUTTON_SIZE);
 
-  wxButton* buttonPP =
-      new wxButton(background, CE::ButPP, wxT("PP"), wxPoint(347, 444), BUTTON_SIZE);
-  wxButton* buttonStepLeft = new wxButton(background, CE::ButStepLeft, wxT("<-"),
-                                          wxPoint(250, 391), BUTTON_SIZE);
-  wxButton* buttonStepRight = new wxButton(background, CE::ButStepRight, wxT("->"),
-                                           wxPoint(200, 391), BUTTON_SIZE);
+  wxButton* buttonPP = new wxButton(background, CE::ButPP, wxT("PP"),
+                                    wxPoint(347, 444), BUTTON_SIZE);
+  wxButton* buttonStepLeft = new wxButton(
+      background, CE::ButStepLeft, wxT("<-"), wxPoint(250, 391), BUTTON_SIZE);
+  wxButton* buttonStepRight = new wxButton(
+      background, CE::ButStepRight, wxT("->"), wxPoint(200, 391), BUTTON_SIZE);
 
   button0->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
   button1->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
@@ -141,5 +143,11 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
   buttonStepRight->Bind(wxEVT_BUTTON, &CalculatorFrame::ButtonClick, this);
 
   visual_template_.SetPanel(background);
+  visualization_ = IV::Visualization(calc, visual_template_);
+
   calc_ = calc;
+}
+
+void IF::CalculatorFrame::UpdateCalc(wxCommandEvent& event) {
+  visualization_.UpdateData();
 }

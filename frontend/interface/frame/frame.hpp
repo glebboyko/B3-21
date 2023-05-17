@@ -8,6 +8,7 @@
 
 #include "backend/calc_exec/calc_exec.hpp"
 #include "frontend/interface/definition/interface_def.hpp"
+#include "frontend/visualization/visualization.hpp"
 
 namespace IF {
 
@@ -16,11 +17,14 @@ class CalculatorFrame : public wxFrame {
   CalculatorFrame(const std::string& title, std::shared_ptr<CE::Calc> calc);
   ~CalculatorFrame() = default;
 
-  ID::VisualisationTemplate GetTemplate() const;
+  static const wxEventType kEventUpdate;
+  void UpdateCalc(wxCommandEvent& event);
+
 
  private:
   std::shared_ptr<CE::Calc> calc_;
   ID::VisualisationTemplate visual_template_;
+  IV::Visualization visualization_;
 
   // Обработчики событий для кнопок
   void ButtonClick(wxCommandEvent& event);
@@ -30,6 +34,8 @@ class CalculatorFrame : public wxFrame {
 
   void SaveProgram(wxCommandEvent& event);
   void LoadProgram(wxCommandEvent& event);
+
+  DECLARE_EVENT_TABLE();
 };
 
 }  // namespace IF
