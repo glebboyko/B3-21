@@ -13,11 +13,16 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
     : wxFrame(NULL, CE::ButNum2, title, wxDefaultPosition, wxSize(1361, 800)) {
   wxPanel* panel = new wxPanel(this, wxID_ANY);
 
+  wxStaticBitmap* background;
+
   wxInitAllImageHandlers();
-  wxImage pict1(wxT("images/transparent-button.png"), wxBITMAP_TYPE_PNG);
-  wxBitmap backgroundBitmap(pict1);
-  wxStaticBitmap* background = new wxStaticBitmap(
-      this, wxID_ANY, backgroundBitmap, wxDefaultPosition, wxSize(1361, 800));
+  {
+    wxLogNull ignore_warnings;
+    wxImage pict1(wxT("images/interface.png"), wxBITMAP_TYPE_PNG);
+    wxBitmap backgroundBitmap(pict1);
+    background = new wxStaticBitmap(this, wxID_ANY, backgroundBitmap,
+                                    wxDefaultPosition, wxSize(1361, 800));
+  }
 
   wxMenuBar* menu_bar = new wxMenuBar();
   wxMenu* backup_menu = new wxMenu();
