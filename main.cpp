@@ -3,26 +3,24 @@
 #include <memory>
 
 #include "backend/calc_exec/calc_exec.hpp"
-#include "frontend/interface/definition/interface_def.hpp"
 #include "frontend/interface/frame/frame.hpp"
-#include "frontend/visualization/visualization.hpp"
+#include "frontend/visualization/updater.hpp"
 
 class Updater : public wxThread {
  public:
-  Updater(std::shared_ptr<CE::Calc> calc,
-          const ID::VisualisationTemplate& visualisation_template)
+  Updater(std::shared_ptr<CE::Calc> calc, wxFrame* frame)
       : wxThread(wxTHREAD_DETACHED),
         calc_(calc),
-        vis_tem_(visualisation_template) {}
+        frame_(frame) {}
 
   virtual void* Entry() {
-    IV::Updater(calc_, vis_tem_);
+    IU::Updater(calc_, frame_);
     return nullptr;
   }
 
  private:
   std::shared_ptr<CE::Calc> calc_;
-  ID::VisualisationTemplate vis_tem_;
+  wxFrame* frame_;
 };
 
 class CalculatorApp : public wxApp {
@@ -33,7 +31,7 @@ class CalculatorApp : public wxApp {
     IF::CalculatorFrame* frame = new IF::CalculatorFrame("Calculator", calc);
     frame->Show(true);
 
-    Updater* updater = new Updater(calc, frame->GetTemplate());
+    Updater* updater = new Updater(calc, frame);
     updater->Run();
     return true;
   }
