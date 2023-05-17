@@ -43,6 +43,8 @@ Calc& Calc::operator=(const CE::Calc& other) {
   curr_func_button_ = other.curr_func_button_;
   mode_ = other.mode_;
 
+  SendSignal(UpdateData);
+
   return *this;
 }
 
@@ -116,10 +118,16 @@ Calc::Calc(const CP::Program& program_buffer, const CM::Buffer& register_buffer,
 }
 
 void Calc::SetProgram(const std::vector<CP::OperationCodes>& program) {
+  if (mode_ == TurnedOff) {
+    return;
+  }
+
   if (mode_ == ExecutingProg) {
     mode_ = Working;
   }
   program_->SetProgram(program);
+
+  SendSignal(UpdateData);
 }
 
 /*---------------------------- приватные методы ------------------------------*/
