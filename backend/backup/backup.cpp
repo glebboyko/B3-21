@@ -20,7 +20,7 @@ void BU::MakeBackup(const CE::Calc& to_backup, const std::string& file_path) {
   std::ofstream output_file(file_path,
                             std::ofstream::out | std::ofstream::trunc);
   if (!output_file.is_open()) {
-    std::cerr << "Не удалось открыть файл для записи." << std::endl;
+    std::cerr << "Failed to open file" << std::endl;
     throw errno;
   }
 
@@ -58,7 +58,7 @@ void BU::MakeBackup(const CE::Calc& to_backup, const std::string& file_path) {
 CE::Calc BU::RestoreFromBackup(const std::string& file_path) {
   std::ifstream file(file_path);
   if (!file) {
-    throw std::invalid_argument("Файл не открылся");
+    throw std::invalid_argument("Failed to open file");
   }
 
   int button_cp;
@@ -71,7 +71,7 @@ CE::Calc BU::RestoreFromBackup(const std::string& file_path) {
     int operation_code;
     file >> operation_code;
     if (!CP::IsOperationCode(operation_code)) {
-      throw std::invalid_argument("not number code");
+      throw std::invalid_argument("Is not an operation code");
     }
     program_data_cp[i] = static_cast<CP::OperationCodes>(operation_code);
   }
@@ -131,8 +131,8 @@ void BU::SaveProgram(const std::vector<CP::OperationCodes>& to_save, const std::
   std::ofstream output_file(file_path,
                             std::ofstream::out | std::ofstream::trunc);
   if (!output_file.is_open()) {
-    std::cerr << "Не удалось открыть файл" << std::endl;
-    throw errno;
+    std::cerr << "Failed to open file" << std::endl;
+    throw std::invalid_argument("Failed to open file");
   }
   for(int i = 0; i < to_save.size(); ++i) {
     output_file << static_cast<int>(to_save[i]) << "\n";
@@ -143,14 +143,14 @@ void BU::SaveProgram(const std::vector<CP::OperationCodes>& to_save, const std::
 std::vector<CP::OperationCodes> BU::LoadProgram(const std::string& file_path) {
   std::ifstream file(file_path);
   if (!file) {
-    throw std::invalid_argument("Файл не открылся");
+    throw std::invalid_argument("Failed to open file");
   }
   std::vector<CP::OperationCodes> result(CP::kProgBufferSize);
   for(int i = 0; i < CP::kProgBufferSize; ++i) {
     int operation_code;
     file >> operation_code;
     if (!CP::IsOperationCode(operation_code)) {
-      throw std::invalid_argument("Not operation code");
+      throw std::invalid_argument("Is not an operation code");
     }
     result[i] = static_cast<CP::OperationCodes>(operation_code);
   }
