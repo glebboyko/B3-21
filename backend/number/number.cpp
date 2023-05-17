@@ -4,11 +4,12 @@
 
 namespace CN {
 
-Number::Number(const Number& other)
-    : sign_(other.sign_),
-      number_(other.number_),
-      characteristic_(other.characteristic_) {
-  RepairNumber();
+Number::Number(const Number& other) {
+  other.ExitEnterMode();
+
+  sign_ = other.sign_;
+  number_ = other.number_;
+  characteristic_ = other.characteristic_;
 }
 
 Number::Number(Number&& other)
@@ -59,14 +60,14 @@ Number::Number(double number) : sign_(number < 0) {
 }
 
 Number& Number::operator=(const Number& other) {
+  other.ExitEnterMode();
+
   sign_ = other.sign_;
   number_ = other.number_;
   characteristic_ = other.characteristic_;
 
   new_characteristic_ = 0;
   mode_ = Mantissa;
-
-  RepairNumber();
   return *this;
 }
 
@@ -87,14 +88,16 @@ std::tuple<int, std::string> Number::GetStaticNumber() const noexcept {
   // может ли число быть представлено полностью
   auto [sign, characteristic, number] = IsFullView() ? FullView() : PartView();
 
-  // Вставка точки в конец после нажатия клавиши "."
-  if (mode_ == AfterDot && !IsThereDot(number)) {
-    number.insert(number.end(), '.');
-  }
   if (sign) {
     number.insert(number.begin(), '-');
   }
 
+  if (new_characteristic_ != 0) {
+    characteristic = new_characteristic_;
+  }
+  if (number.back() == '.') {
+    number.pop_back();
+  }
   return {characteristic, number};
 }
 
@@ -129,6 +132,7 @@ void Number::DotButton() noexcept {
 }
 
 void Number::CharacteristicButton() {
+  RepairNumber();
   if (!IsFullView()) {
     new_characteristic_ = characteristic_;
   }
@@ -347,9 +351,7 @@ Number::BackUpIng Number::GetClass() const noexcept {
 }
 
 /*---------------------------- приватные методы ------------------------------*/
-void Number::ExitEnterMode() noexcept {
-  RepairNumber();
-
+void Number::ExitEnterMode() const noexcept {
   if (mode_ == Characteristic) {
     if (IsFullView()) {
       characteristic_ += new_characteristic_;
@@ -363,7 +365,7 @@ void Number::ExitEnterMode() noexcept {
   mode_ = Mantissa;
 }
 
-void Number::RepairNumber() noexcept {
+void Number::RepairNumber()const noexcept {
   auto old_mode = mode_;
   mode_ = Mantissa;
   auto curr_number = GetNumberPrivate();
