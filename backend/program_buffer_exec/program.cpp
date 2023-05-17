@@ -42,6 +42,7 @@ const TransferStatus& Program::GetTransferStatus() const noexcept {
 void Program::EnterCode(OperationCodes code) noexcept {
   ResetTransferStatus();
   data_[step_] = code;
+  MakeStep(DirRight);
 }
 
 ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
