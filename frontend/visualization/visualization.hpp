@@ -65,8 +65,4 @@ class Visualization {
   std::pair<std::vector<TextBlock>, std::vector<TextBlock>> rounded_buffer_;  //
 };
 
-// функция, следящая за изменениями в калькуляторе (отдельный поток)
-void Updater(std::shared_ptr<CE::Calc> calc,
-             ID::VisualisationTemplate visualisation_template);
-
 }  // namespace IV
