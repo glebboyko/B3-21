@@ -195,11 +195,13 @@ void Visualization::Clear() {
       rounded_buffer_.first.at(i).Update("");
     }
   }
+  wxYield();
 }
 
 TextBlock::TextBlock(const ID::TextBlock& raw) {
   curr_text_ = new wxStaticText(raw.panel, raw.id, raw.text, raw.location);
-  curr_text_->SetFont(raw.font.first);
+  curr_text_->SetFont(raw.font.first.font);
+  curr_text_->SetForegroundColour(raw.font.first.colour);
   fonts_ = raw.font;
 }
 TextBlock::TextBlock(IV::TextBlock&& outer) {
@@ -221,17 +223,18 @@ TextBlock& TextBlock::operator=(IV::TextBlock&& outer) {
 }
 
 TextBlock::~TextBlock() { delete curr_text_; }
+
 void TextBlock::Update(const std::string& str) {
   if (curr_text_->GetLabel() != str) {
     curr_text_->SetLabel(str);
-    wxYield();
   }
 }
 
 void TextBlock::SwitchFont() {
   curr_font_ = !(curr_font_);
-  curr_text_->SetFont(curr_font_ ? fonts_.second : fonts_.first);
-  wxYield();
+  curr_text_->SetFont(curr_font_ ? fonts_.second.font : fonts_.first.font);
+  curr_text_->SetForegroundColour(curr_font_ ? fonts_.second.colour
+                                             : fonts_.first.colour);
 }
 
 }  // namespace IV

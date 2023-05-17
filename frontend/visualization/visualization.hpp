@@ -27,7 +27,7 @@ class TextBlock {
 
  private:
   bool curr_font_ = false;
-  std::pair<wxFont, wxFont> fonts_;
+  std::pair<ID::Font, ID::Font> fonts_;
   wxStaticText* curr_text_ = nullptr;
 };
 
