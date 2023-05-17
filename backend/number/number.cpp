@@ -248,6 +248,8 @@ Number Number::operator-() const {
 }
 
 Number& Number::operator+=(const Number& other) {
+  ExitEnterMode();
+
   if (abs(characteristic_ - other.characteristic_) >= kNumOfDigits) {
     return *this = Number::Abs(*this) > Number::Abs(other) ? *this : other;
   }
@@ -275,6 +277,8 @@ Number Number::operator+(const Number& other) const {
 }
 
 Number& Number::operator-=(const Number& other) {
+  ExitEnterMode();
+
   if (abs(characteristic_ - other.characteristic_) >= kNumOfDigits) {
     return *this = Number::Abs(*this) > Number::Abs(other) ? *this : other;
   }
@@ -287,6 +291,8 @@ Number Number::operator-(const Number& other) const {
 }
 
 Number& Number::operator*=(Number other) {
+  ExitEnterMode();
+
   Number result;
   result.sign_ = sign_ ^ other.sign_;
   result.number_ = number_ * other.number_;
@@ -305,6 +311,8 @@ Number Number::operator*(const Number& other) const {
 }
 
 Number& Number::operator/=(Number other) {
+  ExitEnterMode();
+
   if (other == 0) {
     throw std::invalid_argument("dividing by zero");
   }
@@ -335,6 +343,27 @@ Number& Number::operator%=(Number other) {
 Number Number::operator%(const Number& other) const {
   Number number = *this;
   return number %= other;
+}
+
+Number Number::GetIntegerPart() const {
+  ExitEnterMode();
+
+  if (characteristic_ < 0 || number_ == 0) {
+    return 0;
+  }
+
+  auto [sign, characteristic, number] = GetNumberPrivate();
+  if (characteristic > 0) {
+    return *this;
+  }
+
+  Number result = *this;
+
+  int dot = number.find('.') + 1;
+  for (int i = 0; i < number.size() - dot - 1; ++i) {
+    result.number_ /= 10;
+  }
+  return result;
 }
 
 /*-------------------------- for backup / restore ----------------------------*/

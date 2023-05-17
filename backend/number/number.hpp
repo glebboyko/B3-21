@@ -46,6 +46,7 @@ class Number {
   Number operator*(const Number&) const;
   Number operator/(const Number&) const;
   Number operator%(const Number&) const;
+  Number GetIntegerPart() const;
 
   Number& operator+=(const Number&);
   Number& operator-=(const Number&);
