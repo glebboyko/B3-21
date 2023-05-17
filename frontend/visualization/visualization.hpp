@@ -27,7 +27,7 @@ class TextBlock {
 
  private:
   bool curr_font_ = false;
-  ID::TextBlock pre_upd_;
+  std::pair<wxFont, wxFont> fonts_;
   wxStaticText* curr_text_ = nullptr;
 };
 
@@ -35,7 +35,7 @@ class TextBlock {
 class Visualization {
  public:
   // конструкторы и деструкторы
-  Visualization() = delete;
+  Visualization() = default;
   Visualization(std::shared_ptr<CE::Calc>,
                 const ID::VisualisationTemplate& vis_temp);
   Visualization(const Visualization&) = delete;
@@ -45,7 +45,7 @@ class Visualization {
 
   // операторы присваивания
   Visualization& operator=(const Visualization&) = delete;
-  Visualization& operator=(Visualization&&) = delete;
+  Visualization& operator=(Visualization&&) = default;
 
   // интерфейс взаимодействия
   void UpdateData();
@@ -53,16 +53,17 @@ class Visualization {
  private:
   std::shared_ptr<CE::Calc> calc_;
 
-  TextBlock step_;  //
+  void Clear();
+  TextBlock step_;
   int step_mem_ = -1;
-  std::pair<TextBlock, TextBlock> main_number_;  //
-  std::vector<TextBlock> last_operations_;       //
-  TextBlock mode_;                               //
-  TextBlock function_button_;                    //
-  std::vector<TextBlock> program_;               //
+  std::pair<TextBlock, TextBlock> main_number_;
+  std::vector<TextBlock> last_operations_;
+  TextBlock mode_;
+  TextBlock function_button_;
+  std::vector<TextBlock> program_;
   std::pair<std::vector<TextBlock>, std::vector<TextBlock>>
-      numerated_buffer_;                                                      //
-  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> rounded_buffer_;  //
+      numerated_buffer_;
+  std::pair<std::vector<TextBlock>, std::vector<TextBlock>> rounded_buffer_;
 };
 
 }  // namespace IV
