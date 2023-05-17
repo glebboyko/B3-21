@@ -95,7 +95,7 @@ VisualisationTemplate::VisualisationTemplate() {
   text_block.font.second.font.MakeBold();
   //---------PROGRAM------------
   {
-    TableParameters table_parameters = {550, 134, kRawOffset, 145, 20, 3};
+    TableParameters table_parameters = {552, 134, kRawOffset, 145, 20, 3};
     program = TextBlockTable(table_parameters, text_block);
   }
   //--------------NUMERATED_BUFFER------------
