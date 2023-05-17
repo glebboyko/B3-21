@@ -10,14 +10,19 @@
 
 namespace ID {
 
-const uint32_t kDefaultTextSize = 13;
+const uint32_t kDefaultTextSize = 15;
+
+struct Font {
+  wxFont font;
+  wxColour colour;
+};
 
 struct TableParameters {
-  int32_t init_x;
-  int32_t init_y;
+  double init_x;
+  double init_y;
 
-  int32_t raw_offset;
-  int32_t column_offset;
+  double raw_offset;
+  double column_offset;
 
   uint32_t raw_num;
   uint32_t column_num;
@@ -26,13 +31,9 @@ struct TableParameters {
 struct TextBlock {
   wxWindow* panel = nullptr;
   int id = wxID_ANY;
-  std::string text;
-  wxPoint location = wxPoint(0, 0);
-  std::pair<wxFont, wxFont> font = {
-      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-             wxFONTWEIGHT_BOLD),
-      wxFont(kDefaultTextSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-             wxFONTWEIGHT_BOLD)};
+  std::string text = " ";
+  wxRealPoint location = wxRealPoint(0, 0);
+  std::pair<Font, Font> font;
 };
 
 struct Number {
