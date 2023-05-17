@@ -135,7 +135,7 @@ void BU::SaveProgram(const std::vector<CP::OperationCodes>& to_save, const std::
     throw errno;
   }
   for(int i = 0; i < to_save.size(); ++i) {
-    output_file << static_cast<int>(to_save[i]);
+    output_file << static_cast<int>(to_save[i]) << "\n";
   }
   output_file.close();
 }
