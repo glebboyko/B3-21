@@ -22,8 +22,8 @@ VisualisationTemplate::VisualisationTemplate() {
   //--------STEP-----------
   {
     step.location = {136, 176};
-    step.font.first = wxFont(
-        10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    step.font.first =
+        wxFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
   }
 
   //----------MAIN_NUMBER---------
@@ -78,12 +78,13 @@ VisualisationTemplate::VisualisationTemplate() {
   }
   //---------------ROUNDED_BUFFER-----------
   {
-    TableParameters table_parameters_number = {1135, 410, kRawOffset, 0, 6, 1};
+    TableParameters table_parameters_number = {
+        1135, 410, kRawOffset, 0, CM::kRoundedBuffSize, 1};
     rounded_buffer.number =
         TextBlockTable(table_parameters_number, TextBlock());
 
-    TableParameters table_parameters_characteristic = {1050, 410, kRawOffset,
-                                                       0,    6,   1};
+    TableParameters table_parameters_characteristic = {
+        1050, 410, kRawOffset, 0, CM::kRoundedBuffSize, 1};
     rounded_buffer.characteristic =
         TextBlockTable(table_parameters_characteristic, TextBlock());
   }
