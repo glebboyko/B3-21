@@ -46,6 +46,12 @@ void Program::EnterCode(OperationCodes code) noexcept {
 }
 
 ProgramStatus Program::ExecuteStep(CE::Calc& calc) noexcept {
+  try {
+    FindEnd();
+  } catch (std::overflow_error& error) {
+    return Error;
+  }
+
   // проверка на конец программы
   if (IsThereEndBefore()) {
     if (step_ != kProgBufferSize - 1 && data_[step_] != OpCP) {
@@ -132,9 +138,6 @@ int Program::FindEnd() const {
 }
 
 bool Program::IsThereEndBefore() const noexcept {
-  if (*(data_.begin() + step_) == OpCP) {
-
-  }
   return std::find(data_.begin(), data_.begin() + step_ + 1, OpCP) !=
          data_.begin() + step_ + 1;
 }
