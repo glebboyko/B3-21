@@ -48,6 +48,25 @@ Calc& Calc::operator=(const CE::Calc& other) {
   return *this;
 }
 
+Calc& Calc::operator=(CE::Calc&& other) {
+  if (exec_prog_thread_.has_value()) {
+    mode_ = Working;
+    exec_prog_thread_.value().join();
+    exec_prog_thread_ = {};
+  }
+
+  program_ = other.program_;
+  other.program_ = nullptr;
+
+  buffer_ = std::move(other.buffer_);
+  curr_func_button_ = other.curr_func_button_;
+  mode_ = other.mode_;
+
+  SendSignal(UpdateData);
+
+  return *this;
+}
+
 /*---------------------------- для визуализации ------------------------------*/
 const CP::Program& Calc::GetProgram() const noexcept { return *program_; }
 

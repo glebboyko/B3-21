@@ -1,8 +1,8 @@
 #include "updater.hpp"
 
 namespace IU {
-void Updater(std::shared_ptr<CE::Calc> calc, wxFrame* window) {
-  auto queue_checker = calc->GetDataUpdateMarker();
+void Updater(std::weak_ptr<CE::Calc> calc, wxFrame* window) {
+  auto queue_checker = calc.lock()->GetDataUpdateMarker();
   while (true) {
     auto received_msg = queue_checker.Receive(1, MQ::Wait);
     if (received_msg.value() == CE::Error) {

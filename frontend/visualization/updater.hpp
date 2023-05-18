@@ -12,5 +12,5 @@
 
 namespace IU {
 // функция, следящая за изменениями в калькуляторе (отдельный поток)
-void Updater(std::shared_ptr<CE::Calc> calc, wxFrame* window);
+void Updater(std::weak_ptr<CE::Calc> calc, wxFrame* window);
 }  // namespace IU

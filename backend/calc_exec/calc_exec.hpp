@@ -24,6 +24,7 @@ class Calc {
   Calc(const Calc&);
   ~Calc();
   Calc& operator=(const Calc&);
+  Calc& operator=(Calc&&);
 
   // для визуализации
   const CP::Program& GetProgram() const noexcept;

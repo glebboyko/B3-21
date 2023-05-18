@@ -8,7 +8,7 @@
 
 class Updater : public wxThread {
  public:
-  Updater(std::shared_ptr<CE::Calc> calc, wxFrame* frame)
+  Updater(std::weak_ptr<CE::Calc> calc, wxFrame* frame)
       : wxThread(wxTHREAD_DETACHED),
         calc_(calc),
         frame_(frame) {}
@@ -19,7 +19,7 @@ class Updater : public wxThread {
   }
 
  private:
-  std::shared_ptr<CE::Calc> calc_;
+  std::weak_ptr<CE::Calc> calc_;
   wxFrame* frame_;
 };
 
