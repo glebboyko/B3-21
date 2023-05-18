@@ -71,7 +71,7 @@ void Calc::PXArrowY() {
 
 void Calc::XArrowY() {
   CN::Number tmp = buffer_.GetNumeratedBuffer()[1];
-  buffer_.PutFromZToX(1);
+  buffer_.PutFromXToZ(1);
   buffer_.GetX0() = tmp;
   curr_func_button_ = ButNull;
   SendSignal(UpdateData);
