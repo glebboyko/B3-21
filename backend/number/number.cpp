@@ -105,6 +105,8 @@ std::tuple<int, std::string> Number::GetMainNumber() const noexcept {
   auto [sign, characteristic, number] = GetNumberPrivate();
   if (sign) {
     number.insert(number.begin(), '-');
+  } else {
+    number.insert(number.begin(), ' ');
   }
   return {characteristic, number};
 }
@@ -132,6 +134,10 @@ void Number::DotButton() noexcept {
 }
 
 void Number::CharacteristicButton() {
+  if (mode_ == Characteristic) {
+    ExitEnterMode();
+    return;
+  }
   RepairNumber();
   if (!IsFullView()) {
     new_characteristic_ = characteristic_;

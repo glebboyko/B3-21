@@ -172,8 +172,7 @@ void Calc::FPrefixMinus() {
 }
 
 void Calc::PrefixMinus() {
-  CN::Number& x = buffer_.GetX0();
-  x = CN::Number(-1) * x;
+  buffer_.GetX0().SignButton();
   curr_func_button_ = ButNull;
   SendSignal(UpdateData);
 }
