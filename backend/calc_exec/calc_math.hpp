@@ -111,6 +111,9 @@ CN::Number Ln(CN::Number x) {
 }
 
 CN::Number Root(CN::Number x) {
+  if (x == 0) {
+    return 0;
+  }
   CN::Number epsilon = 1e-8;
   CN::Number y = x;
   CN::Number y_next;
