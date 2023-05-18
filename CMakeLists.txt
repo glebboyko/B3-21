@@ -24,7 +24,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 #adding executables
 add_executable(B3_21 main.cpp backend/backup/backup.cpp
-        backend/calc_exec/calc_exec.cpp backend/calc_exec/calc_operations.cpp
+        backend/calc_exec/calc_exec.cpp backend/calc_exec/calc_operations.cpp backend/calc_exec/calc_math.cpp
         backend/for_society/for_society.cpp
         backend/number/number.cpp
         backend/program_buffer_exec/program.cpp
