@@ -30,7 +30,7 @@ uint32_t GetDigit(uint32_t number, uint32_t index) noexcept;
 }  // namespace FS
 
 namespace CE {
-const std::chrono::milliseconds kWait = std::chrono::milliseconds(1000);
+const std::chrono::milliseconds kWait = std::chrono::milliseconds(500);
 
 const char kMessageQueueFile[] = "message_queue_file";
 
