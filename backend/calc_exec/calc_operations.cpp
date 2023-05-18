@@ -128,6 +128,7 @@ void Calc::XExpY() {
 
 void Calc::PComma() {
   buffer_.RoundBuffer(CM::ContrClockWise);
+  curr_func_button_ = ButNull;
   SendSignal(UpdateData);
 }
 
@@ -156,6 +157,7 @@ void Calc::BO() {
 
 void Calc::PPrefixMinus() {
   buffer_.RoundBuffer(CM::ClockWise);
+  curr_func_button_ = ButNull;
   SendSignal(UpdateData);
 }
 
