@@ -188,11 +188,18 @@ bool Number::operator<(Number other) const {
   if (this_num.sign_ != other.sign_) {
     return this_num.sign_;
   }
+
+  if (this_num == 0 || other == 0) {
+    return this_num == 0 && other != 0;
+  }
+
+  auto compare = this_num.sign_ ? std::cmp_greater<int64_t, int64_t>
+                                : std::cmp_less<int64_t, int64_t>;
   if (this_num.characteristic_ != other.characteristic_) {
-    return this_num.characteristic_ < other.characteristic_;
+    return compare(this_num.characteristic_, other.characteristic_);
   }
   ToEqualDigits(this_num.number_, other.number_);
-  return this_num.number_ < other.number_;
+  return compare(this_num.number_, other.number_);
 }
 
 bool Number::operator<=(Number other) const {
@@ -200,12 +207,18 @@ bool Number::operator<=(Number other) const {
   if (this_num.sign_ != other.sign_) {
     return this_num.sign_;
   }
+
+  if (this_num == 0 || other == 0) {
+    return this_num == 0;
+  }
+
+  auto compare = this_num.sign_ ? std::cmp_greater_equal<int64_t, int64_t>
+                                : std::cmp_less_equal<int64_t, int64_t>;
   if (this_num.characteristic_ != other.characteristic_) {
-    return this_num.characteristic_ < other.characteristic_;
+    return compare(this_num.characteristic_, other.characteristic_);
   }
   ToEqualDigits(this_num.number_, other.number_);
-
-  return this_num.number_ <= other.number_;
+  return compare(this_num.number_, other.number_);
 }
 
 bool Number::operator>(Number other) const {
@@ -213,11 +226,18 @@ bool Number::operator>(Number other) const {
   if (this_num.sign_ != other.sign_) {
     return other.sign_;
   }
+
+  if (this_num == 0 || other == 0) {
+    return other == 0 && this_num != 0;
+  }
+
+  auto compare = this_num.sign_ ? std::cmp_less<int64_t, int64_t>
+                                : std::cmp_greater<int64_t, int64_t>;
   if (this_num.characteristic_ != other.characteristic_) {
-    return this_num.characteristic_ > other.characteristic_;
+    return compare(this_num.characteristic_, other.characteristic_);
   }
   ToEqualDigits(this_num.number_, other.number_);
-  return this_num.number_ > other.number_;
+  return compare(this_num.number_, other.number_);
 }
 
 bool Number::operator>=(Number other) const {
@@ -225,11 +245,18 @@ bool Number::operator>=(Number other) const {
   if (this_num.sign_ != other.sign_) {
     return other.sign_;
   }
+
+  if (this_num == 0 || other == 0) {
+    return other == 0;
+  }
+
+  auto compare = this_num.sign_ ? std::cmp_less_equal<int64_t, int64_t>
+                                : std::cmp_greater_equal<int64_t, int64_t>;
   if (this_num.characteristic_ != other.characteristic_) {
-    return this_num.characteristic_ > other.characteristic_;
+    return compare(this_num.characteristic_, other.characteristic_);
   }
   ToEqualDigits(this_num.number_, other.number_);
-  return this_num.number_ >= other.number_;
+  return compare(this_num.number_, other.number_);
 }
 
 bool Number::operator==(Number other) const {
@@ -400,7 +427,7 @@ void Number::ExitEnterMode() const noexcept {
   mode_ = Mantissa;
 }
 
-void Number::RepairNumber()const noexcept {
+void Number::RepairNumber() const noexcept {
   auto old_mode = mode_;
   mode_ = Mantissa;
   auto curr_number = GetNumberPrivate();
