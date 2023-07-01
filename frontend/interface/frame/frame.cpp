@@ -9,7 +9,8 @@ END_EVENT_TABLE()
 enum WxIds { IdMakeBackUp = 1, IdLoadFromBackUp, IdSaveProgram, IdLoadProgram };
 
 IF::CalculatorFrame::CalculatorFrame(const std::string& title,
-                                     std::shared_ptr<CE::Calc> calc)
+                                     std::shared_ptr<CE::Calc> calc,
+                                     std::string path)
     : wxFrame(NULL, CE::ButNum2, title, wxDefaultPosition, wxSize(1361, 800)) {
   wxPanel* panel = new wxPanel(this, wxID_ANY);
 
@@ -18,7 +19,7 @@ IF::CalculatorFrame::CalculatorFrame(const std::string& title,
   wxInitAllImageHandlers();
   {
     wxLogNull ignore_warnings;
-    wxImage pict1(wxT("images/interface.png"), wxBITMAP_TYPE_PNG);
+    wxImage pict1((path + "images/interface.png").c_str(), wxBITMAP_TYPE_PNG);
     wxBitmap backgroundBitmap(pict1);
     background = new wxStaticBitmap(this, wxID_ANY, backgroundBitmap,
                                     wxDefaultPosition, wxSize(1361, 800));

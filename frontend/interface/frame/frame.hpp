@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "backend/calc_exec/calc_exec.hpp"
@@ -14,12 +15,12 @@ namespace IF {
 
 class CalculatorFrame : public wxFrame {
  public:
-  CalculatorFrame(const std::string& title, std::shared_ptr<CE::Calc> calc);
+  CalculatorFrame(const std::string& title, std::shared_ptr<CE::Calc> calc,
+                  std::string path);
   ~CalculatorFrame() = default;
 
   static const wxEventType kEventUpdate;
   void UpdateCalc(wxCommandEvent& event);
-
 
  private:
   std::shared_ptr<CE::Calc> calc_;

@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <wx/wx.h>
 
 #include <memory>
@@ -9,9 +10,7 @@
 class Updater : public wxThread {
  public:
   Updater(std::weak_ptr<CE::Calc> calc, wxFrame* frame)
-      : wxThread(wxTHREAD_DETACHED),
-        calc_(calc),
-        frame_(frame) {}
+      : wxThread(wxTHREAD_DETACHED), calc_(calc), frame_(frame) {}
 
   virtual void* Entry() {
     IU::Updater(calc_, frame_);
@@ -26,9 +25,15 @@ class Updater : public wxThread {
 class CalculatorApp : public wxApp {
  public:
   virtual bool OnInit() {  // Создание главного окна калькулятора
+    std::string path = argv.GetArguments()[0].ToStdString();
+    while (path.back() != '/') {
+      path.pop_back();
+    }
+
     std::shared_ptr<CE::Calc> calc(new CE::Calc());
 
-    IF::CalculatorFrame* frame = new IF::CalculatorFrame("Calculator", calc);
+    IF::CalculatorFrame* frame =
+        new IF::CalculatorFrame("Calculator", calc, path);
     frame->Show(true);
 
     Updater* updater = new Updater(calc, frame);
